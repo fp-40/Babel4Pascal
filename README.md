@@ -4,6 +4,9 @@ A library that provides an integrated collection of utilities that assist with i
 
 It includes data extracted from the [Common Locale Data Repository (CLDR)](https://unicode.org/cldr/), and provides a number of convenient methods for accessing and using this data for formatting dates and numbers or to access the localized names of countries, languages, time-zones, etc.
 
+The documentation is in [docs/](docs/index.md): a user guide and the API
+reference of every unit.
+
 ## Status
 
 Work in progress. Done so far:
