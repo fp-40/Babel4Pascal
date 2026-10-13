@@ -4,9 +4,6 @@ each case of tests/core/default_locale.json and compare its output
 (DefaultLocale and TLocale.Default for the category) with the expected
 lines.
 
-The expected results are Python Babel 2.18.0's default_locale and
-Locale.default under the same variables, recorded once.
-
 Usage: check_default_locale.py PATH/TO/print_default
 Exit status 1 when any case differs.
 """

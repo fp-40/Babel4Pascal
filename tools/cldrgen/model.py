@@ -3,7 +3,7 @@
 
 class Alias:
     """A reference to another part of the same locale's data, given by the
-    path of keys from the top (as Babel's localedata.Alias). It occurs in
+    path of keys from the top. It occurs in
     root only (months, days, quarters, eras, currency_formats)."""
 
     __slots__ = ('keys',)

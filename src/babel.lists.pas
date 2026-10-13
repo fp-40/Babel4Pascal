@@ -1,5 +1,4 @@
-{ babel.lists - lists of items joined by the locale's patterns, as Python
-  Babel's babel.lists.
+{ babel.lists - lists of items joined by the locale's patterns.
 
   FormatList(['apples', 'oranges', 'pears'], 'en') gives 'apples,
   oranges, and pears'; with Style 'or' in 'fi', 'omena, peruna tai
@@ -11,11 +10,10 @@
   style CLDR's root aliases it to ('unit-narrow' to 'unit-short' to
   'standard').
 
-  The results follow CLDR as ICU applies it where Babel departs from it
-  (tests/icu compares them with ICU4C): parts resolved one by one (Babel
-  failed on partial styles and repeated the last item without a '2'
-  pattern), and ICU's contextual conjunctions ('padre e hijo', 'siete u
-  ocho', Hebrew 'ו-' before other scripts).
+  The results follow CLDR as ICU applies it (tests/icu compares them with
+  ICU4C): each part of a style is resolved on its own, and ICU's
+  contextual conjunctions apply ('padre e hijo', 'siete u ocho', Hebrew
+  'ו-' before other scripts).
 
   Threading: everything here only reads shared data. }
 unit babel.lists;
@@ -38,8 +36,7 @@ uses
   SysUtils, babel.errors, babel.localedata, babel.pystr;
 
 (* The styles a style's patterns are looked up in, as CLDR's root aliases
-  them: 'unit-narrow' to 'unit-short' to 'standard'. (Babel's chains,
-  from CLDR 45, put 'unit' between 'unit-narrow' and 'standard'.) *)
+  them: 'unit-narrow' to 'unit-short' to 'standard'. *)
 function StyleChain(const Style: string): TStringArray;
 begin
   if Style = 'or-narrow' then Result := ['or-narrow', 'or-short', 'or']
@@ -54,8 +51,7 @@ end;
 (* The pattern of a part ('start', 'middle', 'end', '2') in the first
   style of the chain that has it: a locale may give only some parts of a
   style (af's 'standard-narrow' has '2' and 'end'), the others are
-  inherited through the alias. Babel took the whole style from the first
-  that existed, and failed (KeyError) on the missing parts. *)
+  inherited through the alias. *)
 function PartPattern(const Locale: TLocale; const Chain: TStringArray; const Part: string): string;
 var
   S: string;

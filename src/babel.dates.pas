@@ -1,31 +1,28 @@
-{ babel.dates - formatting and parsing of dates, times and durations, as
-  Python Babel's babel.dates.
+{ babel.dates - formatting and parsing of dates, times and durations with
+  the locale's CLDR data.
 
   FormatDate(EncodeDate(2026, 10, 13), 'es_PE') gives '13 oct 2026';
   FormatDateAndTime(Now_UTC, 'en', DateTimeOptions.WithFormat('full')
   .WithTimeZone('America/Lima')) gives 'Tuesday, October 13, 2026 at
   9:30:00 AM Peru Standard Time'.
 
-  Dates and times are TDateTime values in UTC (Babel's naive datetimes are
-  UTC as well). TimeZone names the zone to show them in ('Europe/Madrid';
-  '' is UTC); the rules come from the system's tz database (babel.tz).
-  FormatDate formats the date of the value as it is, without a zone (as
-  Babel's format_date takes a date). Precision: milliseconds (TDateTime
-  is decoded to milliseconds; the 'S' field shows microseconds as 0).
+  Dates and times are TDateTime values in UTC. TimeZone names the zone to
+  show them in ('Europe/Madrid'; '' is UTC); the rules come from the
+  system's tz database (babel.tz). FormatDate formats the date of the
+  value as it is, without a zone. Precision: milliseconds (TDateTime is
+  decoded to milliseconds; the 'S' field shows microseconds as 0).
 
-  The API is Babel's; the results follow CLDR as ICU applies it where
-  Babel departs from it (tests/icu compares them with ICU4C): time zone
-  names (localized GMT from the locale's hourFormat, zone aliases,
-  generic names with partial locations, rearguard daylight time), day
-  periods (noon only at 12:00 exactly, no midnight), skeleton field
-  lengths adjusted to the request, the atTime date-time patterns, the
-  week data of the locale's likely region, relative-time field aliases.
-  format_timedelta keeps Babel's choice of unit (months of 30 days).
+  The results follow CLDR as ICU applies it (tests/icu compares them with
+  ICU4C): time zone names (localized GMT from the locale's hourFormat,
+  zone aliases, generic names with partial locations, rearguard daylight
+  time), day periods (noon only at 12:00 exactly, no midnight), skeleton
+  field lengths adjusted to the request, the atTime date-time patterns,
+  the week data of the locale's likely region, relative-time field
+  aliases. FormatTimedelta counts months of 30 days and years of 365.
   NumberingSystem (options): the digits of the numeric fields and of the
-  localized GMT ('latn' by default, as Babel; 'default' for the
-  locale's, as ICU).
+  localized GMT ('latn' by default; 'default' for the locale's, as ICU).
 
-  Babel's format_datetime is FormatDateAndTime here: FormatDateTime is
+  The date-and-time function is FormatDateAndTime: FormatDateTime is
   taken by SysUtils.
 
   Threading: everything here only reads shared data. }
@@ -40,7 +37,7 @@ uses
   SysUtils, babel.errors, babel.localedata, babel.core, babel.tz;
 
 type
-  EDateParseError = class(EBabelValueError);   { Babel's ParseError }
+  EDateParseError = class(EBabelValueError);   { a text that is not a date or time }
 
   TDateTimeOptions = record
     Format: string;     { 'full', 'long', 'medium' (default), 'short' or a pattern }
@@ -67,8 +64,8 @@ type
     Skeleton: string;   { '' = none }
     TimeZone: string;
     Fuzzy: Boolean;
-    Kind: TIntervalKind; { what the values are (Babel tells by their Python
-                           type); ikDate uses only their dates }
+    Kind: TIntervalKind; { what the values are: dates, times or both;
+                           ikDate uses only their dates }
     NumberingSystem: string;
     function WithSkeleton(const Value: string): TIntervalOptions;
     function WithTimeZone(const Value: string): TIntervalOptions;
@@ -92,7 +89,7 @@ type
 
   TTimeZoneNameOptions = record
     Width: string;          { 'long' (default) or 'short' }
-    Uncommon: Boolean;      { accepted and ignored, as in Babel }
+    Uncommon: Boolean;      { accepted and ignored }
     ZoneVariant: string;    { '' = from the date ('generic' without one), 'generic', 'standard', 'daylight' }
     ReturnZone: Boolean;    { the canonical zone name instead }
     function WithWidth(const Value: string): TTimeZoneNameOptions;
@@ -109,7 +106,7 @@ type
   end;
   TPatternTokens = array of TPatternToken;
 
-  { A parsed date/time pattern (Babel's DateTimePattern). }
+  { A parsed date/time pattern. }
   TDateTimePattern = record
     Pattern: string;
     Tokens: TPatternTokens;
@@ -121,7 +118,7 @@ function IntervalOptions: TIntervalOptions;
 function TimedeltaOptions: TTimedeltaOptions;
 function TimeZoneNameOptions: TTimeZoneNameOptions;
 
-{ Names (maps: index or id -> name), as Babel's get_*_names. }
+{ Names (maps: index or id -> name). }
 function GetPeriodNames(const Locale: TLocale; const Width: string = 'wide';
   const Context: string = 'stand-alone'): TCLDRValue;
 function GetDayNames(const Locale: TLocale; const Width: string = 'wide';
@@ -177,7 +174,8 @@ function FormatInterval(StartUTC, EndUTC: TDateTime; const Locale: TLocale;
 function GetPeriodId(UTC: TDateTime; const Locale: TLocale; const RuleType: string = '';
   const TimeZone: string = ''): string;
 
-{ Parsing (Babel's simple guessing from the order of the fields). }
+{ Parsing: the numbers of the text read in the order of the fields of
+  the locale's pattern. }
 function ParseDate(const S: string; const Locale: TLocale; const Format: string = 'medium'): TDateTime;
 function ParseTime(const S: string; const Locale: TLocale; const Format: string = 'medium'): TDateTime;
 
@@ -470,7 +468,8 @@ begin
   P := Need(Locale.Data, 'datetime_formats');
   if not P.Has(Format) then
   begin
-    { Babel falls back to patterns[None], which does not exist }
+    { a length the locale does not have: the entry without a length,
+      which CLDR does not give (EBabelKeyError) }
     if P.GetNone = nil then
       raise EBabelKeyError.Create('None');
     Exit(P.GetNone.AsString);
@@ -483,7 +482,7 @@ begin
   Result := (Format = 'full') or (Format = 'long') or (Format = 'medium') or (Format = 'short');
 end;
 
-{ ---- patterns (Babel's tokenize_pattern and friends) ---- }
+{ ---- patterns: tokens, parsing, interval splitting ---- }
 
 function IsPatternChar(C: Char): Boolean; inline;
 begin
@@ -602,7 +601,7 @@ begin
     end;
 end;
 
-{ The lengths each field allows (Babel's PATTERN_CHARS); '' = any. }
+{ The lengths each field allows; '' = any. }
 function AllowedLengths(F: Char): string;
 begin
   case F of
@@ -768,7 +767,7 @@ end;
 type
   TValueKind = (vkDate, vkTime, vkDateTime);
 
-  { A date, a time or a datetime as Babel's DateTimeFormat sees it: the
+  { A date, a time or a datetime as the field formatting sees it: the
     local fields, and for times and datetimes the zone. }
   TValue = record
     Kind: TValueKind;
@@ -801,7 +800,8 @@ begin
   Result.Zone := GetTimeZone('');
 end;
 
-{ An aware datetime: UTC converted to the zone, with zoneinfo's fold. }
+{ A datetime in a zone: UTC converted to the zone, with the fold of a
+  repeated local time. }
 function DateTimeValue(UTC: TDateTime; const TimeZone: string): TValue;
 var
   Info: TZoneInfo;
@@ -837,8 +837,8 @@ begin
   Result := UnixSeconds(EncodeDate(Y, M, D)) + V.H * 3600 + V.N * 60 + V.S;
 end;
 
-{ utcoffset() and dst() of the value (a time with a reference date is
-  combined with it, as Babel does; the fold is kept). }
+{ The UTC offset and daylight saving time of the value (a time with a
+  reference date is combined with it; the fold is kept). }
 function ZoneInfoOf(const V: TValue): TZoneInfo;
 begin
   Result := V.Zone.InfoAtLocal(LocalSeconds(V), V.Fold);
@@ -899,11 +899,10 @@ begin
   Result := PercentS(Need(Locale.Data, 'zone_formats').Str('gmt'), Part);
 end;
 
-{ get_timezone_gmt: Width 'long' is CLDR's localized GMT ('GMT-05:00',
-  'GMT' for UTC); 'short' ('-0500'), 'iso8601' ('-05:00') and
-  'iso8601_short' ('-05') are ISO 8601 forms. Babel split negative
-  offsets with floor division (-3:30 gave -04:30) and wrote the
-  localized form with a fixed '+00:00'. }
+{ GetTimezoneGmt: Width 'long' is CLDR's localized GMT ('GMT-05:00',
+  'GMT+00:00' for UTC), 'localized_short' its short form ('GMT-5');
+  'short' ('-0500'), 'iso8601' ('-05:00') and 'iso8601_short' ('-05') are
+  ISO 8601 forms. }
 function GmtText(OffsetSeconds: Integer; const Width: string; const Locale: TLocale;
   ReturnZ: Boolean; const Digits: TCodePoints = nil): string;
 var
@@ -939,8 +938,8 @@ end;
 
 { The ids a zone may be found under in CLDR's tables: the name given,
   its canonical IANA name, and the other names that are aliases of it
-  (CLDR keeps names and metazones under older ids such as Asia/Calcutta,
-  which Babel 2.18 no longer found from Asia/Kolkata). }
+  (CLDR keeps names and metazones under older ids such as Asia/Calcutta
+  for Asia/Kolkata). }
 function ZoneIds(const Zone: string): TStringArray;
 var
   Canon: string;
@@ -1009,7 +1008,7 @@ end;
 
 { A name of the zone's tables (width 'long' or 'short', variant
   'generic', 'standard' or 'daylight'); '' when absent or ∅∅∅ (CLDR's
-  "no value": Babel fell back to the long name). }
+  "no value"). }
 function NameIn(Info: TCLDRValue; const Width, Variant: string): string;
 begin
   Result := '';
@@ -1234,7 +1233,7 @@ begin
     Result := LocalizedGmt(0, Locale, False, nil);
 end;
 
-{ get_timezone_name; HasDate: a datetime was given (its DST and offset). }
+{ The zone's name; HasDate: a datetime was given (its DST and offset). }
 function TimezoneNameOf(const TimeZone: string; HasDate: Boolean; DSTOffset, UTCOffset: Integer;
   UTCSeconds: Int64; const Locale: TLocale; const Options: TTimeZoneNameOptions;
   const Digits: TCodePoints = nil): string;
@@ -1284,8 +1283,8 @@ var
   Info: TZoneInfo;
   Secs: Int64;
 begin
-  { an unknown zone raises, as in Babel; the offset of the localized GMT
-    fallback is the current one }
+  { an unknown zone raises EUnknownTimeZoneError; the offset of the
+    localized GMT fallback is the current one }
   Secs := UnixSeconds(LocalTimeToUniversal(Now));
   Info := NameInfoAt(TimeZone, Secs);
   Result := TimezoneNameOf(TimeZone, False, Info.DSTOffset, Info.UTCOffset, Secs, Locale, Options);
@@ -1300,7 +1299,7 @@ begin
   Result := TimezoneNameOf(TimeZone, True, Info.DSTOffset, Info.UTCOffset, UnixSeconds(UTC), Locale, Options);
 end;
 
-{ ---- periods of the day (get_period_id) ---- }
+{ ---- periods of the day ---- }
 
 function PeriodIdAt(SecondsPastMidnight: Integer; const Locale: TLocale; const RuleType: string;
   UseAt: Boolean = True): string;
@@ -1373,7 +1372,7 @@ begin
   Result := PeriodIdAt(V.H * 3600 + V.N * 60 + V.S, Locale, RuleType);
 end;
 
-{ ---- fields (Babel's DateTimeFormat) ---- }
+{ ---- fields ---- }
 
 procedure NeedDate(const V: TValue; F: Char);
 begin
@@ -1501,9 +1500,8 @@ end;
 
 { The name of a day period in the format context: the width asked for,
   else the abbreviated one, which CLDR's root aliases the narrow and wide
-  names to ('nachm.' for BBBBB in de, 'po południu' for BBBB in pl;
-  Babel loses those aliases and tried wide, then narrow). '' when
-  absent. }
+  names to ('nachm.' for BBBBB in de, 'po południu' for BBBB in pl).
+  '' when absent. }
 function PeriodName(const Locale: TLocale; const Width, Period: string): string;
 var
   Names: TCLDRValue;
@@ -1522,8 +1520,7 @@ end;
   and the locale has it; midnight is not used (ICU suppresses it: it
   could be the start or the end of the day); B is otherwise the day
   period of the time. A missing name falls back to the day period, then
-  to AM/PM. (Babel used noon and midnight at the exact second, the day
-  periods for b too, and the stand-alone names for b.) }
+  to AM/PM. }
 function FormatPeriodField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
 var
   Width, AmPm: string;
@@ -1634,8 +1631,8 @@ begin
     's': begin NeedTime(V, F); Result := Pad(V.S, Num); end;
     'S':
       begin
-        { the first Num digits of the fraction, truncated (CLDR; Babel
-          rounded through a float: 290 ms gave '28' for SS) }
+        { the first Num digits of the fraction, truncated (CLDR: 290 ms
+          is '29' for SS) }
         NeedTime(V, F);
         Result := Copy(Pad(V.Micro, 6) + StringOfChar('0', Max(0, Num - 6)), 1, Num);
       end;
@@ -1690,8 +1687,8 @@ begin
   Result := ApplyPattern(ParseDatePattern(Fmt), D, Locale);
 end;
 
-{ format_time of an aware datetime value: a time with the value's date as
-  reference }
+{ FormatTime of a datetime value in a zone: a time with the value's date
+  as reference }
 function FormatTimeValue(const V: TValue; const Locale: TLocale; const Format: string;
   RefY, RefM, RefD: Integer): string;
 var
@@ -1731,8 +1728,8 @@ function FormatTime(UTC: TDateTime; const Locale: TLocale; const Options: TDateT
 var
   V: TValue;
 begin
-  { the zone fields use the local date of the time (Babel used the date
-    before conversion: near midnight, another day's offset or name) }
+  { the zone fields use the local date of the time (near midnight the
+    UTC date can have another offset or name) }
   V := DateTimeValue(UTC, Options.TimeZone);
   V.Digits := SystemDigits(Locale, Options.NumberingSystem);
   Result := FormatTimeValue(V, Locale, Options.Format, V.Y, V.M, V.D);
@@ -1986,8 +1983,7 @@ end;
   (adjustFieldTypes): 'MMM d, y' for yMMMd gives 'MMMM d, y' for yMMMMd.
   Hours, minutes and seconds keep their length; a field keeps it too when
   the matched skeleton already has the requested length, or when one of
-  the pattern and the skeleton has it as a number and the other as text.
-  Babel used the matched pattern as it was ('Oct 13, 2026' for yMMMMd). }
+  the pattern and the skeleton has it as a number and the other as text. }
 function AdjustFieldLengths(const Pattern, Requested, Matched: string): TDateTimePattern;
 var
   Req, Mat: string;
@@ -2026,8 +2022,8 @@ begin
     Tokens[I].Field := C;
     Tokens[I].Count := AdjLen;
   end;
-  { the tokens, not a pattern written back: UntokenizeDatePattern (as
-    Babel's) loses quotes between adjacent quoted texts }
+  { the tokens, not a pattern written back: UntokenizeDatePattern loses
+    quotes between adjacent quoted texts }
   Result.Tokens := Tokens;
 end;
 
@@ -2144,7 +2140,7 @@ begin
     begin
       if (Units[I] = Options.Granularity) and (Value > 0) then
         Value := Max(1, Value);
-      IValue := Round(Value);     { Python's round(): half to even }
+      IValue := Round(Value);     { half to even }
       PluralForm := Locale.PluralForm.Evaluate(IValue);
       Candidates := nil;
       if Options.AddDirection then
@@ -2152,9 +2148,8 @@ begin
         if Seconds >= 0 then Direction := 'future' else Direction := 'past';
         { the field of the width, then the ones CLDR aliases it to
           ('second-narrow' to 'second-short' to 'second'), for each
-          direction (de 'month-short' has only the past): Babel used the
-          width's field only when it was not empty, and the wide one
-          otherwise ('hace 3 segundos' for the narrow es) }
+          direction (de 'month-short' has only the past; the narrow es
+          'second' is 'hace 3 s') }
         Field := Units[I] + '-' + Fmt;
         while Field <> '' do
         begin
@@ -2199,7 +2194,7 @@ end;
 { ---- intervals ---- }
 
 { What an interval compares for a field: whether the two ends differ in
-  it (Babel handled y M d H h m a only, and failed on B). }
+  it. }
 function Extract(const V: TValue; F: Char; const Locale: TLocale): string;
 begin
   case F of
@@ -2350,8 +2345,8 @@ begin
   Result := StrToInt64(Numbers[I]);
 end;
 
-{ The order (0, 1, 2) of three positions, as Python's sorted() of
-  (position, name) pairs. }
+{ The order (0, 1, 2) of three positions, sorted by position, then by
+  name. }
 procedure OrderOf(const P: array of Double; out Order: array of Integer);
 var
   I, J: Integer;

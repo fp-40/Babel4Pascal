@@ -11,12 +11,11 @@
   always present.
 
   The data of a locale is a tree of TCLDRValue: maps, lists, strings and
-  numbers, with the same keys and values as the dicts of Python Babel's
-  babel.localedata.load (number and date patterns are strings; plural
-  rules are lists of [category, condition]). LoadLocaleData merges the
-  locale's own data into a copy of its parent's (as Babel's load and
-  merge do) and resolves aliases, so the result holds everything the
-  locale inherits.
+  numbers, with the keys of tools/cldrgen/importer.py (number and date
+  patterns are strings; plural rules are lists of [category,
+  condition]). LoadLocaleData merges the locale's own data into a copy of
+  its parent's, map by map, and resolves aliases, so the result holds
+  everything the locale inherits.
 
   Ownership: every TCLDRValue belongs to this unit and lives until the
   program ends; callers never free one.
@@ -87,13 +86,12 @@ type
 procedure RegisterLocaleData(const Name, Parent: string; Data: PByte; Len: SizeInt);
 procedure RegisterGlobalData(Data: PByte; Len: SizeInt);
 
-{ The version of the CLDR release the linked data comes from, as Babel's
-  get_cldr_version ('47'). Raises ELocaleDataError when no global data is
+{ The version of the CLDR release the linked data comes from ('47'). Raises ELocaleDataError when no global data is
   linked. }
 function GetCLDRVersion: string;
 
 { True when the data of the locale is linked into the program. Exact match
-  first; else a case-insensitive match (as Babel's exists). }
+  first; else a case-insensitive match. }
 function LocaleDataExists(const Name: string): Boolean;
 { The registered identifier that equals Name ignoring case; '' if none. }
 function NormalizeLocale(const Name: string): string;
@@ -518,8 +516,7 @@ begin
     Corrupt(D, 'top-level value is not a map');
 end;
 
-{ ---- merge and alias resolution (Babel's localedata.merge, Alias.resolve
-  and LocaleDataDict) ---- }
+{ ---- merge and alias resolution ---- }
 
 function CopyMap(M: TCLDRValue): TCLDRValue;
 begin
@@ -562,13 +559,13 @@ end;
 
 function ResolveShallow(V, Base: TCLDRValue): TCLDRValue; forward;
 
-{ Babel's merge(dict1, dict2) on a fresh copy of dict1: None values of
-  Over are skipped; a map merges into the map below it (copied); a map
+{ Over merged into a fresh copy of Target: None values of Over are
+  skipped; a map merges into the map below it (copied); a map
   over an alias makes an alias merge; anything else replaces.
 
-  With Base <> nil the merge goes through the resolved view of the data
-  (Babel merging into a LocaleDataDict): a value below an incoming map is
-  read resolved, so it is never an alias. }
+  With Base <> nil the merge goes through the resolved view of the data:
+  a value below an incoming map is read resolved, so it is never an
+  alias. }
 procedure MergeInto(Target, Over: TCLDRValue; Base: TCLDRValue = nil);
 var
   I: Integer;
@@ -616,10 +613,8 @@ begin
   end;
 end;
 
-{ Alias resolution, as reading through Babel's LocaleDataDict does it.
-  LocaleDataDict replaces each value it reads by its resolved form in
-  place, so by the time an alias is followed, every container on its path
-  has been read: the path is followed through resolved values. Resolving
+{ Alias resolution. An alias's path is followed through resolved values:
+  every container on the path is read in its resolved form. Resolving
   one level at a time (ResolveShallow) keeps an alias inside a map from
   requiring the whole map to be resolved first. }
 
@@ -775,9 +770,9 @@ begin
 end;
 
 { The locale's data merged into a copy of its parent's merged data, with
-  aliases still unresolved: what Babel's load returns in a fresh process
-  (Babel resolves aliases only when values are read, so a parent's
-  aliases reach the child unresolved). Called with Lock held. }
+  aliases still unresolved (a parent's aliases reach the child
+  unresolved, and are resolved against the child's data). Called with
+  Lock held. }
 function BuildRaw(E: PLocaleEntry): TCLDRValue;
 var
   ParentEntry: PLocaleEntry;

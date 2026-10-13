@@ -2,8 +2,8 @@
   tests/core/reference.jsonl: 66 245 cases (identifiers, Locale.parse,
   negotiation, names and properties of every locale, plural rules and
   operands, Decimal parsing, float-to-decimal conversion of 30 000
-  doubles, decimal arithmetic), recorded from Python Babel 2.18.0 and
-  Python's decimal module run on the same data.
+  doubles, decimal arithmetic with the results of Python's decimal
+  module).
 
   Usage: test_core VECTORS.jsonl
   Prints each failing case (up to 40) and a count per operation; exit

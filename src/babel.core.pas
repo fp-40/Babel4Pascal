@@ -1,10 +1,10 @@
-{ babel.core - locales and their data, as Python Babel's babel.core.
+{ babel.core - locales and their data.
 
   A locale identifier names a language and optionally a script, a
   territory, a variant and a modifier: 'es_PE', 'zh_Hant_TW',
   'ca_ES_VALENCIA', 'de_DE@euro'. TLocale holds those parts and the
-  locale's CLDR data (babel.localedata), and gives the data the same
-  names Babel's Locale does (Languages, Territories, Months, ...).
+  locale's CLDR data (babel.localedata), with accessors for its parts
+  (Languages, Territories, Months, ...).
 
   TLocale is a record: it is copied like a string and needs no freeing.
   A string converts to a TLocale implicitly (TLocale.Parse), so the
@@ -13,15 +13,13 @@
 
   A locale exists when its data unit is linked into the program
   (babel.cldr_es_PE for es_PE; babel.cldr_all for every generated
-  locale). TLocale.Parse finds the closest linked locale as Babel does:
-  the identifier as given, then with aliases replaced and likely subtags
+  locale). TLocale.Parse finds the closest linked locale: the identifier
+  as given, then with aliases replaced and likely subtags
   added ('zh_TW' is zh_Hant_TW; 'und_AT' is de_AT).
 
-  Where Babel returns None for a missing name, the functions here return
-  ''. Differences from Babel: identifiers are parsed as ASCII (Python's
-  isalpha also accepts other Unicode letters); a locale made with
-  TLocale.Create in a case other than its data's ('ES') loads that data,
-  where Babel fails when it opens the file.
+  A missing name is ''. Identifiers are parsed as ASCII. A locale made
+  with TLocale.Create in a case other than its data's ('ES') loads that
+  data.
 
   Threading: everything here only reads shared data; any thread may call
   it. DefaultLocale reads environment variables. }
@@ -66,15 +64,16 @@ type
     class function Create(const Language: string; const Territory: string = '';
       const Script: string = ''; const Variant: string = '';
       const Modifier: string = ''): TLocale; static;
-    { Locale.parse. Raises EBabelValueError for a malformed or empty
-      identifier and EUnknownLocaleError when no linked locale matches. }
+    { The locale of an identifier. Raises EBabelValueError for a malformed
+      or empty identifier and EUnknownLocaleError when no linked locale matches. }
     class function Parse(const Identifier: string; const Sep: string = '_';
       ResolveLikelySubtags: Boolean = True): TLocale; static;
-    { Locale.default: the locale named by the environment (DefaultLocale).
+    { The locale named by the environment (DefaultLocale).
       Raises EBabelTypeError when the environment names none. }
     class function Default(const Category: string = ''): TLocale; overload; static;
     class function Default(const Category: string; const Aliases: TLocaleAliases): TLocale; overload; static;
-    { Locale.negotiate: False when nothing matches (Babel returns None). }
+    { The best match of Preferred in Available (NegotiateLocale); False
+      when nothing matches. }
     class function Negotiate(const Preferred, Available: array of string;
       out Locale: TLocale; const Sep: string = '_'): Boolean; overload; static;
     class function Negotiate(const Preferred, Available: array of string;
@@ -88,11 +87,11 @@ type
     property Script: string read FScript;
     property Variant: string read FVariant;
     property Modifier: string read FModifier;
-    { The identifier: 'zh_Hant_TW', 'de_DE@euro' (str(locale)). }
+    { The identifier: 'zh_Hant_TW', 'de_DE@euro'. }
     function ToString: string;
-    { repr(locale): "Locale('de', territory='DE')". }
+    { A description of the parts: "Locale('de', territory='DE')". }
     function Repr: string;
-    { The locale's data, merged with what it inherits (Locale._data). }
+    { The locale's data, merged with what it inherits. }
     property Data: TCLDRValue read FData;
 
     { Names, in this locale or in InLocale. }
@@ -160,28 +159,30 @@ type
     function UnitDisplayNames: TCLDRValue;
   end;
 
-{ Babel's LOCALE_ALIASES: language-only identifiers browsers send, mapped
+{ Language-only identifiers browsers send, mapped
   to a full identifier ('en' -> 'en_US', 'no' -> 'nb_NO'). }
 function LocaleAliases: TLocaleAliases;
 
-{ parse_locale. Raises EBabelValueError for a malformed identifier. }
+{ The parts of an identifier. Raises EBabelValueError for a malformed
+  identifier. }
 function ParseLocale(const Identifier: string; const Sep: string = '_'): TLocaleParts;
-{ get_locale_identifier: the parts joined (language, script, territory,
+{ The parts joined (language, script, territory,
   variant), then '@modifier'. }
 function GetLocaleIdentifier(const Parts: TLocaleParts; const Sep: string = '_'): string;
-{ default_locale: the first of the variables Category (when given),
+{ The first of the variables Category (when given),
   LANGUAGE, LC_ALL, LC_CTYPE and LANG that names a locale; '' when none
   does. 'C' and 'POSIX' mean en_US_POSIX; Aliases (default LocaleAliases;
   pass an empty array for none) map a whole value. }
 function DefaultLocale(const Category: string = ''): string; overload;
 function DefaultLocale(const Categories: array of string; const Aliases: TLocaleAliases): string; overload;
-{ negotiate_locale: the first preferred identifier found in Available
+{ The first preferred identifier found in Available
   (ignoring case), or its alias, or its language alone; '' when none. }
 function NegotiateLocale(const Preferred, Available: array of string;
   const Sep: string = '_'): string; overload;
 function NegotiateLocale(const Preferred, Available: array of string;
   const Aliases: TLocaleAliases; const Sep: string = '_'): string; overload;
-{ get_cldr_version and get_global, from babel.localedata. }
+{ The CLDR version of the data and a value of the global data, from
+  babel.localedata. }
 function GetCLDRVersion: string;
 function GetGlobal(const Key: string): TCLDRValue;
 
@@ -351,7 +352,7 @@ begin
       Inc(First);
     end;
   end;
-  { Babel tests the first remaining part but takes the last one. }
+  { the variant: tested on the first remaining part, taken from the last }
   if (First <= Last) and (
        ((Length(Parts[First]) = 4) and (Parts[First][1] in ['0'..'9'])) or
        ((Length(Parts[First]) >= 5) and (Parts[First][1] in ['A'..'Z', 'a'..'z']))) then
@@ -531,7 +532,7 @@ begin
   end;
 end;
 
-{ _try_load_reducing: the parts, then language and territory alone. }
+{ The locale of the parts, else of the language and territory alone. }
 function TryCreateReducing(const P: TLocaleParts; out Locale: TLocale): Boolean;
 begin
   Result := TryCreate(P.Language, P.Territory, P.Script, P.Variant, P.Modifier, Locale) or

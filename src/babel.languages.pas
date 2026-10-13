@@ -1,5 +1,5 @@
 { babel.languages - the languages of a territory, from CLDR's
-  territoryInfo, as Python Babel's babel.languages.
+  territoryInfo.
 
   GetOfficialLanguages('CH') gives ['de', 'fr', 'it'];
   GetTerritoryLanguageInfo('CH') gives the share of the population that
@@ -69,7 +69,7 @@ var
 
   function Before(const A, B: TTerritoryLanguage): Boolean;
   begin
-    { Python's sort(reverse=True) of (percent, language) pairs }
+    { by population share, then language code, both descending }
     if A.PopulationPercent <> B.PopulationPercent then
       Result := A.PopulationPercent > B.PopulationPercent
     else

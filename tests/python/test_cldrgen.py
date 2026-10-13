@@ -29,8 +29,8 @@ class TestEncode(unittest.TestCase):
 
 
 class TestIntervalSplit(unittest.TestCase):
-    # The examples of Babel's dates.split_interval_pattern docstring.
-    def test_babel_examples(self):
+    # Interval patterns split into their two halves.
+    def test_split_interval_examples(self):
         f = importer.split_interval_pattern
         self.assertEqual(f('E d.M. – E d.M.'), ['E d.M. – ', 'E d.M.'])
         self.assertEqual(f("Y 'text' Y 'more text'"), ["Y 'text '", "Y 'more text'"])

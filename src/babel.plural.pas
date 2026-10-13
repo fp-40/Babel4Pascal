@@ -1,4 +1,4 @@
-{ babel.plural - CLDR plural rules, as Python Babel's babel.plural.
+{ babel.plural - CLDR plural rules.
 
   A plural rule maps a number to a plural category (zero, one, two, few,
   many, other): English has "1 file" (one) and "2 files" (other); Russian
@@ -9,17 +9,18 @@
   (TLocale.OrdinalForm, "1st, 2nd, 3rd").
 
   TPluralRule parses the conditions once and evaluates numbers against
-  them, with Babel's semantics:
+  them:
   - the conditions are tried in alphabetical order of the category, and
     'other' is the answer when none holds;
   - the operands come from ExtractOperands: an Int64 is an integer; a
     Double is its shortest decimal (TDecimal.FromDouble), an integer when
     it is integral; a TDecimal keeps its digits, so '1.0' and '1' differ
     (v = 1 and v = 0);
-  - the operands c and e are always 0 (Babel does not support them).
+  - the operands c and e are always 0 (compact exponents are not
+    supported).
 
-  The textual forms are Babel's: Rules (its PluralRule.rules), ToGettext
-  and ToJavaScript. Babel's to_python (Python source) has no equivalent.
+  Textual forms: Rules (the conditions in the old syntax), ToGettext and
+  ToJavaScript.
 
   Threading: TPluralRule is a value; evaluating it changes nothing. }
 unit babel.plural;
@@ -33,7 +34,7 @@ uses
   SysUtils, babel.errors, babel.decimal;
 
 type
-  EPluralRuleError = class(EBabelError);   { Babel's RuleError }
+  EPluralRuleError = class(EBabelError);   { a malformed rule }
 
   { The operands of a number for plural rules (UTS #35): N the absolute
     value; I its integer digits; V and W the number of visible fraction
@@ -75,31 +76,31 @@ type
     function CompileUnicode(Node: Integer): string;
     function CompileGettext(Node: Integer; JavaScript: Boolean): string;
   public
-    { PluralRule(rules): Items as (category, condition) pairs, in any
+    { A rule from Items, (category, condition) pairs in any
       order. Raises EBabelValueError for an unknown or repeated category
       and EPluralRuleError for a malformed condition. A condition that is
       only samples ('@integer ...') adds no rule. }
     class function Create(const Items: array of TPluralRuleItem): TPluralRule; static;
     { The same, from pairs given flat: ['one', 'n = 1', 'few', '...']. }
     class function CreatePairs(const Pairs: array of string): TPluralRule; static;
-    { The rule that always answers 'other' (Babel's PluralRule of an empty
-      dict). }
+    { The rule that always answers 'other' (no conditions). }
     class function Empty: TPluralRule; static;
 
-    { The category of the number (calling the PluralRule in Babel). }
+    { The category of the number. }
     function Evaluate(N: Int64): string; overload;
     function Evaluate(N: Double): string; overload;
     function Evaluate(const N: TDecimal): string; overload;
     function EvaluateOperands(const Ops: TPluralOperands): string;
 
-    { The conditions, rewritten as Babel's PluralRule.rules does (old
-      syntax: 'n is 1', 'n mod 10 in 2..4'), in evaluation order. }
+    { The conditions rewritten in the old syntax ('n is 1', 'n mod 10 in
+      2..4'), in evaluation order. }
     function Rules: TPluralRuleItems;
-    { The categories that have a condition, sorted (PluralRule.tags). }
+    { The categories that have a condition, sorted. }
     function Tags: TStringArray;
-    { Babel's to_gettext: 'nplurals=2; plural=((n == 1) ? 0 : 1);'. }
+    { The gettext Plural-Forms expression:
+      'nplurals=2; plural=((n == 1) ? 0 : 1);'. }
     function ToGettext: string;
-    (* Babel's to_javascript: "(function(n) { return ... 'other'; })". *)
+    (* A JavaScript function: "(function(n) { return ... 'other'; })". *)
     function ToJavaScript: string;
   end;
 
@@ -110,7 +111,7 @@ function ExtractOperands(N: Int64): TPluralOperands; overload;
 function ExtractOperands(N: Double): TPluralOperands; overload;
 function ExtractOperands(const N: TDecimal): TPluralOperands; overload;
 
-{ Babel's in_range_list, within_range_list and cldr_modulo. }
+{ The 'in' and 'within' tests of a condition, and its modulo. }
 function InRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
 function WithinRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
 function CldrModulo(const A: TDecimal; B: Int64): TDecimal;
@@ -130,9 +131,9 @@ begin
   Result := Default(TPluralOperands);
   Result.N := N.Abs;
   Result.I := Result.N.Truncate;
-  { Babel: fraction_digits = digits[exp:] if exp < 0: the last -exp
-    coefficient digits, or all of them when there are fewer (so 0.05,
-    whose coefficient is 5, has v = 1). }
+  { the fraction digits: the last -exp coefficient digits, or all of
+    them when there are fewer (so 0.05, whose coefficient is 5, has
+    v = 1) }
   Trailing := '';
   if Result.N.Exponent < 0 then
   begin
@@ -204,13 +205,13 @@ function CldrModulo(const A: TDecimal; B: Int64): TDecimal;
 begin
   if B = 0 then
     raise EBabelValueError.Create('modulo by zero');
-  { Python: the remainder keeps the sign of the dividend. }
+  { the remainder keeps the sign of the dividend }
   Result := A.Abs.ModInt(System.Abs(B));
   if A.Negative then
     Result := TDecimal.Make(True, Result.Digits, Result.Exponent);
 end;
 
-{ ---- tokenizer and parser (Babel's tokenize_rule and _Parser) ---- }
+{ ---- tokenizer and parser ---- }
 
 type
   TTokKind = (tkWord, tkValue, tkSymbol, tkEllipsis);
@@ -243,8 +244,8 @@ begin
 end;
 
 const
-  { Babel's word alternatives, in the order the regular expression tries
-    them: and|or|is|(?:with)?in|not|mod|[nivwftce]. }
+  { the words, in the order they are tried: and, or, is, within, in,
+    not, mod and the operands }
   Words: array[0..14] of string = ('and', 'or', 'is', 'within', 'in', 'not', 'mod',
     'n', 'i', 'v', 'w', 'f', 't', 'c', 'e');
   Ellipsis = #$E2#$80#$A6;   { U+2026 in UTF-8 }
@@ -469,7 +470,7 @@ var
 begin
   if not Peek(tkWord) or (Length(Toks[Pos].Text) <> 1) then
   begin
-    { Babel: skip_token(word) then test it is a variable. }
+    { the word is consumed, then found not to be a variable }
     if Peek(tkWord) then
       Inc(Pos);
     raise EPluralRuleError.Create('Expected identifier variable');
@@ -680,7 +681,7 @@ begin
   end;
 end;
 
-{ Babel's _UnicodeCompiler. }
+{ A condition in the old syntax ('n is 1'). }
 function TPluralRule.CompileUnicode(Node: Integer): string;
 const
   Method: array[Boolean] of string = ('in', 'within');
@@ -702,7 +703,8 @@ begin
     end;
 end;
 
-{ Babel's _GettextCompiler and, with JavaScript, _JavaScriptCompiler. }
+{ A condition as a C expression for gettext or, with JavaScript, as a
+  JavaScript one. }
 function TPluralRule.CompileGettext(Node: Integer; JavaScript: Boolean): string;
 var
   E: string;
@@ -774,7 +776,7 @@ var
   end;
 
 begin
-  { used_tags: the tags and 'other', indexed in the order of PluralTags }
+  { the tags used and 'other', indexed in the order of PluralTags }
   Used := nil;
   for I := 0 to High(PluralTags) do
     if PluralTags[I] = 'other' then

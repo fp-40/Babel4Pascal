@@ -1,14 +1,13 @@
 { babel.errors - the exception classes shared by the units of Babel4Pascal.
 
-  They mirror the Python exceptions Babel raises, so that a caller can tell
-  the same failures apart: EBabelValueError where Babel raises ValueError
-  (a malformed identifier or number), EBabelTypeError for TypeError,
-  EBabelKeyError for KeyError (data that the locale does not have),
-  EBabelOverflowError for OverflowError, EBabelIndexError for IndexError,
-  EBabelDecimalError for the
-  exceptions of Python's decimal module. Units
-  add their own subclasses (EUnknownLocaleError in babel.core,
-  EPluralRuleError in babel.plural). }
+  EBabelError is the base class. Its subclasses tell the failures apart:
+  EBabelValueError for a malformed argument (an identifier, a number, a
+  pattern), EBabelTypeError for an argument of the wrong kind or a missing
+  one, EBabelKeyError for data the locale does not have, EBabelOverflowError
+  for a value out of range, EBabelIndexError for an index out of range,
+  EBabelNotImplementedError for an unsupported case, EBabelDecimalError for
+  a failed decimal operation. Units add their own subclasses
+  (EUnknownLocaleError in babel.core, EPluralRuleError in babel.plural). }
 unit babel.errors;
 
 {$mode objfpc}{$H+}
@@ -26,9 +25,8 @@ type
   EBabelOverflowError = class(EBabelError);
   EBabelIndexError = class(EBabelError);
   EBabelNotImplementedError = class(EBabelError);
-  { Python's decimal.DecimalException (InvalidOperation, DivisionByZero,
-    Overflow): the operations Babel does with Decimal fail with it, as
-    quantizing a number with more than 28 digits. }
+  { A failed decimal operation (invalid operation, division by zero,
+    overflow), as quantizing a number to more than 28 digits. }
   EBabelDecimalError = class(EBabelError);
 
 implementation

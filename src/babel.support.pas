@@ -1,15 +1,10 @@
-{ babel.support - Format, the formatting functions bound to a locale, a
-  time zone and a numbering system, as Python Babel's
-  babel.support.Format.
+{ babel.support - TFormat, the formatting functions bound to a locale, a
+  time zone and a numbering system.
 
   var F: TFormat;
   F := TFormat.Create('es_PE', 'America/Lima');
   F.Date(D) gives '13 oct 2026'; F.Currency(1234.5, 'PEN') gives
   'S/ 1,234.50'.
-
-  Not ported from babel.support: LazyProxy (deferred evaluation of Python
-  objects) and the gettext translation classes (NullTranslations,
-  Translations), out of Babel4Pascal's scope.
 
   Threading: a TFormat is a value; its methods only read shared data. }
 unit babel.support;
@@ -61,8 +56,8 @@ begin
   Result.NumberingSystem := ANumberingSystem;
 end;
 
-{ The dates take the numbering system too (Babel's dates have none: with
-  the default 'latn' the results are Babel's). }
+{ The dates take the numbering system too ('default': the locale's
+  digits). }
 function TFormat.Date(D: TDateTime; const Format: string): string;
 begin
   Result := FormatDate(D, Locale, DateTimeOptions.WithFormat(Format).WithNumberingSystem(NumberingSystem));

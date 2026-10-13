@@ -1,10 +1,10 @@
-{ babel.pystr - the parts of Python's str semantics that Babel's results
-  depend on, for UTF-8 strings: code points, str.isspace and str.strip,
-  the Unicode decimal digits that int() and Decimal() accept
-  ('١٢٣' is 123), and str.format with positional fields.
+{ babel.pystr - string helpers for UTF-8 text: code points, white space
+  (the semantics of str.isspace and str.strip), the Unicode decimal
+  digits that numbers may be written in ('١٢٣' is 123), and formatting
+  with positional fields ('{0} and {1}').
 
-  The tables are those of Unicode 16.0 (Python 3.14's): 76 runs of ten decimal digits (category Nd, each run
-  0..9 in order), the 29 characters for which str.isspace() is true, and
+  The tables are those of Unicode 16.0: 76 runs of ten decimal digits
+  (category Nd, each run 0..9 in order), the 29 characters for which str.isspace() is true, and
   the 243 ranges of the categories S and Z.
 
   Threading: no state. }
@@ -28,8 +28,8 @@ function IsPySpace(C: Cardinal): Boolean;
 function PyStrip(const S: string): string;
 { The value 0..9 of a Unicode decimal digit; -1 for anything else. }
 function DecimalDigitValue(C: Cardinal): Integer;
-{ S with every Unicode decimal digit replaced by its ASCII digit, as
-  Python normalizes the text it gives int() and Decimal(). }
+{ S with every Unicode decimal digit replaced by its ASCII digit (the
+  text numbers are parsed from). }
 function AsciiDigits(const S: string): string;
 { True for a character of the Unicode general categories S (symbols) and
   Z (separators): the complement of CLDR's currencySpacing currencyMatch
@@ -39,7 +39,7 @@ function IsSymbolOrSeparator(C: Cardinal): Boolean;
   in order), '{{' and '}}' for braces, in one pass (an argument's text is
   not read as a field). Raises EBabelIndexError for a field without an
   argument and EBabelValueError for a malformed or unsupported field
-  ('{0:>5}', a single '}'), as Python's ValueError. *)
+  ('{0:>5}', a single '}'). *)
 function PyFormat(const Fmt: string; const Args: array of string): string;
 
 implementation

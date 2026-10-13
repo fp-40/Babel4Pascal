@@ -1,5 +1,4 @@
-{ babel.units - measurement units ('12 kilometers', '3 km/h'), as Python
-  Babel's babel.units.
+{ babel.units - measurement units ('12 kilometers', '3 km/h').
 
   FormatUnit(12, 'length-kilometer', 'en') gives '12 kilometers';
   FormatUnit(12, 'kilometer', 'es', UnitOptions.WithLength('short'))
@@ -8,16 +7,15 @@
 
   A unit is CLDR's id with its category ('length-kilometer') or the end of
   one ('kilometer'; the shortest id that ends with it is taken). Lengths:
-  'long' (default), 'short', 'narrow'. Babel's preformatted values (a str
-  given as the value) are FormatUnitText and FormatCompoundUnitText here,
-  as TDecimal converts from strings.
+  'long' (default), 'short', 'narrow'. A value already formatted goes to
+  FormatUnitText and FormatCompoundUnitText (TDecimal converts from
+  strings, so an overload taking a string would be ambiguous).
 
-  The results follow CLDR as ICU applies it where Babel departs from it
-  (tests/icu compares them with ICU4C): the plural form of the number as
-  shown ('1.0' shows '1': '1 meter'), the 'other' pattern for a missing
-  plural form, and the short data for what the long and narrow lengths
-  lack (CLDR's root aliases; Babel wrote the unit's id, '0
-  length-kilometer').
+  The results follow CLDR as ICU applies it (tests/icu compares them with
+  ICU4C): the plural form of the number as shown ('1.0' shows '1': '1
+  meter'), the 'other' pattern for a missing plural form, and the short
+  data for what the long and narrow lengths lack (CLDR's root
+  aliases).
 
   Threading: everything here only reads shared data. }
 unit babel.units;
@@ -31,7 +29,7 @@ uses
   babel.errors, babel.decimal, babel.core;
 
 type
-  EUnknownUnitError = class(EBabelValueError);   { Babel's UnknownUnitError }
+  EUnknownUnitError = class(EBabelValueError);   { a unit the locale does not have }
 
   TUnitOptions = record
     Length: string;           { 'long' (default), 'short' or 'narrow' }
@@ -125,8 +123,7 @@ begin
   Patterns := UnitPatterns(Locale);
   if Patterns.Has(UnitId) then
     Exit(UnitId);
-  { the shortest id ending with UnitId, the first of equal length (a
-    stable sort by length, as Babel) }
+  { the shortest id ending with UnitId, the first of equal length }
   Result := '';
   Best := MaxInt;
   for I := 0 to Patterns.Count - 1 do
@@ -143,7 +140,7 @@ end;
 
 (* The lengths to look a unit's data up in: the one asked for, then
   short, which CLDR's root aliases long and narrow to (de's long g-force
-  is its short 'G'). Babel looked in the length asked for only. *)
+  is its short 'G'). *)
 function LengthChain(const Length: string): TStringArray;
 begin
   if (Length = 'long') or (Length = 'narrow') then
@@ -198,7 +195,7 @@ begin
   if QUnit = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
   { the plural form's pattern, else the 'other' one (CLDR's fallback for
-    a missing plural form; Babel wrote the unit's name instead) }
+    a missing plural form) }
   Pattern := UnitEntry(Locale, QUnit, Options.Length, PluralForm);
   if Pattern = '' then
     Pattern := UnitEntry(Locale, QUnit, Options.Length, 'other');
@@ -229,7 +226,7 @@ begin
   if FindUnitPattern(MeasurementUnit, Locale) = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
   { the plural form of the number as shown ('1.0' is shown '1': '1
-    meter'; Babel took the value's: '1 meters') }
+    meter') }
   Formatted := FormatDecimalShown(Value, Locale, NumberOptionsOf(Options), Shown);
   Result := ApplyUnit(Formatted, Locale.PluralForm.Evaluate(Shown), MeasurementUnit, Locale, Options);
 end;

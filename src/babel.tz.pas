@@ -4,8 +4,7 @@
   daylight saving time is in effect at an instant) come from the IANA tz
   database, which Linux installs as TZif files under /usr/share/zoneinfo
   (one file per zone: Europe/Madrid, America/Lima, ...). This unit reads
-  those files, as Python's zoneinfo module (which Babel uses) does, with
-  the same results:
+  those files as Python's zoneinfo module does, with the same results:
   - the transitions of the file (version 2+ data, 64-bit times);
   - after the last transition, the POSIX TZ rule of the file's footer
     ('CET-1CEST,M3.5.0,M10.5.0/3'), computed for the year of the instant;
@@ -31,7 +30,7 @@ uses
   SysUtils, Classes, babel.errors;
 
 type
-  { Babel's (Python's) LookupError for an unknown zone. }
+  { An unknown zone. }
   EUnknownTimeZoneError = class(EBabelError);
 
   { What applies at one instant. }
@@ -908,9 +907,8 @@ var
   L: TStringList;
   FileName: string;
 begin
-  { as babel.localtime on Unix: TZ; /etc/localtime's link target (after
-    /zoneinfo/); /etc/timezone; ZONE= in /etc/sysconfig/clock or
-    /etc/conf.d/clock; else UTC (where Babel raises LookupError) }
+  { TZ; /etc/localtime's link target (after /zoneinfo/); /etc/timezone;
+    ZONE= in /etc/sysconfig/clock or /etc/conf.d/clock; else UTC }
   TZ := GetEnvironmentVariable('TZ');
   if TZ <> '' then
   begin

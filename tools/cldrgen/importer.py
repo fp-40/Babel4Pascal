@@ -2,22 +2,15 @@
 extracted) into Python dicts: one dict of global data and one sparse dict
 per locale (its own data; the library merges the parent chain).
 
-The structure of the data (keys and values) and most import rules come
-from Python Babel's scripts/import_cldr.py, which the first versions of
-this module reproduced exactly. It departs from that script where Babel
-does not follow CLDR or ICU:
+Import rules, where CLDR leaves a choice, as ICU reads the data:
 
 - elements of draft status unconfirmed or provisional are left out (and
   the containers they leave empty), so their values are inherited;
 - the week data of a locale without a region is its likely region's (en:
   US), and a key a territory does not list has the world's value;
 - alternate skeletons and interval formats (alt="ascii", "variant") are
-  left out; Babel let them replace the standard ones;
-- the plain regionFormat is taken, not its daylight or standard variant;
-- data Babel does not import: numbering system digits and formats,
-  minimum grouping digits, currency spacing, GMT formats, atTime
-  date-time patterns, relative-time field aliases, time data, primary
-  zones, metazone reference zones, BCP 47 zone ids.
+  left out;
+- the plain regionFormat is taken, not its daylight or standard variant.
 
 Representation:
 
@@ -27,8 +20,8 @@ Representation:
 - an alias of root is a model.Alias (the path of keys it refers to);
 - tuples are lists, and sets do not occur.
 
-Babel's import_cldr.py is Copyright (C) 2007-2011 Edgewall Software,
-2013-2026 the Babel team, BSD-3-Clause; see tools/cldrgen/NOTICE.
+Parts of the generator derive from third-party code under the
+BSD-3-Clause license; see tools/cldrgen/NOTICE.
 """
 import collections
 import os
@@ -51,7 +44,7 @@ NAME_MAP = {
     'timeFormats': 'time_formats',
 }
 
-# Date pattern letters (Babel's dates.PATTERN_CHARS keys).
+# Date pattern letters.
 PATTERN_CHARS = set("GyYuQqMLwWdDFgEecabBhHKkmsSAzZOvVxX")
 
 
@@ -62,8 +55,8 @@ def _parse(path):
 def _drop_unconfirmed(tree):
     """Remove the elements of unconfirmed or provisional status (and what
     they contain), as ICU does: their values are inherited from the parent
-    locale instead (fr's short 'TU' for UTC is unconfirmed). Babel imports
-    them. Contributed and approved data stay."""
+    locale instead (fr's short 'TU' for UTC is unconfirmed). Contributed
+    and approved data stay."""
     parents = {child: parent for parent in tree.iter() for child in parent}
     for elem in [e for e in tree.iter() if e.attrib.get('draft') in ('unconfirmed', 'provisional')]:
         parent = parents.get(elem)
@@ -115,7 +108,7 @@ def _currency_sort_key(tup):
 
 def _extract_plural_rules(path):
     """{locale: [[category, condition], ...]}. The samples that follow the
-    condition ('@integer 1, 21, ...') are dropped, as Babel's parser does."""
+    condition ('@integer 1, 21, ...') are dropped."""
     rules_by_locale = {}
     for elem in _parse(path).findall('.//plurals/pluralRules'):
         rules = [[rule.attrib['count'], str(rule.text).split('@', 1)[0].strip()]
@@ -145,7 +138,8 @@ def _should_skip_elem(elem, type=None, dest=None):
 
 
 def _should_skip_number_elem(elem):
-    """Only the Latin numbering system is imported (as in Babel)."""
+    """Only the Latin numbering system is imported (the formats of other
+    systems are in numbering_system_formats)."""
     return elem.get('numberSystem', 'latn') != 'latn'
 
 
@@ -159,7 +153,7 @@ def _import_type_text(dest, elem, type=None, *, allow_variant_and_draft_fallback
     dest[type] = _text(elem)
 
 
-# --- date patterns (Babel's dates.tokenize_pattern and friends) -------------
+# --- date patterns ----------------------------------------------------------
 
 def tokenize_date_pattern(pattern):
     result = []
@@ -349,14 +343,14 @@ def parse_global(srcdir):
             int(fraction.attrib.get('cashRounding', rounding)),
         ]
 
-    # Not in Babel: the digits of each numeric numbering system, so that
-    # numbers can be written in the locale's digits.
+    # The digits of each numeric numbering system, so that numbers can be
+    # written in the locale's digits.
     digits = g.setdefault('numbering_system_digits', {})
     for ns in _parse(os.path.join(sup_dir, 'numberingSystems.xml')).findall('.//numberingSystem'):
         if ns.attrib.get('type') == 'numeric':
             digits[ns.attrib['id']] = ns.attrib['digits']
 
-    # Not in Babel: the primary zone of countries with several zones
+    # The primary zone of countries with several zones
     # (Europe/Madrid for ES: 'Spain Time'), the golden zone of each
     # metazone per territory (for partial location names), and the short
     # BCP 47 id of each zone (the V field: 'usnyc').
@@ -378,7 +372,7 @@ def parse_global(srcdir):
                 if iana:
                     bcp47.setdefault(iana, elem.attrib['name'])
 
-    # Not in Babel: the hour cycles of each region or locale (for the
+    # The hour cycles of each region or locale (for the
     # skeleton characters j, J and C).
     time_data = g.setdefault('time_data', {})
     for hours in sup.findall('.//timeData/hours'):
@@ -411,7 +405,8 @@ class LocaleImporter:
         regions = {}
         for elem in self.sup.findall('.//territoryContainment/group'):
             regions[elem.attrib['type']] = elem.attrib['contains'].split()
-        # The same (order-dependent) resolution as Babel's importer.
+        # The containers of each territory, groups in sorted order (the
+        # result depends on the order).
         self.territory_containment = {}
         for group, territory_list in sorted(regions.items()):
             for territory in territory_list:
@@ -457,8 +452,7 @@ class LocaleImporter:
         _parse_locale_display_names(data, tree, is_global='_' not in locale_id)
         _parse_list_patterns(data, tree)
         # The week of a locale without a region is its likely region's (en:
-        # US, Sunday), as CLDR specifies and ICU does; Babel used the
-        # world's (Monday).
+        # US, Sunday), as CLDR specifies and ICU does.
         week_territory, week_regions = territory, regions
         if territory == '001' and name != 'root':
             # by the full name first: zh_Hant is TW, zh is CN
@@ -558,8 +552,8 @@ def _parse_dates(data, tree, sup, regions, territory):
             if territory in territories or any(r in territories for r in regions):
                 week_data[key] = int(elem.attrib['count']) if convert is None \
                     else WEEKDAYS[elem.attrib['day']]
-        # A territory not listed has the world's value (CLDR); Babel left
-        # the key out, so fr_CA inherited fr's minimal days (4, not 1).
+        # A territory not listed has the world's value (CLDR): fr_CA's
+        # minimal days are 1, not fr's 4.
         if key not in week_data:
             for elem in supelem.findall(tag):
                 if not _should_skip_elem(elem) and '001' in elem.attrib['territories'].split():
@@ -574,8 +568,8 @@ def _parse_dates(data, tree, sup, regions, territory):
             ('fallbackRegionFormat', 'fallback_region',
              lambda s: s.replace('{0}', '%(0)s').replace('{1}', '%(1)s'))):
         for elem in tree.findall('.//timeZoneNames/' + tag):
-            # the plain regionFormat; Babel took the first one, which in
-            # fr_CA is the daylight variant ('{0} (heure avancée)')
+            # the plain regionFormat (in fr_CA the daylight variant
+            # '{0} (heure avancée)' comes first)
             if not _should_skip_elem(elem) and 'type' not in elem.attrib:
                 zone_formats[key] = convert(str(elem.text))
                 break
@@ -637,8 +631,8 @@ def _parse_calendar_periods(data, calendar):
 def _parse_calendar_formats(data, calendar, container_tag, length_tag, key, pattern_path):
     """date_formats and time_formats: {length: pattern}.
 
-    As in Babel, an alias element replaces the local variable only, so it
-    never reaches the data (root's formats have no alias)."""
+    An alias element replaces the local variable only, so it never reaches
+    the data (root's formats have no alias)."""
     formats = data.setdefault(key, {})
     for container in calendar.findall(container_tag):
         for elem in container:
@@ -652,10 +646,9 @@ def _parse_calendar_formats(data, calendar, container_tag, length_tag, key, patt
 
 
 def _parse_calendar_datetime_skeletons(data, calendar):
-    """datetime_formats and datetime_skeletons. Babel takes every
-    dateFormatItem, so an alternate (alt="ascii": 'h:mm a' for 'h:mm\u202fa'
-    in en; alt="variant") that follows the item replaces it; here
-    alternates are skipped, as ICU does."""
+    """datetime_formats and datetime_skeletons. Alternates (alt="ascii":
+    'h:mm a' for 'h:mm\u202fa' in en; alt="variant") are skipped, as ICU
+    does."""
     datetime_formats = data.setdefault('datetime_formats', {})
     datetime_skeletons = data.setdefault('datetime_skeletons', {})
     for container in calendar.findall('dateTimeFormats'):
@@ -709,8 +702,7 @@ def _parse_numbering_systems(data, tree):
     if node is not None:
         data['default_numbering_system'] = node.text
     numbering_systems = data.setdefault('numbering_systems', {})
-    # Babel tests the element's truth value (`find(...) or []`): an element
-    # with no children counts as absent.
+    # An element with no children counts as absent.
     node = tree.find('.//numbers/otherNumberingSystems')
     if node is not None and len(node):
         for system in node:
@@ -781,7 +773,7 @@ def _parse_currency_formats(data, tree):
 
 
 def _parse_number_extras(data, tree):
-    """Not in Babel: minimumGroupingDigits, and the currencySpacing of the
+    """minimumGroupingDigits, and the currencySpacing of the
     Latin numbering system (only root has one in CLDR 47)."""
     for elem in tree.findall('.//numbers/minimumGroupingDigits'):
         if elem.attrib.get('draft') in ('unconfirmed', 'provisional') or 'alt' in elem.attrib:
@@ -841,7 +833,7 @@ def _parse_number_extras(data, tree):
 
 
 def _parse_date_extras(data, tree):
-    """Not in Babel: hourFormat and gmtZeroFormat (localized GMT), and the
+    """hourFormat and gmtZeroFormat (localized GMT), and the
     atTime variant of the Gregorian date-time patterns."""
     gmt = {}
     for tag, key in (('hourFormat', 'hour'), ('gmtZeroFormat', 'gmt_zero')):
@@ -864,9 +856,8 @@ def _parse_date_extras(data, tree):
                     at_time[length.attrib.get('type')] = str(pattern)
         if at_time:
             data['datetime_formats_at_time'] = at_time
-    # Not in Babel: the aliases between relative-time fields
-    # ('second-narrow' is 'second-short' in root), which Babel imports as
-    # empty fields.
+    # The aliases between relative-time fields ('second-narrow' is
+    # 'second-short' in root); the aliased fields themselves are empty.
     aliases = {}
     for field in tree.findall('.//dates/fields/field'):
         alias = field.find('alias')

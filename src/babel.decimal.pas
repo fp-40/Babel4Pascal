@@ -4,22 +4,21 @@
   exponent (12.50 is 1250 x 10^-2: digits "1250", exponent -2), or one of
   the special values Infinity and NaN. The digits keep trailing zeros,
   which matter: they are the visible fraction digits of number formatting
-  and of the plural rules (1.50 has two). The representation is that of
-  Python's decimal.Decimal, which Babel uses; the arithmetic is exact,
-  with no precision limit (Python rounds to 28 digits).
+  and of the plural rules (1.50 has two). The arithmetic is exact, with
+  no precision limit.
 
   TDecimal is a value type (a record); nothing needs freeing.
 
   Ways in (also as implicit conversions, so a function that takes a
   TDecimal accepts 1234, 1234.5 or '1234.50'):
-  - from a string: the syntax of Python's Decimal(str): optional sign,
+  - from a string: optional sign,
     digits with an optional '.', an optional exponent ('1.5E+3'),
     'Infinity' or 'Inf', 'NaN', in any case, with whitespace around;
     decimal digits of any script are accepted ('١٢٣' is 123). An invalid
     string raises EBabelValueError.
   - from an Int64.
   - from a Double: the shortest decimal text that reads back as the same
-    Double (babel.pyfloatrepr.inc), as Python and ICU read a double: 2.675
+    Double (babel.pyfloatrepr.inc), as ICU reads a double: 2.675
     is 2.675, not its binary value 2.67499999999999982236...
     FromDoubleExact gives the binary value.
 
@@ -84,8 +83,9 @@ type
     { The value has no fraction. Finite only. }
     function IsIntegral: Boolean;
 
-    { As Python's str(Decimal): '12.50', '1E+3', '1E-7', '-0',
-      'Infinity', 'NaN'. }
+    { The value as text, in the notation of the General Decimal
+      Arithmetic specification (to-scientific-string): '12.50', '1E+3',
+      '1E-7', '-0', 'Infinity', 'NaN'. }
     function ToString: string;
     { The absolute value (a NaN keeps its sign). }
     function Abs: TDecimal;
@@ -129,8 +129,8 @@ type
     function TryToInt64(out V: Int64): Boolean;
   end;
 
-{ repr() of a Python float: the shortest text that reads back as X
-  ('0.1', '1e+16', '0.30000000000000004', 'inf', 'nan', '-0.0'). }
+{ The shortest text that reads back as X ('0.1', '1e+16',
+  '0.30000000000000004', 'inf', 'nan', '-0.0'). }
 function PyFloatRepr(X: Double): string;
 
 implementation
@@ -301,7 +301,7 @@ var
   R: string;
 begin
   R := PyFloatRepr(V);
-  { an integral double is an integer: Python writes 1.0, ICU 1 }
+  { an integral double is an integer, as in ICU: 1.0 is 1 }
   if (Length(R) > 2) and (Copy(R, Length(R) - 1, 2) = '.0') then
     SetLength(R, Length(R) - 2);
   Result := Parse(R);
@@ -424,7 +424,8 @@ begin
     dkInfinity: Exit(Sign + 'Infinity');
     dkNaN: Exit(Sign + 'NaN');
   end;
-  { Python's Decimal.__str__ (scientific notation rules). }
+  { to-scientific-string: plain notation unless the exponent is positive
+    or the adjusted exponent is below -6 }
   LeftDigits := FExponent + Length(FDigits);
   if (FExponent <= 0) and (LeftDigits > -6) then
     DotPlace := LeftDigits
@@ -930,7 +931,7 @@ begin
   { Precision + 1 digits of quotient, the last one made inexact (sticky)
     when there is a remainder, then rounded; an exact quotient keeps only
     the trailing zeros its operands' exponents call for (1500 / 1000 is
-    1.5). The same method as Python's decimal module. }
+    1.5), as the General Decimal Arithmetic specification divides. }
   Shift := Length(B.FDigits) - Length(FDigits) + Precision + 1;
   Exp := FExponent - B.FExponent - Shift;
   if Shift >= 0 then
@@ -1008,7 +1009,7 @@ begin
     dkInfinity: Exit(Sign + 'Infinity');
     dkNaN: Exit(Sign + 'NaN');
   end;
-  { Python rescales a zero with a positive exponent to 0E0 first. }
+  { a zero with a positive exponent is written as 0 }
   if (FDigits = '0') and (FExponent > 0) then
     Exit(Sign + '0');
   DotPlace := FExponent + Length(FDigits);

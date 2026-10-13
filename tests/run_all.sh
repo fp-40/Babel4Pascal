@@ -31,7 +31,7 @@
 #    cases (tests/languages/reference.jsonl, tests/format/reference.jsonl).
 #
 # The CLDR release (.cache/cldr) is downloaded once when absent. Python 3
-# runs the generator and the checkers; Python Babel is not used.
+# runs the generator and the checkers.
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"

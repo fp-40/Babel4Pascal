@@ -8,12 +8,8 @@
 build/bin/test_dates tests/dates/reference.jsonl
 ```
 
-The file started as a sample of the cases on which `babel.dates` matched
-Python Babel 2.18.0 exactly (commit d1e1263, 352 627 cases). Since then
-`babel.dates` departs from Babel on purpose where Babel is wrong or does
-not follow CLDR, so the file, not Babel, is the reference. After a
-deliberate change, update it from the library's own results and review
-the diff:
+After a deliberate change, update it from the library's own results and
+review the diff:
 
 ```sh
 build/bin/test_dates tests/dates/reference.jsonl --update /tmp/new.jsonl
@@ -21,9 +17,10 @@ mv /tmp/new.jsonl tests/dates/reference.jsonl
 git diff tests/dates/reference.jsonl
 ```
 
-## Where babel.dates departs from Babel
+## Behavior checked against ICU4C
 
-Checked against ICU4C (tests/icu/README.md):
+Where CLDR leaves the use of its data to the implementation, babel.dates
+does what ICU does (tests/icu/README.md):
 
 - localized GMT: the locale's hourFormat with its signs, 'GMT+0' and
   'GMT+00:00' for a zero offset (never gmtZeroFormat), two-digit hours in
@@ -48,6 +45,6 @@ Checked against ICU4C (tests/icu/README.md):
 - the atTime date-time patterns for every length that has one;
 - weeks: the likely region's first day and minimal days (en: Sunday);
 - relative times: CLDR's aliases between widths ('hace 3 s');
-- S truncates; format_time uses the local date; intervals compare any
+- S truncates; FormatTime uses the local date; intervals compare any
   field;
 - NumberingSystem option ('default': the locale's digits).

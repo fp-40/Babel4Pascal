@@ -66,7 +66,7 @@ begin
     P.Version := '0.1.0';
     P.Author := 'Juan-Pablo Scaletti';
     P.License := 'MIT';
-    P.Description := 'Locale data (CLDR) and localized formatting of numbers, dates and names, after Python Babel';
+    P.Description := 'Locale data (CLDR) and localized formatting of numbers, dates and names';
     P.OSes := [linux];
     P.CPUs := [x86_64, aarch64];
     P.Options.Add('-Mobjfpc');

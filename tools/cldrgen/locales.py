@@ -11,8 +11,7 @@ def _script_of(name):
 
 
 def parent_of(name, global_data):
-    """The locale whose data `name` inherits, as Babel's localedata.load
-    finds it: an explicit CLDR parentLocale; root for a 'lang_Script'
+    """The locale whose data `name` inherits: an explicit CLDR parentLocale; root for a 'lang_Script'
     locale whose script is not the language's likely script; else the
     identifier without its last subtag; root for a language alone."""
     if name == 'root':

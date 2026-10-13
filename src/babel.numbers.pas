@@ -1,12 +1,10 @@
 { babel.numbers - formatting and parsing of numbers, currencies and
-  percentages, after Python Babel's babel.numbers.
+  percentages.
 
   FormatDecimal(1234.5, 'es_PE') gives '1,234.5'; FormatCurrency(1234.5,
   'PEN', 'es_PE') gives 'S/ 1,234.50'.
 
-  The functions, their options and the pattern logic are Babel's, and the
-  results were checked to equal Babel's on 263 000 calls (commit 0535909).
-  Since then they follow CLDR (UTS #35) and ICU where Babel does not:
+  The results follow CLDR (UTS #35) as ICU applies it:
   - the signs of a pattern are the locale's: '-' is the minus sign ('−'
     in Swedish), '%' the percent sign ('٪؜' in Arabic), and so on, except
     inside quotes;
@@ -16,8 +14,7 @@
   - a plural form depends on the number as shown: FormatCurrency(1, 'USD',
     'en') with the 'name' format type gives '1.00 US dollars', as ICU;
   - NaN is the locale's nan symbol;
-  - the arithmetic is exact (Babel fails on numbers of more than 28
-    digits);
+  - the arithmetic is exact, for numbers of any number of digits;
   - minimumGroupingDigits: es writes 1234 and 12.345;
   - currencySpacing: a no-break space between a currency code or a
     symbol that ends in a letter and the digits ('PEN 1.00');
@@ -38,18 +35,18 @@
   Numbers are TDecimal (babel.decimal), which converts implicitly from an
   Int64, a Double (its shortest decimal: 2.675 is 2.675) and a string.
 
-  Options. The optional parameters of Babel's functions are fields of an
-  options record: NumberOptions, CurrencyOptions and CompactOptions return
-  Babel's defaults, and the With* methods return a changed copy:
+  Options. The optional parameters are fields of an options record:
+  NumberOptions, CurrencyOptions and CompactOptions return the defaults,
+  and the With* methods return a changed copy:
 
     FormatDecimal(X, 'en', NumberOptions.WithGroupSeparator(False));
     FormatCurrency(X, 'USD', 'en', CurrencyOptions.WithFormatType('accounting'));
 
-  A record that was not made by these functions has False and '' where
-  Babel's defaults are True and 'latn': always start from them.
+  A record that is not made by these functions has False and '' where
+  the defaults are True and 'latn': always start from them.
 
-  An empty Format means the locale's pattern (Babel's None); a currency
-  of '' is Babel's None.
+  An empty Format means the locale's pattern; a currency of '' means
+  none.
 
   Threading: everything here only reads shared data. }
 unit babel.numbers;
@@ -73,17 +70,17 @@ type
   EUnknownCurrencyFormatError = class(EBabelKeyError);
   ENumberFormatError = class(EBabelValueError)
   public
-    { Properly formatted numbers derived from the input (parse_decimal
-      with Strict). }
+    { Correctly formatted numbers derived from the input (ParseDecimal
+      with StrictMode). }
     Suggestions: TStringArray;
     constructor CreateWith(const Msg: string; const ASuggestions: TStringArray);
   end;
 
-  { format_decimal, format_percent and format_scientific options. }
+  { FormatDecimal, FormatPercent and FormatScientific options. }
   TNumberOptions = record
     Format: string;                 { '' = the locale's pattern }
     DecimalQuantization: Boolean;   { True }
-    GroupSeparator: Boolean;        { True (format_scientific has none) }
+    GroupSeparator: Boolean;        { True (FormatScientific has none) }
     NumberingSystem: string;        { 'latn'; 'default' = the locale's }
     function WithFormat(const Value: string): TNumberOptions;
     function WithDecimalQuantization(Value: Boolean): TNumberOptions;
@@ -91,7 +88,7 @@ type
     function WithNumberingSystem(const Value: string): TNumberOptions;
   end;
 
-  { format_currency options. }
+  { FormatCurrency options. }
   TCurrencyOptions = record
     Format: string;                 { '' = the locale's pattern }
     CurrencyDigits: Boolean;        { True: the currency's fraction digits }
@@ -107,7 +104,7 @@ type
     function WithNumberingSystem(const Value: string): TCurrencyOptions;
   end;
 
-  { format_compact_decimal and format_compact_currency options. }
+  { FormatCompactDecimal and FormatCompactCurrency options. }
   TCompactOptions = record
     FormatType: string;             { 'short' or 'long' (currency: 'short') }
     FractionDigits: Integer;        { 0 }
@@ -117,17 +114,17 @@ type
     function WithNumberingSystem(const Value: string): TCompactOptions;
   end;
 
-  { parse_number and parse_decimal options. }
+  { ParseNumber and ParseDecimal options. }
   TParseOptions = record
-    StrictMode: Boolean;            { Babel's strict (False; parse_decimal only);
+    StrictMode: Boolean;            { strict parsing (False; ParseDecimal only);
                                       Strict is a reserved word here }
     NumberingSystem: string;        { 'latn' }
     function WithStrict(Value: Boolean): TParseOptions;
     function WithNumberingSystem(const Value: string): TParseOptions;
   end;
 
-  { get_territory_currencies options. A date of 0 is Babel's None: the
-    start date defaults to today and the end date to the start date. }
+  { GetTerritoryCurrencies options. A date of 0 means none: the start
+    date defaults to today and the end date to the start date. }
   TTerritoryCurrencyOptions = record
     StartDate, EndDate: TDateTime;
     Tender: Boolean;                { True }
@@ -138,8 +135,8 @@ type
     function WithNonTender(Value: Boolean): TTerritoryCurrencyOptions;
   end;
 
-  { One currency of a territory (include_details=True); a date of 0 is
-    None. }
+  { One currency of a territory (GetTerritoryCurrencyDetails); a date of 0
+    means none. }
   TCurrencyPeriod = record
     Currency: string;
     FromDate, ToDate: TDateTime;
@@ -153,7 +150,7 @@ type
 
   { NumberPattern.apply options. }
   TApplyOptions = record
-    Currency: string;               { '' = None }
+    Currency: string;               { '' = none }
     CurrencyDigits: Boolean;        { True }
     DecimalQuantization: Boolean;   { True }
     GroupSeparator: Boolean;        { True }
@@ -161,14 +158,14 @@ type
     MinGrouping: Integer;           { 0: the locale's minimumGroupingDigits }
   end;
 
-  { A parsed number pattern (Babel's NumberPattern). }
+  { A parsed number pattern. }
   TNumberPattern = record
     Pattern: string;
     PosPrefix, NegPrefix, PosSuffix, NegSuffix: string;
     NumberPattern: string;           { the number part, without the exponent }
     Grouping: TIntPair;              { Min = primary, Max = secondary size }
     IntPrec, FracPrec: TIntPair;
-    HasExp: Boolean;                 { exp_prec is not None }
+    HasExp: Boolean;                 { the pattern has an exponent }
     ExpPrec: TIntPair;
     ExpPlus: Boolean;
     Scale: Integer;                  { 0, 2 (percent) or 3 (per mille) }
@@ -188,7 +185,7 @@ function ApplyOptions: TApplyOptions;
 
 { Currencies }
 { The ISO 4217 codes known to the locale, or (no locale) every currency
-  of the global data; sorted (Babel returns a set). }
+  of the global data; sorted. }
 function ListCurrencies: TStringArray; overload;
 function ListCurrencies(const Locale: TLocale): TStringArray; overload;
 { Raises EUnknownCurrencyError when the code is not listed. }
@@ -222,8 +219,8 @@ function GetExponentialSymbol(const Locale: TLocale; const NumberingSystem: stri
 function GetGroupSymbol(const Locale: TLocale; const NumberingSystem: string = 'latn'): string;
 function GetInfinitySymbol(const Locale: TLocale; const NumberingSystem: string = 'latn'): string;
 
-{ get_decimal_precision: the number of fraction digits of the normalized
-  number. get_decimal_quantum: 10 ** -Precision. }
+{ GetDecimalPrecision: the number of fraction digits of the normalized
+  number. GetDecimalQuantum: 10 ** -Precision. }
 function GetDecimalPrecision(const Number: TDecimal): Integer;
 function GetDecimalQuantum(Precision: Int64): TDecimal;
 
@@ -248,12 +245,12 @@ function FormatScientific(const Number: TDecimal; const Locale: TLocale): string
 function FormatScientific(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string; overload;
 
 { Parsing }
-{ parse_number: an integer written in the locale's format ('1,099' in
+{ ParseNumber: an integer written in the locale's format ('1,099' in
   en; the locale's minus and plus signs, digits of any script). Raises
   ENumberFormatError. Beyond Int64 raises EBabelOverflowError. }
 function ParseNumber(const S: string; const Locale: TLocale): Int64; overload;
 function ParseNumber(const S: string; const Locale: TLocale; const Options: TParseOptions): Int64; overload;
-{ parse_decimal: a decimal number written in the locale's format (as
+{ ParseDecimal: a decimal number written in the locale's format (as
   FormatDecimal writes it: the locale's separators, minus and plus
   signs, digits of any script). With StrictMode, a misplaced group symbol
   raises ENumberFormatError with suggestions. }
@@ -261,10 +258,10 @@ function ParseDecimal(const S: string; const Locale: TLocale): TDecimal; overloa
 function ParseDecimal(const S: string; const Locale: TLocale; const Options: TParseOptions): TDecimal; overload;
 
 { Patterns }
-{ parse_grouping: the primary and secondary group sizes of the integer
+{ ParseGrouping: the primary and secondary group sizes of the integer
   part of a pattern (1000, 1000 when it has no ','). }
 function ParseGrouping(const P: string): TIntPair;
-{ parse_pattern. Raises EBabelValueError for a pattern that mixes '@'
+{ The parsed pattern. Raises EBabelValueError for a pattern that mixes '@'
   with '.' and '0'. }
 function ParseNumberPattern(const Pattern: string): TNumberPattern;
 { The ten digits of a numbering system ('default': the locale's; nil for
@@ -275,7 +272,7 @@ function LocalizeDigits(const S: string; const Digits: TCodePoints): string;
 
 implementation
 
-{ ---- small helpers with Python's string semantics ---- }
+{ ---- small string helpers (code points) ---- }
 
 { s[-n:] (all of s when n = 0) }
 function PyTail(const S: string; N: Integer): string;
@@ -807,7 +804,7 @@ var
   C: TCodePoints;
   Width, G1, G2, I: Integer;
 begin
-  { Python counts characters: work on code points. }
+  { characters are code points }
   C := CodePoints(P);
   Width := Length(C);
   G1 := -1;
@@ -1488,9 +1485,9 @@ end;
   rounded to FractionDigits), and Format, the compact pattern ('' when
   no abbreviation applies: the number is then shown whole, rounded).
 
-  The pattern is chosen from CompactFormat as Babel does (the largest
-  magnitude not above the number, the plural form of the number shown).
-  As in ICU, the number is rounded in every case, and when rounding
+  The pattern is chosen from CompactFormat: the largest magnitude not
+  above the number, the plural form of the number shown. As in ICU, the
+  number is rounded in every case, and when rounding
   reaches the next magnitude, that magnitude is used (999999 is 1M, not
   1000K). }
 procedure GetCompactFormat(const Number: TDecimal; CompactFormat: TCLDRValue; const Locale: TLocale;
@@ -1575,7 +1572,7 @@ begin
     end;
     MagKey := Mags[Idx];
     { the zeros of the number of the positive pattern ('elfu 0;elfu -0'
-      has one; Babel counts the whole text) }
+      has one) }
     Pat := ParseNumberPattern(Others.Str(MagKey)).NumberPattern;
     Zeros := 0;
     for C in Pat do
@@ -1604,8 +1601,7 @@ begin
     end;
     Rounded := Rounded.Normalize;
     { the form for exactly 1 ('1': 'mille'), else the plural form of the
-      number shown, else 'other': the first that has this magnitude
-      (Babel goes from '1' straight to 'other': '1 millions') }
+      number shown, else 'other': the first that has this magnitude }
     PluralForm := Locale.PluralForm.Evaluate(Rounded.Abs);
     Format := '';
     if (Rounded.CompareInt(1) = 0) and CompactFormat.Has('1') and
@@ -2011,7 +2007,7 @@ end;
 
 function ParseDecimal(const S: string; const Locale: TLocale; const Options: TParseOptions): TDecimal;
 var
-  Group, Dec, T, Proper, ProperN, ProperAlt: string;
+  Group, Dec, T, Suggested, SuggestedN, SuggestedAlt: string;
   Alt: TDecimal;
   NO: TNumberOptions;
 begin
@@ -2026,22 +2022,22 @@ begin
   if Options.StrictMode and (Pos(Group, T) > 0) then
   begin
     NO := NumberOptions.WithDecimalQuantization(False).WithNumberingSystem(Options.NumberingSystem);
-    Proper := FormatDecimal(Result, Locale, NO);
+    Suggested := FormatDecimal(Result, Locale, NO);
     { compared with the signs written alike on both sides }
-    ProperN := NormalizeSigns(Proper, Locale, Options.NumberingSystem);
-    if (T <> ProperN) and (ProperN <> RemoveTrailingZerosAfterDecimal(T, Dec)) then
+    SuggestedN := NormalizeSigns(Suggested, Locale, Options.NumberingSystem);
+    if (T <> SuggestedN) and (SuggestedN <> RemoveTrailingZerosAfterDecimal(T, Dec)) then
     begin
       if not TDecimal.TryParse(StringReplace(StringReplace(T, Dec, '', [rfReplaceAll]), Group, '.',
         [rfReplaceAll]), Alt) then
         raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Proper) + '?', [Proper]);
-      ProperAlt := FormatDecimal(Alt, Locale, NO);
-      if ProperAlt = Proper then
+          'Did you mean ' + PyRepr(Suggested) + '?', [Suggested]);
+      SuggestedAlt := FormatDecimal(Alt, Locale, NO);
+      if SuggestedAlt = Suggested then
         raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Proper) + '?', [Proper])
+          'Did you mean ' + PyRepr(Suggested) + '?', [Suggested])
       else
         raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Proper) + '? Or maybe ' + PyRepr(ProperAlt) + '?', [Proper, ProperAlt]);
+          'Did you mean ' + PyRepr(Suggested) + '? Or maybe ' + PyRepr(SuggestedAlt) + '?', [Suggested, SuggestedAlt]);
     end;
   end;
 end;

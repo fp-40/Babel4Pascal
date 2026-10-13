@@ -1,7 +1,6 @@
 // Writes test vectors for babel.numbers from ICU, through Node's
-// Intl.NumberFormat: a second reference where babel.numbers follows CLDR
-// rather than Babel (localized signs and digits, plural of the number
-// shown). Node's ICU has its own CLDR version (node -p process.versions),
+// Intl.NumberFormat, a second reference besides tests/numbers/reference.jsonl
+// (localized signs and digits, plural of the number shown). Node's ICU has its own CLDR version (node -p process.versions),
 // so some results differ because the data differ; tests/js/README.md
 // explains how the comparison is read.
 //

@@ -8,12 +8,9 @@
 build/bin/test_numbers tests/numbers/reference.jsonl
 ```
 
-The file started as a sample of the cases on which `babel.numbers`
-matched Python Babel 2.18.0 exactly (commit 0535909). Since then
-`babel.numbers` departs from Babel on purpose (exact decimal arithmetic,
-CLDR's localized signs and digits, plural from the displayed number, ...),
-so the file, not Babel, is the reference. After a deliberate change,
-update it from the library's own results and review the diff:
+The results are also compared with ICU (tests/js/README.md). After a
+deliberate change, update the file from the library's own results and
+review the diff:
 
 ```sh
 build/bin/test_numbers tests/numbers/reference.jsonl --update /tmp/new.jsonl
