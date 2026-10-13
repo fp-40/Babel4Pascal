@@ -50,31 +50,14 @@ type
   end;
   TPluralRuleItems = array of TPluralRuleItem;
 
-  TPluralNodeKind = (pnValue, pnVar, pnMod, pnIs, pnIsNot, pnIn, pnWithin,
-    pnAnd, pnOr, pnNot);
-
-  TPluralRange = record
-    Lo, Hi: Int64;
-  end;
-
-  TPluralNode = record
-    Kind: TPluralNodeKind;
-    Value: Int64;          { pnValue; pnMod: the divisor; pnIs/pnIsNot: the value }
-    Name: Char;            { pnVar }
-    A, B: Integer;         { children: pnMod A = variable; pnIs/pnIn A = expr;
-                             pnAnd/pnOr A, B; pnNot A }
-    Ranges: array of TPluralRange;   { pnIn, pnWithin }
-  end;
-
   TPluralRule = record
   private
     FTags: array of string;      { in evaluation order (alphabetical) }
     FRoots: array of Integer;    { the root node of each tag's condition }
-    FNodes: array of TPluralNode;
+    FTree: IInterface;           { the parsed conditions (see the implementation) }
     function Eval(Node: Integer; const Ops: TPluralOperands): Boolean;
     function Num(Node: Integer; const Ops: TPluralOperands): TDecimal;
-    function CompileUnicode(Node: Integer): string;
-    function CompileGettext(Node: Integer; JavaScript: Boolean): string;
+    function CompileRule(Node: Integer): string;
   public
     { A rule from Items, (category, condition) pairs in any
       order. Raises EBabelValueError for an unknown or repeated category
@@ -92,15 +75,21 @@ type
     function Evaluate(const N: TDecimal): string; overload;
     function EvaluateOperands(const Ops: TPluralOperands): string;
 
-    { The conditions rewritten in the old syntax ('n is 1', 'n mod 10 in
-      2..4'), in evaluation order. }
+    { The conditions in CLDR's syntax ('n = 1', 'n % 10 = 2..4 and n % 100
+      != 12..14'), in evaluation order. }
     function Rules: TPluralRuleItems;
     { The categories that have a condition, sorted. }
     function Tags: TStringArray;
-    { The gettext Plural-Forms expression:
-      'nplurals=2; plural=((n == 1) ? 0 : 1);'. }
+    { The gettext Plural-Forms header value, for the integer counts that
+      format uses: 'nplurals=2; plural=(n == 1 ? 0 : 1);'. The forms are
+      numbered in the order zero, one, two, few, many, other, among those
+      the rule has. }
     function ToGettext: string;
-    (* A JavaScript function: "(function(n) { return ... 'other'; })". *)
+    (* A JavaScript function of a number or a numeric string that returns
+      its category: "(function(n) { ...; return ts == '' && i == 1 ? 'one'
+      : 'other'; })". It reads the decimal text of the value (a string
+      keeps its trailing zeros: '1.50' has two fraction digits); integer
+      parts beyond 2^53 lose precision in JavaScript numbers. *)
     function ToJavaScript: string;
   end;
 
@@ -111,15 +100,41 @@ function ExtractOperands(N: Int64): TPluralOperands; overload;
 function ExtractOperands(N: Double): TPluralOperands; overload;
 function ExtractOperands(const N: TDecimal): TPluralOperands; overload;
 
-{ The 'in' and 'within' tests of a condition, and its modulo. }
-function InRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
-function WithinRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
-function CldrModulo(const A: TDecimal; B: Int64): TDecimal;
-
 implementation
 
 uses
   Math;
+
+type
+  TPluralNodeKind = (pnValue, pnVar, pnMod, pnIs, pnIsNot, pnIn, pnWithin,
+    pnAnd, pnOr, pnNot);
+
+  TPluralRange = record
+    Lo, Hi: Int64;
+  end;
+
+  TPluralNode = record
+    Kind: TPluralNodeKind;
+    Value: Int64;          { pnValue; pnMod: the divisor; pnIs/pnIsNot: the value }
+    Name: Char;            { pnVar }
+    A, B: Integer;         { children: pnMod A = variable; pnIs/pnIn A = expr;
+                             pnAnd/pnOr A, B; pnNot A }
+    Ranges: array of TPluralRange;   { pnIn, pnWithin }
+  end;
+  TPluralNodes = array of TPluralNode;
+
+  { The parsed conditions of a rule, shared by its copies. }
+  TPluralTree = class(TInterfacedObject)
+    Nodes: TPluralNodes;
+  end;
+
+function NodesOf(const Tree: IInterface): TPluralNodes; inline;
+begin
+  if Tree = nil then
+    Result := nil
+  else
+    Result := TPluralTree(Tree as TObject).Nodes;
+end;
 
 { ---- operands ---- }
 
@@ -515,8 +530,11 @@ var
   I, J, Root, Base, K: Integer;
   T: TPluralRuleItem;
   P: TRuleParser;
+  Nodes: TPluralNodes;
+  Tree: TPluralTree;
 begin
   Result := Default(TPluralRule);
+  Nodes := nil;
   SetLength(Sorted, Length(Items));
   for I := 0 to High(Items) do
     Sorted[I] := Items[I];
@@ -547,18 +565,21 @@ begin
     if P.Pos < Length(P.Toks) then
       raise EPluralRuleError.CreateFmt('Expected end of rule, got ''%s''', [P.Toks[P.Pos].Text]);
     { Append this condition's nodes, shifting child indexes. }
-    Base := Length(Result.FNodes);
+    Base := Length(Nodes);
     for K := 0 to High(P.Nodes) do
     begin
       if P.Nodes[K].A >= 0 then Inc(P.Nodes[K].A, Base);
       if P.Nodes[K].B >= 0 then Inc(P.Nodes[K].B, Base);
     end;
-    Result.FNodes := Concat(Result.FNodes, P.Nodes);
+    Nodes := Concat(Nodes, P.Nodes);
     SetLength(Result.FTags, Length(Result.FTags) + 1);
     Result.FTags[High(Result.FTags)] := Sorted[I].Tag;
     SetLength(Result.FRoots, Length(Result.FRoots) + 1);
     Result.FRoots[High(Result.FRoots)] := Root + Base;
   end;
+  Tree := TPluralTree.Create;
+  Tree.Nodes := Nodes;
+  Result.FTree := Tree;
 end;
 
 class function TPluralRule.CreatePairs(const Pairs: array of string): TPluralRule;
@@ -584,7 +605,7 @@ end;
 
 function TPluralRule.Num(Node: Integer; const Ops: TPluralOperands): TDecimal;
 begin
-  with FNodes[Node] do
+  with NodesOf(FTree)[Node] do
     case Kind of
       pnValue: Result := TDecimal.FromInt64(Value);
       pnVar:
@@ -607,7 +628,7 @@ end;
 
 function TPluralRule.Eval(Node: Integer; const Ops: TPluralOperands): Boolean;
 begin
-  with FNodes[Node] do
+  with NodesOf(FTree)[Node] do
     case Kind of
       pnIs: Result := Num(A, Ops).CompareInt(Value) = 0;
       pnIsNot: Result := Num(A, Ops).CompareInt(Value) <> 0;
@@ -681,69 +702,29 @@ begin
   end;
 end;
 
-{ A condition in the old syntax ('n is 1'). }
-function TPluralRule.CompileUnicode(Node: Integer): string;
-const
-  Method: array[Boolean] of string = ('in', 'within');
+{ A condition in CLDR's syntax ('n % 10 = 2..4 and n % 100 != 12..14'). }
+function TPluralRule.CompileRule(Node: Integer): string;
+var
+  Nodes: TPluralNodes;
 begin
-  with FNodes[Node] do
+  Nodes := NodesOf(FTree);
+  with Nodes[Node] do
     case Kind of
       pnValue: Result := IntToStr(Value);
       pnVar: Result := Name;
-      pnMod: Result := CompileUnicode(A) + ' mod ' + IntToStr(Value);
-      pnIs: Result := CompileUnicode(A) + ' is ' + IntToStr(Value);
-      pnIsNot: Result := CompileUnicode(A) + ' is not ' + IntToStr(Value);
-      pnIn, pnWithin:
-        Result := CompileUnicode(A) + ' ' + Method[Kind = pnWithin] + ' ' + RangesText(Ranges);
-      pnAnd: Result := CompileUnicode(A) + ' and ' + CompileUnicode(B);
-      pnOr: Result := CompileUnicode(A) + ' or ' + CompileUnicode(B);
+      pnMod: Result := CompileRule(A) + ' % ' + IntToStr(Value);
+      pnIs: Result := CompileRule(A) + ' = ' + IntToStr(Value);
+      pnIsNot: Result := CompileRule(A) + ' != ' + IntToStr(Value);
+      pnIn: Result := CompileRule(A) + ' = ' + RangesText(Ranges);
+      pnWithin: Result := CompileRule(A) + ' within ' + RangesText(Ranges);
+      pnAnd: Result := CompileRule(A) + ' and ' + CompileRule(B);
+      pnOr: Result := CompileRule(A) + ' or ' + CompileRule(B);
       pnNot:
-        with FNodes[A] do
-          Result := CompileUnicode(A) + ' not ' + Method[Kind = pnWithin] + ' ' + RangesText(Ranges);
-    end;
-end;
-
-{ A condition as a C expression for gettext or, with JavaScript, as a
-  JavaScript one. }
-function TPluralRule.CompileGettext(Node: Integer; JavaScript: Boolean): string;
-var
-  E: string;
-  I: Integer;
-begin
-  with FNodes[Node] do
-    case Kind of
-      pnValue: Result := IntToStr(Value);
-      pnVar:
-        case Name of
-          'n', 'c', 'e': Result := Name;
-          'i': if JavaScript then Result := 'parseInt(n, 10)' else Result := 'n';
-        else
-          Result := '0';   { v, w, f, t }
-        end;
-      pnMod: Result := '(' + CompileGettext(A, JavaScript) + ' % ' + IntToStr(Value) + ')';
-      pnIs: Result := '(' + CompileGettext(A, JavaScript) + ' == ' + IntToStr(Value) + ')';
-      pnIsNot: Result := '(' + CompileGettext(A, JavaScript) + ' != ' + IntToStr(Value) + ')';
-      pnIn, pnWithin:
-        begin
-          E := CompileGettext(A, JavaScript);
-          Result := '';
-          for I := 0 to High(Ranges) do
-          begin
-            if I > 0 then
-              Result := Result + ' || ';
-            if Ranges[I].Lo = Ranges[I].Hi then
-              Result := Result + '(' + E + ' == ' + IntToStr(Ranges[I].Lo) + ')'
-            else
-              Result := Result + '(' + E + ' >= ' + IntToStr(Ranges[I].Lo) + ' && ' +
-                E + ' <= ' + IntToStr(Ranges[I].Hi) + ')';
-          end;
-          Result := '(' + Result + ')';
-          if JavaScript and (Kind = pnIn) then
-            Result := '(parseInt(' + E + ', 10) == ' + E + ' && ' + Result + ')';
-        end;
-      pnAnd: Result := '(' + CompileGettext(A, JavaScript) + ' && ' + CompileGettext(B, JavaScript) + ')';
-      pnOr: Result := '(' + CompileGettext(A, JavaScript) + ' || ' + CompileGettext(B, JavaScript) + ')';
-      pnNot: Result := '(!' + CompileGettext(A, JavaScript) + ')';
+        with Nodes[A] do
+          if Kind = pnWithin then
+            Result := CompileRule(A) + ' not within ' + RangesText(Ranges)
+          else
+            Result := CompileRule(A) + ' != ' + RangesText(Ranges);
     end;
 end;
 
@@ -756,14 +737,306 @@ begin
   for I := 0 to High(FTags) do
   begin
     Result[I].Tag := FTags[I];
-    Result[I].Expr := CompileUnicode(FRoots[I]);
+    Result[I].Expr := CompileRule(FRoots[I]);
   end;
+end;
+
+{ ---- C (gettext) and JavaScript expressions ---- }
+
+type
+  { An expression being written: a constant (the operands that are always
+    0 make many terms constant) or text with the precedence of its
+    outermost operator. }
+  TCExpr = record
+    IsConst: Boolean;
+    Value: Int64;              { constant: a number, or 0/1 for a condition }
+    Text: string;
+    Level: Integer;            { 1 ||, 2 &&, 3 comparison or !, 4 %, 5 operand }
+    Fractional: Boolean;       { n in JavaScript: written as its integer part i,
+                                 so a comparison also needs the fraction to be
+                                 zero (ts == '') }
+    Guard: Integer;            { 1: "ts == '' && Rest", -1: "ts != '' || Rest" }
+    Rest: string;              { with a guard: the comparison of i }
+    RestLevel: Integer;
+  end;
+
+  TExprWriter = record
+    Nodes: TPluralNodes;
+    JavaScript: Boolean;
+    Used: set of Char;         { the operands the expression reads ('z': the
+                                 fraction digits without trailing zeros) }
+    NumericN: Boolean;         { write n as a number (for within) }
+    function Number(Node: Integer): TCExpr;
+    function Condition(Node: Integer): TCExpr;
+    function WithinOperand(Node: Integer): TCExpr;
+    function RangeTest(const X: TCExpr; Node: Integer; Integral, Negated: Boolean): TCExpr;
+  end;
+
+function ConstExpr(V: Int64): TCExpr;
+begin
+  Result := Default(TCExpr);
+  Result.IsConst := True;
+  Result.Value := V;
+end;
+
+function TextExpr(const Text: string; Level: Integer; Fractional: Boolean = False): TCExpr;
+begin
+  Result := Default(TCExpr);
+  Result.Text := Text;
+  Result.Level := Level;
+  Result.Fractional := Fractional;
+end;
+
+{ "ts == '' && X" (Guard 1) or "ts != '' || X" (Guard -1). }
+function Guarded(Guard: Integer; const X: string; XLevel: Integer): TCExpr;
+begin
+  if Guard > 0 then
+  begin
+    if XLevel < 2 then
+      Result := TextExpr('ts == '''' && (' + X + ')', 2)
+    else
+      Result := TextExpr('ts == '''' && ' + X, 2);
+  end
+  else if XLevel < 1 then
+    Result := TextExpr('ts != '''' || (' + X + ')', 1)
+  else
+    Result := TextExpr('ts != '''' || ' + X, 1);
+  Result.Guard := Guard;
+  Result.Rest := X;
+  Result.RestLevel := XLevel;
+end;
+
+{ The text of E, in parentheses when its operator binds less than Level. }
+function Wrap(const E: TCExpr; Level: Integer): string;
+begin
+  if E.IsConst then
+    Result := IntToStr(E.Value)
+  else if E.Level < Level then
+    Result := '(' + E.Text + ')'
+  else
+    Result := E.Text;
+end;
+
+{ The comparison without its fraction test, for a conjunction. }
+function Unguarded(const E: TCExpr): string;
+begin
+  if E.Guard <> 0 then
+  begin
+    if E.RestLevel < 2 then
+      Result := '(' + E.Rest + ')'
+    else
+      Result := E.Rest;
+  end
+  else
+    Result := Wrap(E, 2);
+end;
+
+function TExprWriter.Number(Node: Integer): TCExpr;
+var
+  X: TCExpr;
+begin
+  with Nodes[Node] do
+    case Kind of
+      pnValue: Result := ConstExpr(Value);
+      pnVar:
+        if Name in ['c', 'e'] then
+          Result := ConstExpr(0)
+        else if not JavaScript and (Name in ['v', 'w', 'f', 't']) then
+          Result := ConstExpr(0)       { an integer count has no fraction digits }
+        else if not JavaScript then
+        begin
+          Include(Used, 'n');          { n and i are the count }
+          Result := TextExpr('n', 5);
+        end
+        else if (Name = 'n') and NumericN then
+        begin
+          Include(Used, 'N');
+          Result := TextExpr('n', 5);
+        end
+        else if Name = 'n' then
+        begin
+          { exact for any number of digits: the integer part, and the
+            fraction tested apart }
+          Include(Used, 'i');
+          Include(Used, 'z');
+          Result := TextExpr('i', 5, True);
+        end
+        else
+        begin
+          Include(Used, Name);
+          Result := TextExpr(Name, 5);
+        end;
+      pnMod:
+        begin
+          X := Number(A);
+          if X.IsConst then
+            Result := ConstExpr(X.Value mod Value)
+          else
+            Result := TextExpr(Wrap(X, 4) + ' % ' + IntToStr(Value), 4, X.Fractional);
+        end;
+    else
+      raise EPluralRuleError.Create('not a numeric node');
+    end;
+end;
+
+function Bool(B: Boolean): TCExpr;
+begin
+  Result := ConstExpr(Ord(B));
+end;
+
+{ X tested against the ranges of Node: in them, or with Negated not in
+  them; Integral: the value must also be an integer ('=' and 'in'). }
+function TExprWriter.RangeTest(const X: TCExpr; Node: Integer; Integral, Negated: Boolean): TCExpr;
+var
+  R: TPluralRange;
+  Item, Joined, Op: string;
+  Count, ItemLevel: Integer;
+  Check: Boolean;
+begin
+  if X.IsConst then
+  begin
+    Result := Bool(False);
+    for R in Nodes[Node].Ranges do
+      if (X.Value >= R.Lo) and (X.Value <= R.Hi) then
+        Result := Bool(True);
+    if Negated then
+      Result := Bool(Result.Value = 0);
+    Exit;
+  end;
+  Check := X.Fractional;   { n as i: the fraction must be zero }
+  if Negated then Op := ' && ' else Op := ' || ';
+  Joined := '';
+  Count := 0;
+  ItemLevel := 3;
+  for R in Nodes[Node].Ranges do
+  begin
+    if R.Lo = R.Hi then
+    begin
+      if Negated then
+        Item := Wrap(X, 4) + ' != ' + IntToStr(R.Lo)
+      else
+        Item := Wrap(X, 4) + ' == ' + IntToStr(R.Lo);
+      ItemLevel := 3;
+    end
+    else if not Negated then
+    begin
+      Item := Wrap(X, 4) + ' >= ' + IntToStr(R.Lo) + ' && ' + Wrap(X, 4) + ' <= ' + IntToStr(R.Hi);
+      ItemLevel := 2;
+    end
+    else
+    begin
+      Item := Wrap(X, 4) + ' < ' + IntToStr(R.Lo) + ' || ' + Wrap(X, 4) + ' > ' + IntToStr(R.Hi);
+      ItemLevel := 1;
+    end;
+    Inc(Count);
+    if Count > 1 then
+      Joined := Joined + Op;
+    { an item joined to others keeps its own grouping }
+    if (Length(Nodes[Node].Ranges) > 1) and (ItemLevel < 3) then
+      Item := '(' + Item + ')';
+    Joined := Joined + Item;
+  end;
+  if Count = 1 then
+    Result := TextExpr(Joined, ItemLevel)
+  else if Negated then
+    Result := TextExpr(Joined, 2)
+  else
+    Result := TextExpr(Joined, 1);
+  if Check then
+    if Negated then
+      Result := Guarded(-1, Result.Text, Result.Level)
+    else
+      Result := Guarded(1, Result.Text, Result.Level);
+end;
+
+{ The operand of 'within', which compares the value itself (2.5 is
+  within 2..3). }
+function TExprWriter.WithinOperand(Node: Integer): TCExpr;
+begin
+  NumericN := True;
+  Result := Number(Node);
+  NumericN := False;
+end;
+
+function TExprWriter.Condition(Node: Integer): TCExpr;
+var
+  L, R: TCExpr;
+begin
+  with Nodes[Node] do
+    case Kind of
+      pnIs, pnIsNot:
+        begin
+          L := Number(A);
+          if L.IsConst then
+            Result := Bool((L.Value = Value) = (Kind = pnIs))
+          else if (Kind = pnIs) and L.Fractional then
+            Result := Guarded(1, Wrap(L, 4) + ' == ' + IntToStr(Value), 3)
+          else if Kind = pnIs then
+            Result := TextExpr(Wrap(L, 4) + ' == ' + IntToStr(Value), 3)
+          else if L.Fractional then
+            Result := Guarded(-1, Wrap(L, 4) + ' != ' + IntToStr(Value), 3)
+          else
+            Result := TextExpr(Wrap(L, 4) + ' != ' + IntToStr(Value), 3);
+        end;
+      pnIn: Result := RangeTest(Number(A), Node, True, False);
+      pnWithin: Result := RangeTest(WithinOperand(A), Node, False, False);
+      pnNot:
+        if Nodes[A].Kind = pnIn then
+          Result := RangeTest(Number(Nodes[A].A), A, True, True)
+        else if Nodes[A].Kind = pnWithin then
+          Result := RangeTest(WithinOperand(Nodes[A].A), A, False, True)
+        else
+        begin
+          L := Condition(A);
+          if L.IsConst then
+            Result := Bool(L.Value = 0)
+          else
+            Result := TextExpr('!(' + L.Text + ')', 3);
+        end;
+      pnAnd, pnOr:
+        begin
+          L := Condition(A);
+          R := Condition(B);
+          if Kind = pnAnd then
+          begin
+            if (L.IsConst and (L.Value = 0)) or (R.IsConst and (R.Value = 0)) then
+              Result := Bool(False)
+            else if L.IsConst then
+              Result := R
+            else if R.IsConst then
+              Result := L
+            else if (L.Guard > 0) or (R.Guard > 0) then
+              { one test of the fraction for the whole conjunction: under
+                ts == '' a negated test "ts != '' || X" is X }
+              Result := Guarded(1, Unguarded(L) + ' && ' + Unguarded(R), 2)
+            else
+              Result := TextExpr(Wrap(L, 2) + ' && ' + Wrap(R, 2), 2);
+          end
+          else
+          begin
+            if (L.IsConst and (L.Value <> 0)) or (R.IsConst and (R.Value <> 0)) then
+              Result := Bool(True)
+            else if L.IsConst then
+              Result := R
+            else if R.IsConst then
+              Result := L
+            else
+              Result := TextExpr(Wrap(L, 1) + ' || ' + Wrap(R, 1), 1);
+          end;
+        end;
+    else
+      raise EPluralRuleError.Create('not a condition node');
+    end;
 end;
 
 function TPluralRule.ToGettext: string;
 var
   Used: array of string;
   I, J: Integer;
+  W: TExprWriter;
+  C: TCExpr;
+  Expr: string;
+  Closed: Boolean;
 
   function Index(const Tag: string): Integer;
   var
@@ -792,20 +1065,87 @@ begin
           Used[High(Used)] := PluralTags[I];
           Break;
         end;
-  Result := 'nplurals=' + IntToStr(Length(Used)) + '; plural=(';
+  W := Default(TExprWriter);
+  W.Nodes := NodesOf(FTree);
+  W.JavaScript := False;
+  Expr := '';
+  Closed := False;
   for I := 0 to High(FTags) do
-    Result := Result + CompileGettext(FRoots[I], False) + ' ? ' + IntToStr(Index(FTags[I])) + ' : ';
-  Result := Result + IntToStr(Index('other')) + ');';
+  begin
+    C := W.Condition(FRoots[I]);
+    if C.IsConst and (C.Value = 0) then
+      Continue;                  { never true for an integer count }
+    if C.IsConst then
+    begin
+      Expr := Expr + IntToStr(Index(FTags[I]));
+      Closed := True;
+      Break;
+    end;
+    Expr := Expr + C.Text + ' ? ' + IntToStr(Index(FTags[I])) + ' : ';
+  end;
+  if not Closed then
+    Expr := Expr + IntToStr(Index('other'));
+  Result := 'nplurals=' + IntToStr(Length(Used)) + '; plural=(' + Expr + ');';
 end;
 
 function TPluralRule.ToJavaScript: string;
 var
   I: Integer;
+  W: TExprWriter;
+  C: TCExpr;
+  Expr, Vars: string;
+  Closed: Boolean;
+
+  procedure AddVar(const Decl: string);
+  begin
+    if Vars = '' then
+      Vars := 'var ' + Decl
+    else
+      Vars := Vars + ', ' + Decl;
+  end;
+
 begin
-  Result := '(function(n) { return ';
+  W := Default(TExprWriter);
+  W.Nodes := NodesOf(FTree);
+  W.JavaScript := True;
+  Expr := '';
+  Closed := False;
   for I := 0 to High(FTags) do
-    Result := Result + CompileGettext(FRoots[I], True) + ' ? ''' + FTags[I] + ''' : ';
-  Result := Result + '''other''; })';
+  begin
+    C := W.Condition(FRoots[I]);
+    if C.IsConst and (C.Value = 0) then
+      Continue;
+    if C.IsConst then
+    begin
+      Expr := Expr + '''' + FTags[I] + '''';
+      Closed := True;
+      Break;
+    end;
+    Expr := Expr + C.Text + ' ? ''' + FTags[I] + ''' : ';
+  end;
+  if not Closed then
+    Expr := Expr + '''other''';
+  { the operands from the decimal text of the number, sign dropped and
+    exponent notation ('1E+3', '1e-7') written out }
+  Vars := '';
+  if W.Used * ['v', 'w', 'f', 't', 'z'] <> [] then
+    AddVar('p = s.indexOf(''.''), fs = p < 0 ? '''' : s.slice(p + 1)');
+  if W.Used * ['w', 't', 'z'] <> [] then
+    AddVar('ts = fs.replace(/0+$/, '''')');
+  if 'i' in W.Used then AddVar('i = parseInt(s, 10)');
+  if 'v' in W.Used then AddVar('v = fs.length');
+  if 'w' in W.Used then AddVar('w = ts.length');
+  if 'f' in W.Used then AddVar('f = +fs || 0');
+  if 't' in W.Used then AddVar('t = +ts || 0');
+  Result := '(function(n) { ';
+  if W.Used <> [] then
+    Result := Result + 'var s = String(n).replace(/^[-+]/, ''''); ' +
+      'if (/e/i.test(s)) s = Number(s).toFixed(20).replace(/\.?0+$/, ''''); ';
+  if Vars <> '' then
+    Result := Result + Vars + '; ';
+  if 'N' in W.Used then
+    Result := Result + 'n = +s; ';
+  Result := Result + 'return ' + Expr + '; })';
 end;
 
 end.

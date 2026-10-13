@@ -325,9 +325,16 @@ begin
 end;
 
 begin
+  { --update writes the ordinary cases with the results obtained; the
+    special lines (float_repr, ...) are not written }
+  if (ParamCount = 3) and (ParamStr(2) = '--update') then
+  begin
+    RunVectors(ParamStr(1), @Run, @SpecialLine, ParamStr(3));
+    Exit;
+  end;
   if ParamCount <> 1 then
   begin
-    WriteLn('usage: test_core VECTORS.jsonl');
+    WriteLn('usage: test_core VECTORS.jsonl [--update OUT.jsonl]');
     Halt(2);
   end;
   if RunVectors(ParamStr(1), @Run, @SpecialLine) > 0 then

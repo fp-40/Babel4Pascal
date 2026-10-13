@@ -135,13 +135,18 @@ function Rules: TPluralRuleItems;
 function Tags: TStringArray;
 ```
 
-`Rules` gives the conditions rewritten in the syntax of the older CLDR
-releases (`in`, `not in`, `mod`), in evaluation order. `Tags` gives the
-categories that have a condition, sorted.
+`Rules` gives the conditions in CLDR's syntax (`=`, `!=`, `%`, ranges
+`2..4` and lists `0,1`), in evaluation order (alphabetical by category).
+A rule created from them is the same rule. `Tags` gives the categories
+that have a condition, sorted.
 
 ```pascal
-R := TLocale('en').PluralForm;
-// R.Rules: one: i in 1 and v in 0
+// TLocale('en').PluralForm.Rules
+//   one: i = 1 and v = 0
+// TLocale('ru').PluralForm.Rules
+//   few: v = 0 and i % 10 = 2..4 and i % 100 != 12..14
+//   many: v = 0 and i % 10 = 0 or v = 0 and i % 10 = 5..9 or v = 0 and i % 100 = 11..14
+//   one: v = 0 and i % 10 = 1 and i % 100 != 11
 string.Join(',', TLocale('pl').PluralForm.Tags);   // few,many,one
 string.Join(',', TLocale('ar').PluralForm.Tags);   // few,many,one,two,zero
 ```
@@ -153,17 +158,31 @@ function ToGettext: string;
 function ToJavaScript: string;
 ```
 
-The rule as a gettext `Plural-Forms` expression, and as the source of a
-JavaScript function that returns the category of its argument.
+`ToGettext` gives the value of a gettext `Plural-Forms` header. That
+format counts with integers, so the operands `n` and `i` are the count and
+`v`, `w`, `f`, `t`, `c` and `e` are 0; the terms that are then constant
+are left out. The forms are numbered in the order zero, one, two, few,
+many, other, among the categories the rule has.
+
+`ToJavaScript` gives the source of a JavaScript function that returns
+the category of a number or a numeric string. It reads the decimal text
+of the value, so a string keeps its fraction digits (`'1.50'` has
+`v = 2`); exponent notation (`'1e3'`) is written out first. Integer parts
+beyond 2^53 lose precision in JavaScript numbers.
 
 ```pascal
-R := TLocale('en').PluralForm;
-R.ToGettext;
-// nplurals=2; plural=((((n == 1)) && ((0 == 0))) ? 0 : 1);
+TLocale('en').PluralForm.ToGettext;
+// nplurals=2; plural=(n == 1 ? 0 : 1);
+TLocale('fr').PluralForm.ToGettext;
+// nplurals=3; plural=(n != 0 && n % 1000000 == 0 ? 1 : n == 0 || n == 1 ? 0 : 2);
+TLocale('ru').PluralForm.ToGettext;
+// nplurals=4; plural=(n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 10 == 0 || n % 10 >= 5 && n % 10 <= 9 || n % 100 >= 11 && n % 100 <= 14 ? 2 : n % 10 == 1 && n % 100 != 11 ? 0 : 3);
 
-R := TPluralRule.CreatePairs(['one', 'n = 1', 'few', 'n in 2..4']);
-R.ToJavaScript;
-// (function(n) { return (parseInt(n, 10) == n && ((n >= 2 && n <= 4))) ? 'few' : (parseInt(n, 10) == n && ((n == 1))) ? 'one' : 'other'; })
+TLocale('en').PluralForm.ToJavaScript;
+// (function(n) { var s = String(n).replace(/^[-+]/, ''); if (/e/i.test(s)) s = Number(s).toFixed(20).replace(/\.?0+$/, ''); var p = s.indexOf('.'), fs = p < 0 ? '' : s.slice(p + 1), i = parseInt(s, 10), v = fs.length; return i == 1 && v == 0 ? 'one' : 'other'; })
+
+TPluralRule.CreatePairs(['one', 'n = 1', 'few', 'n = 2..4']).ToJavaScript;
+// (function(n) { var s = String(n).replace(/^[-+]/, ''); if (/e/i.test(s)) s = Number(s).toFixed(20).replace(/\.?0+$/, ''); var p = s.indexOf('.'), fs = p < 0 ? '' : s.slice(p + 1), ts = fs.replace(/0+$/, ''), i = parseInt(s, 10); return ts == '' && i >= 2 && i <= 4 ? 'few' : ts == '' && i == 1 ? 'one' : 'other'; })
 ```
 
 ## TPluralRuleItem
@@ -227,32 +246,6 @@ O := ExtractOperands(1.25);
 O := ExtractOperands(Int64(-15));
 // N = 15, I = 15, V = 0
 ```
-
-## Condition helpers
-
-```pascal
-type
-  TPluralRange = record
-    Lo, Hi: Int64;
-  end;
-
-function InRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
-function WithinRangeList(const Num: TDecimal; const Ranges: array of TPluralRange): Boolean;
-function CldrModulo(const A: TDecimal; B: Int64): TDecimal;
-```
-
-The tests and the operation of the condition language:
-
-- `InRangeList`: the `in` test (`n in 2..4, 7`): `Num` is an integer
-  inside one of the ranges.
-- `WithinRangeList`: the `within` test: `Num` lies inside one of the
-  ranges, integer or not.
-- `CldrModulo`: the `%` (`mod`) operation; the result has the sign of
-  `A` (`-7 % 3` is `-1`).
-
-The interface also declares `TPluralNodeKind` and `TPluralNode`, the
-parsed form of a condition inside `TPluralRule`; programs do not use
-them.
 
 ## PluralTags
 

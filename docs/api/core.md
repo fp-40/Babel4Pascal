@@ -111,6 +111,12 @@ Raises `EBabelTypeError` when the environment names none.
 ```pascal
 // LANG=fr_FR.UTF-8
 TLocale.Default.ToString;   // fr_FR
+
+// no locale variable set
+TLocale.Default;
+// raises EBabelTypeError: No locale identifier in the environment (LANGUAGE, LC_ALL, LC_CTYPE, LANG)
+TLocale.Default('LC_TIME');
+// raises EBabelTypeError: No locale identifier in the environment (LC_TIME, LANGUAGE, LC_ALL, LC_CTYPE, LANG)
 ```
 
 #### TLocale.Negotiate

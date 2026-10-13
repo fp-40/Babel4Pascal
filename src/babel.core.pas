@@ -597,13 +597,24 @@ begin
   raise EUnknownLocaleError.CreateFor(InputId);
 end;
 
+{ The error of TLocale.Default when no variable names a locale. }
+function NoDefaultLocale(const Category: string): EBabelTypeError;
+var
+  Names: string;
+begin
+  Names := 'LANGUAGE, LC_ALL, LC_CTYPE, LANG';
+  if Category <> '' then
+    Names := Category + ', ' + Names;
+  Result := EBabelTypeError.CreateFmt('No locale identifier in the environment (%s)', [Names]);
+end;
+
 class function TLocale.Default(const Category: string): TLocale;
 var
   Id: string;
 begin
   Id := DefaultLocale(Category);
   if Id = '' then
-    raise EBabelTypeError.Create('Empty locale identifier value: None');
+    raise NoDefaultLocale(Category);
   Result := Parse(Id);
 end;
 
@@ -616,7 +627,7 @@ begin
   else
     Id := DefaultLocale([Category], Aliases);
   if Id = '' then
-    raise EBabelTypeError.Create('Empty locale identifier value: None');
+    raise NoDefaultLocale(Category);
   Result := Parse(Id);
 end;
 
