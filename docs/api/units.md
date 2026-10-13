@@ -17,9 +17,12 @@ Measurement units in the locale's words or symbols: '12 kilometers',
 A unit is named by its CLDR id, which starts with its category:
 `'length-kilometer'`, `'duration-hour'`, `'mass-kilogram'`,
 `'temperature-celsius'`, `'digital-gigabyte'`,
-`'speed-kilometer-per-hour'`, `'concentr-percent'`. The end of an id is
-also accepted (`'kilometer'`, `'hour'`): the shortest id that ends with
-the given text is used (see `FindUnitPattern`).
+`'speed-kilometer-per-hour'`, `'concentr-percent'`. The end of an id,
+made of whole components, is also accepted (`'kilometer'`, `'hour'`,
+`'kilometer-per-hour'`): the shortest id that ends with `'-'` and the
+given text is used. A text that ends two ids of that length is
+ambiguous and names no unit (see `FindUnitPattern`). Ids are
+case-sensitive.
 
 ## Lengths
 
@@ -28,9 +31,8 @@ the given text is used (see `FindUnitPattern`).
 - `'narrow'`: '12km'
 
 Where the locale has no data for the long or the narrow length of a
-unit, the short length's data is used, as CLDR specifies. Another length
-string matches no data, and the result is the number followed by the
-unit's id.
+unit, the short length's data is used, as CLDR specifies. Any other
+length raises `EBabelValueError`.
 
 ## Plural forms
 
@@ -97,10 +99,13 @@ FormatUnit(12, 'kilogram', 'ar_EG', UnitOptions.WithNumberingSystem('default'));
 FormatUnit(3, 'g-force', 'de');                                            // '3 G' (short data)
 ```
 
-Errors: an unknown unit raises `EUnknownUnitError`:
+Errors: an unknown or ambiguous unit raises `EUnknownUnitError`; a
+length other than `'long'`, `'short'` or `'narrow'` raises
+`EBabelValueError`:
 
 ```pascal
-FormatUnit(1, 'banana', 'en');   // EUnknownUnitError: banana is not a known unit in en
+FormatUnit(1, 'banana', 'en');                                  // EUnknownUnitError: banana is not a known unit in en
+FormatUnit(1, 'meter', 'en', UnitOptions.WithLength('wide'));   // EBabelValueError: Invalid unit length 'wide' (long, short or narrow)
 ```
 
 ## FormatUnitText
@@ -119,7 +124,8 @@ overload of `FormatUnit` taking a string would be ambiguous.)
 FormatUnitText('one and a half', 'hour', 'en', UnitOptions);   // 'one and a half hour'
 ```
 
-Errors: `EUnknownUnitError` for an unknown unit.
+Errors: `EUnknownUnitError` for an unknown unit; `EBabelValueError` for
+an invalid length.
 
 ## FormatCompoundUnit
 
@@ -162,8 +168,8 @@ FormatCompoundUnit(5, 'kilometer', 2, '', 'en');                      // '5 kilo
 FormatCompoundUnit(5, '', 2, '', 'en');                               // '5 per 2'
 ```
 
-Errors: `EUnknownUnitError` for an unknown unit that has to be
-formatted.
+Errors: `EUnknownUnitError` for an unknown unit (numerator or
+denominator); `EBabelValueError` for an invalid length.
 
 ## FormatCompoundUnitText
 
@@ -173,12 +179,18 @@ function FormatCompoundUnitText(const NumeratorValue, NumeratorUnit, Denominator
 ```
 
 `FormatCompoundUnit` with both values already formatted by the caller.
-The values are placed as they are; a preformatted denominator is not
-read as 1, so the compound pattern joins the two.
+The values are text and are placed as they are: a denominator of `'1'` is
+not read as the number 1, so neither the compound unit nor the per
+pattern is used, and the compound pattern joins the two. To get
+'7 L/km', pass the numbers to `FormatCompoundUnit`.
 
 ```pascal
 FormatCompoundUnitText('7', 'liter', 'two', 'kilometer', 'en',
   UnitOptions.WithLength('short'));                                   // '7/two'
+FormatCompoundUnitText('7', 'liter', '1', 'kilometer', 'en',
+  UnitOptions.WithLength('short'));                                   // '7/1'
+FormatCompoundUnit(7, 'liter', 1, 'kilometer', 'en',
+  UnitOptions.WithLength('short'));                                   // '7 L/km'
 ```
 
 ## GetUnitName
@@ -199,7 +211,8 @@ GetUnitName('length-kilometer', 'es');        // 'kilómetros'
 GetUnitName('celsius', 'en', 'narrow');       // '°C'
 ```
 
-Errors: `EUnknownUnitError` for an unknown unit.
+Errors: `EUnknownUnitError` for an unknown unit; `EBabelValueError` for
+an invalid length.
 
 ## FindUnitPattern
 
@@ -208,18 +221,23 @@ function FindUnitPattern(const UnitId: string; const Locale: TLocale): string;
 ```
 
 The full id of a unit: `UnitId` itself when the locale has it, else the
-shortest id that ends with `UnitId` (the first in the data among ids of
-the same length); `''` when none does.
+shortest id that ends with `'-'` + `UnitId`. `''` when no id matches, and
+when two ids of the shortest length match (`'mass'` ends both
+`'mass-earth-mass'` and `'mass-solar-mass'`).
 
 ```pascal
 FindUnitPattern('kilometer', 'en');            // 'length-kilometer'
 FindUnitPattern('hour', 'en');                 // 'duration-hour'
 FindUnitPattern('kilometer-per-hour', 'en');   // 'speed-kilometer-per-hour'
+FindUnitPattern('per-hour', 'en');             // 'speed-mile-per-hour'
+FindUnitPattern('er', 'en');                   // ''
+FindUnitPattern('mass', 'en');                 // ''
 FindUnitPattern('banana', 'en');               // ''
 ```
 
-The match is on the end of the text, so a short fragment can select an
-unrelated unit: give the full id where it matters.
+A fragment selects the shortest matching id, which is not always the one
+meant (`'per-hour'` is miles per hour): give the full id where it
+matters.
 
 ## EUnknownUnitError
 
@@ -228,8 +246,9 @@ type
   EUnknownUnitError = class(EBabelValueError);
 ```
 
-Raised for a unit the locale does not have. Its message names the unit
-and the locale: `'banana is not a known unit in en'`.
+Raised for a unit the locale does not have, or a fragment that matches
+two ids. Its message names the unit and the locale: `'banana is not a
+known unit in en'`.
 
 ---
 

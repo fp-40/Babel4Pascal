@@ -6,15 +6,18 @@
   gives '150 kilometers per hour'.
 
   A unit is CLDR's id with its category ('length-kilometer') or the end of
-  one ('kilometer'; the shortest id that ends with it is taken). Lengths:
-  'long' (default), 'short', 'narrow'. A value already formatted goes to
-  FormatUnitText and FormatCompoundUnitText (TDecimal converts from
-  strings, so an overload taking a string would be ambiguous).
+  one made of whole components ('kilometer', 'kilometer-per-hour'): the
+  shortest id equal to it or ending with '-' and it is taken; a fragment
+  that ends two ids of that length ('mass': earth-mass, solar-mass) is
+  ambiguous and matches none. Lengths: 'long' (default), 'short',
+  'narrow'; any other raises EBabelValueError. A value already formatted
+  goes to FormatUnitText and FormatCompoundUnitText (TDecimal converts
+  from strings, so an overload taking a string would be ambiguous); such
+  a value is used as given, also '1' in a denominator.
 
-  The results follow CLDR as ICU applies it (tests/icu compares them with
-  ICU4C): the plural form of the number as shown ('1.0' shows '1': '1
-  meter'), the 'other' pattern for a missing plural form, and the short
-  data for what the long and narrow lengths lack (CLDR's root
+  The plural form is that of the number as shown ('1.0' shows '1': '1
+  meter'); a missing plural form takes the 'other' pattern; what the long
+  and narrow lengths lack comes from the short one (CLDR's root
   aliases).
 
   Threading: everything here only reads shared data. }
@@ -47,7 +50,7 @@ function UnitOptions: TUnitOptions;
 function GetUnitName(const MeasurementUnit: string; const Locale: TLocale;
   const Length: string = 'long'): string;
 { The qualified id of a unit ('length-kilometer' for 'kilometer'); '' when
-  unknown. }
+  unknown or ambiguous. }
 function FindUnitPattern(const UnitId: string; const Locale: TLocale): string;
 
 function FormatUnit(const Value: TDecimal; const MeasurementUnit: string;
@@ -118,24 +121,40 @@ function FindUnitPattern(const UnitId: string; const Locale: TLocale): string;
 var
   Patterns: TCLDRValue;
   I, Best: Integer;
-  Key: string;
+  Key, Suffix: string;
+  Tie: Boolean;
 begin
   Patterns := UnitPatterns(Locale);
-  if Patterns.Has(UnitId) then
+  if (UnitId = '') or Patterns.Has(UnitId) then
+  begin
+    if UnitId = '' then
+      Exit('');
     Exit(UnitId);
-  { the shortest id ending with UnitId, the first of equal length }
+  end;
+  { the shortest id that ends with '-' + UnitId; none when two have that
+    length }
+  Suffix := '-' + UnitId;
   Result := '';
   Best := MaxInt;
+  Tie := False;
   for I := 0 to Patterns.Count - 1 do
   begin
     Key := Patterns.Keys(I).AsString;
-    if (System.Length(Key) < Best) and (System.Length(Key) >= System.Length(UnitId)) and
-       (Copy(Key, System.Length(Key) - System.Length(UnitId) + 1, MaxInt) = UnitId) then
+    if (System.Length(Key) > System.Length(Suffix)) and
+       (Copy(Key, System.Length(Key) - System.Length(Suffix) + 1, MaxInt) = Suffix) then
     begin
-      Result := Key;
-      Best := System.Length(Key);
+      if System.Length(Key) < Best then
+      begin
+        Result := Key;
+        Best := System.Length(Key);
+        Tie := False;
+      end
+      else if System.Length(Key) = Best then
+        Tie := True;
     end;
   end;
+  if Tie then
+    Result := '';
 end;
 
 (* The lengths to look a unit's data up in: the one asked for, then
@@ -143,10 +162,16 @@ end;
   is its short 'G'). *)
 function LengthChain(const Length: string): TStringArray;
 begin
-  if (Length = 'long') or (Length = 'narrow') then
-    Result := [Length, 'short']
+  if Length = 'short' then
+    Result := ['short']
   else
-    Result := [Length];     { short, or a length CLDR does not have }
+    Result := [Length, 'short'];
+end;
+
+procedure CheckLength(const Length: string);
+begin
+  if (Length <> 'long') and (Length <> 'short') and (Length <> 'narrow') then
+    raise EBabelValueError.CreateFmt('Invalid unit length ''%s'' (long, short or narrow)', [Length]);
 end;
 
 (* The unit's entry Key (a plural form, 'per') in the first length of the
@@ -174,6 +199,7 @@ var
   QUnit, L: string;
   Names: TCLDRValue;
 begin
+  CheckLength(Length);
   QUnit := FindUnitPattern(MeasurementUnit, Locale);
   if QUnit = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
@@ -191,6 +217,7 @@ function ApplyUnit(const FormattedValue, PluralForm, MeasurementUnit: string;
 var
   QUnit, Name, Pattern: string;
 begin
+  CheckLength(Options.Length);
   QUnit := FindUnitPattern(MeasurementUnit, Locale);
   if QUnit = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
@@ -223,6 +250,7 @@ var
   Formatted: string;
   Shown: TDecimal;
 begin
+  CheckLength(Options.Length);
   if FindUnitPattern(MeasurementUnit, Locale) = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
   { the plural form of the number as shown ('1.0' is shown '1': '1
@@ -271,6 +299,7 @@ var
   Compound, FormattedNumerator, FormattedDenominator, DUnit, PerPattern, L: string;
   V: TCLDRValue;
 begin
+  CheckLength(Options.Length);
   if (NumeratorUnit <> '') and (DenominatorUnit <> '') and IsOne(Den) then
   begin
     Compound := FindCompoundUnit(NumeratorUnit, DenominatorUnit, Locale);
@@ -299,6 +328,8 @@ begin
         the unit without its number (TR35's per-unit algorithm, 3.2:
         ' second' stripped) *)
       DUnit := FindUnitPattern(DenominatorUnit, Locale);
+      if DUnit = '' then
+        raise UnknownUnit(DenominatorUnit, Locale);
       PerPattern := UnitEntry(Locale, DUnit, Options.Length, 'per');
       if PerPattern <> '' then
         Exit(PyFormat(PerPattern, [FormattedNumerator]));

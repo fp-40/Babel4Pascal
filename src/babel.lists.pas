@@ -10,10 +10,9 @@
   style CLDR's root aliases it to ('unit-narrow' to 'unit-short' to
   'standard').
 
-  The results follow CLDR as ICU applies it (tests/icu compares them with
-  ICU4C): each part of a style is resolved on its own, and ICU's
-  contextual conjunctions apply ('padre e hijo', 'siete u ocho', Hebrew
-  'ו-' before other scripts).
+  Each part of a style is resolved on its own, and the conjunction of
+  some languages depends on the next item ('padre e hijo', 'siete u
+  ocho', Hebrew 'ו-' before other scripts).
 
   Threading: everything here only reads shared data. }
 unit babel.lists;
@@ -71,7 +70,7 @@ begin
   Result := (Length(S) >= I) and (UpCase(S[I]) = UpCase(C));
 end;
 
-(* ICU's contextual conjunctions (ListFormatter): Spanish 'y' is 'e'
+(* The contextual conjunctions: Spanish 'y' is 'e'
   before a word that starts with the sound i ('i', 'hi', but not 'hia',
   'hie': 'padre e hijo', 'agua y hielo'), 'o' is 'u' before the sound o
   ('o', 'ho', '8', '11': 'siete u ocho'); Hebrew 'ו' takes a hyphen
@@ -102,8 +101,8 @@ begin
   end
   else if (Locale.Language = 'he') and (Pattern = '{0} ' + Vav + '{1}') then
   begin
-    { not a letter of the Hebrew block (U+0590..U+05FF), as ICU's
-      script test for the common case; FB1D..FB4F are Hebrew forms }
+    { not a letter of the Hebrew block (U+0590..U+05FF) or of the Hebrew
+      presentation forms (U+FB1D..U+FB4F) }
     C := CodePointAt(Next, 1, Len);
     if not (((C >= $0590) and (C <= $05FF)) or ((C >= $FB1D) and (C <= $FB4F))) then
       Result := '{0} ' + Vav + '-{1}';
