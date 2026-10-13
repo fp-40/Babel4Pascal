@@ -167,7 +167,7 @@ options.
 5. `tests/tz/test_tz` with vectors from `tests/python/gen_tz_vectors.py`:
    offsets and DST of every zone of the system's tz database against
    Python's zoneinfo (581 000 lookups);
-6. `tests/dates/test_dates` with `tests/dates/reference.jsonl`: 8 673
+6. `tests/dates/test_dates` with `tests/dates/reference.jsonl`: 8 695
    calls of the dates functions (every pattern field and length,
    predefined formats, skeletons, intervals, durations, day periods, zone
    names in 19 zones, parsing) with their expected results

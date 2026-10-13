@@ -7508,11 +7508,11 @@
 { "op" : "period_id", "args" : [[2026, 5, 5, 7, 0, 0, 0], "", "", "el"], "expect" : "morning1" }
 { "op" : "period_id", "args" : [[2026, 5, 5, 3, 0, 0, 0], "", "", "my"], "expect" : "morning1" }
 { "op" : "period_id", "args" : [[2026, 5, 5, 20, 0, 0, 0], "selection", "", "ru"], "expect" : "evening1" }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "ar"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "uk"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "ar"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "uk"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "dd.MM.yy", "es_PE"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "te"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "pt_BR"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "te"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "pt_BR"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "medium", "en"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13.10.26", "dd.MM.yy", "it"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["13.10.26", "yyyy/MM/dd", "hi"], "expect" : [2013, 10, 26] }
@@ -7524,8 +7524,8 @@
 { "op" : "parse_date", "args" : ["1/2/3", "dd.MM.yy", "zh_Hant"], "expect" : [3, 2, 1] }
 { "op" : "parse_date", "args" : ["13.10.26", "short", "de"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["20261013", "medium", "my"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "en"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "pt_BR"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "en"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "pt_BR"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "ja"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "en_IN"], "expect" : [3, 2, 1] }
@@ -7536,35 +7536,35 @@
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "te"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "yyyy/MM/dd", "id"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "my"], "expect" : [1, 2, 3] }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "hi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "hi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["no numbers", "dd.MM.yy", "ar_EG"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "fr"], "expect" : [1, 2, 3] }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "short", "de"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "cs"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "cs"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "medium", "zh_Hant"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "medium", "sw"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "yyyy/MM/dd", "el"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "ca"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "bn"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "tr"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "tr"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["no numbers", "short", "el"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "en"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "ko"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "en"], "error" : "ValueError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "ko"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "yyyy/MM/dd", "ar_EG"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "ko"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "pl"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "fi"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["5", "yyyy/MM/dd", "el"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["5", "short", "en"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "pl"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "fi"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "yyyy/MM/dd", "el"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "short", "en"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "en"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "zh"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "short", "ar_EG"], "expect" : [3, 2, 1] }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "hi"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["5", "short", "ru"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "short", "ru"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "ta"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "am"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "en_GB"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "am"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "en_GB"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "es"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "ca"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "am"], "expect" : [3, 2, 1] }
@@ -7572,24 +7572,24 @@
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "ja"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13.10.26", "yyyy/MM/dd", "fa"], "expect" : [2013, 10, 26] }
 { "op" : "parse_date", "args" : ["13/10/2026", "yyyy/MM/dd", "hi"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "ru"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "fi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "ru"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "fi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "yyyy/MM/dd", "pt_BR"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "short", "zh"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "ru"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "short", "vi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "ru"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["12 34", "short", "vi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "sv"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "dd.MM.yy", "fr"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "yyyy/MM/dd", "tr"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "ru"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "ru"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "vi"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "medium", "fr"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "ta"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "ar_EG"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "short", "es_PE"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["20261013", "short", "da"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "hi"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "th"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "hi"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "th"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "dd.MM.yy", "pt_BR"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "dd.MM.yy", "nl"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["1/2/3", "dd.MM.yy", "ca"], "expect" : [3, 2, 1] }
@@ -7602,24 +7602,24 @@
 { "op" : "parse_date", "args" : ["2026-10-13", "short", "ar_EG"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "short", "pl"], "expect" : [3, 2, 1] }
 { "op" : "parse_date", "args" : ["2026-10-13", "dd.MM.yy", "en_GB"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "te"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "sv"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "te"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "sv"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["20261013", "short", "de"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "nl"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "medium", "hi"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["13/10/2026", "dd.MM.yy", "da"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "en_IN"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "pt_BR"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "pt_BR"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "yyyy/MM/dd", "en_IN"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "medium", "fa"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["5", "short", "bn"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "short", "bn"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13.10.26", "short", "hi"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "short", "fr"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "es"], "expect" : [1, 2, 3] }
-{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "ar_EG"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "ar_EG"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["no numbers", "short", "en_GB"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "yyyy/MM/dd", "pl"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "pl"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "pl"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "da"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "short", "tr"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["no numbers", "medium", "ar"], "error" : "ParseError" }
@@ -7629,111 +7629,111 @@
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "ru"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "short", "fr"], "expect" : [3, 2, 1] }
 { "op" : "parse_date", "args" : ["no numbers", "dd.MM.yy", "te"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "ja"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "en_IN"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "ja"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "en_IN"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "am"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "yyyy/MM/dd", "es_PE"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "nl"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "cs"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "nl"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "cs"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "yyyy/MM/dd", "de"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["5", "medium", "fr"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "medium", "fr"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "he"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "ta"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "zh"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "zh"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13.10.26", "yyyy/MM/dd", "ja"], "expect" : [2013, 10, 26] }
 { "op" : "parse_date", "args" : ["2026-10-13", "medium", "vi"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "pt_BR"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "pt_BR"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "bn"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "el"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "en_GB"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "el"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "en_GB"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "ar"], "expect" : [3, 2, 1] }
-{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ja"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "sw"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ja"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "sw"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "it"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "en_IN"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "short", "it"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "pl"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["13.10.26", "medium", "te"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "cs"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["5", "short", "el"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "en_IN"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "short", "el"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "dd.MM.yy", "en_IN"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "medium", "sw"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "medium", "pt_BR"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["20261013", "medium", "fa"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "ko"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "ko"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "ta"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "zh"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "medium", "id"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "nl"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "bn"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "ta"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["5", "short", "ca"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "es_PE"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "nl"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "bn"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "ta"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "short", "ca"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "es_PE"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "yyyy/MM/dd", "en_IN"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "yyyy/MM/dd", "sv"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "medium", "te"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "medium", "zh"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "short", "de"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "en_IN"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "es_PE"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "en_IN"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "es_PE"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "medium", "pl"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "medium", "de"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ru"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ru"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "zh"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["5", "short", "th"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "short", "nl"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "short", "th"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["12 34", "short", "nl"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "uk"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "dd.MM.yy", "en_GB"], "expect" : [3, 2, 1] }
 { "op" : "parse_date", "args" : ["13.10.26", "medium", "ru"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["no numbers", "yyyy/MM/dd", "uk"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "en_IN"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "it"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "en_IN"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["12 34", "yyyy/MM/dd", "it"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "short", "te"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "short", "pl"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "medium", "sv"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "el"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "el"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "pt_BR"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "my"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "dd.MM.yy", "my"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "nl"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["20261013", "medium", "pt_BR"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "fa"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13.10.26", "short", "fi"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "fr"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "fr"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "vi"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "sv"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["20261013", "short", "my"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "id"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "vi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "id"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "vi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "yyyy/MM/dd", "am"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "dd.MM.yy", "hi"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["13.10.26", "dd.MM.yy", "hi"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "pl"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "pl"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "short", "it"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "my"], "expect" : [1, 2, 3] }
 { "op" : "parse_date", "args" : ["13.10.26", "medium", "he"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "ru"], "expect" : [3, 2, 1] }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "bn"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["5", "yyyy/MM/dd", "vi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "bn"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "yyyy/MM/dd", "vi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "yyyy/MM/dd", "es"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "te"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "da"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "te"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "da"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "medium", "ar_EG"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["no numbers", "short", "cs"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ko"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "medium", "he"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "am"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "ko"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["12 34", "medium", "he"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "am"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "sw"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "vi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "vi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "medium", "id"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "te"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "am"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "te"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "am"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "sw"], "expect" : [1, 2, 3] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "yyyy/MM/dd", "id"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "te"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "te"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "yyyy/MM/dd", "uk"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "short", "te"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "my"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "short", "my"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026年10月13日", "dd.MM.yy", "nl"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["20261013", "medium", "sv"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "medium", "zh"], "error" : "ValueError" }
@@ -7741,61 +7741,61 @@
 { "op" : "parse_date", "args" : ["2026年10月13日", "short", "he"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13.10.26", "dd.MM.yy", "bn"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026-13-45", "short", "id"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "zh_Hant"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "zh_Hant"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "dd.MM.yy", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "te"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "medium", "am"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ko"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ko"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "cs"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "medium", "es"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "nl"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "te"], "expect" : [1, 2, 3] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "ta"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "short", "ta"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "en"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "yyyy/MM/dd", "en_GB"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "dd.MM.yy", "vi"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "medium", "ca"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "short", "sw"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "short", "ta"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "da"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "da"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "dd.MM.yy", "el"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "yyyy/MM/dd", "ru"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["10/13/2026", "dd.MM.yy", "es_PE"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "medium", "am"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ja"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ja"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13.10.26", "yyyy/MM/dd", "am"], "expect" : [2013, 10, 26] }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "short", "fa"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "en_IN"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["5", "dd.MM.yy", "en_IN"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "medium", "pt_BR"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "medium", "fr"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["31/02/2026", "short", "fi"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "medium", "id"], "expect" : [3, 2, 1] }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "nl"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "nl"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "medium", "am"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["20261013", "medium", "pl"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["no numbers", "yyyy/MM/dd", "it"], "error" : "ParseError" }
-{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "zh"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "el"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "yyyy/MM/dd", "zh"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "yyyy/MM/dd", "el"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["20261013", "short", "pl"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "en_IN"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "en_IN"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "dd.MM.yy", "fi"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-13-45", "short", "ru"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["1/2/3", "yyyy/MM/dd", "ko"], "expect" : [1, 2, 3] }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "pt_BR"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "pt_BR"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "dd.MM.yy", "pl"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "zh"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "zh"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "dd.MM.yy", "bn"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "yyyy/MM/dd", "pt_BR"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["20261013", "short", "th"], "expect" : [2026, 10, 13] }
-{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "sv"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ta"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "fa"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["20261013", "dd.MM.yy", "sv"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "yyyy/MM/dd", "ta"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13 oct. 2026", "medium", "fa"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "medium", "sv"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["10/13/2026", "yyyy/MM/dd", "my"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["no numbers", "dd.MM.yy", "tr"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["2026-10-13", "medium", "en_IN"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["2026年10月13日", "medium", "da"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["12 34", "short", "zh"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["12 34", "short", "zh"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "medium", "en"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["no numbers", "yyyy/MM/dd", "ar_EG"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13.10.26", "medium", "th"], "expect" : [2026, 10, 13] }
@@ -7803,8 +7803,8 @@
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "pt_BR"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["13/10/2026", "yyyy/MM/dd", "en"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["31/02/2026", "dd.MM.yy", "en_IN"], "error" : "ValueError" }
-{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "he"], "error" : "IndexError" }
-{ "op" : "parse_date", "args" : ["12 34", "short", "fi"], "error" : "IndexError" }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "dd.MM.yy", "he"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["12 34", "short", "fi"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13.10.26", "medium", "am"], "expect" : [2026, 10, 13] }
 { "op" : "parse_date", "args" : ["13/10/2026", "short", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_date", "args" : ["٢٠٢٦-١٠-١٣", "short", "zh_Hant"], "expect" : [2026, 10, 13] }
@@ -7813,14 +7813,14 @@
 { "op" : "parse_time", "args" : ["2:30 PM", "medium", "ar"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["2:30 pm", "h:mm a", "el"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "short", "ca"], "expect" : [9, 0, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "sw"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "sw"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "am"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "short", "da"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "short", "da"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["nothing", "HH:mm", "ta"], "error" : "ParseError" }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "vi"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "vi"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "bn"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["10:70", "medium", "de"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "zh_Hant"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "zh_Hant"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "fi"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["14:30:15", "h:mm a", "en_IN"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["10:70", "medium", "fi"], "error" : "ValueError" }
@@ -7832,62 +7832,62 @@
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "vi"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "h:mm a", "ca"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 PM", "h:mm a", "de"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "HH:mm", "ja"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "HH:mm", "ja"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "tr"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["25:00", "medium", "uk"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "en_IN"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "en_IN"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 PM", "h:mm a", "th"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["nothing", "HH:mm", "my"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["14:30:15", "HH:mm", "de"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "sw"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "sw"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "fr"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "am"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["nothing", "medium", "ca"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "short", "en"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "vi"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "fr"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "fr"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["10:70", "HH:mm", "en"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "fr"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "uk"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "uk"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30", "HH:mm", "zh_Hant"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "de"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["nothing", "HH:mm", "hi"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "el"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "fi"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "fi"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "nl"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "h:mm a", "tr"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["23:59:59", "h:mm a", "ru"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "zh_Hant"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "ja"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "zh_Hant"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "ja"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "short", "id"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "id"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["nothing", "h:mm a", "en"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["10:70", "HH:mm", "he"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["9", "HH:mm", "te"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "h:mm a", "nl"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ar_EG"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ar_EG"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["9", "short", "hi"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 PM", "medium", "bn"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["25:00", "HH:mm", "tr"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "zh_Hant"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "am"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "ko"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "am"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "ko"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["25:00", "medium", "vi"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["10:70", "HH:mm", "pl"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "cs"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "HH:mm", "cs"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["9", "HH:mm", "el"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30", "short", "uk"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "de"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "de"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["10:70", "medium", "cs"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "he"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "he"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["2:30 PM", "h:mm a", "fi"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "HH:mm", "sw"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "HH:mm", "sw"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "medium", "vi"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "medium", "ru"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "short", "de"], "expect" : [2, 30, 0] }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "id"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "medium", "id"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["10:70", "HH:mm", "zh_Hant"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "bn"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "bn"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["nothing", "HH:mm", "en_IN"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "short", "el"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["2:30 pm", "h:mm a", "bn"], "expect" : [14, 30, 0] }
@@ -7899,19 +7899,19 @@
 { "op" : "parse_time", "args" : ["23:59:59", "h:mm a", "my"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["14:30:15", "h:mm a", "ta"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "short", "te"], "expect" : [16, 5, 6] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "fi"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "fi"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "de"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["25:00", "h:mm a", "fr"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["٢:٣٠", "h:mm a", "my"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "HH:mm", "ta"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "de"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "de"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "HH:mm", "fi"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["10:70", "medium", "tr"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "zh"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "zh"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "h:mm a", "uk"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["25:00", "medium", "ca"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["10:70", "h:mm a", "sv"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "el"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "el"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["10:70", "short", "zh_Hant"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["9", "HH:mm", "ca"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["9", "h:mm a", "es"], "expect" : [9, 0, 0] }
@@ -7923,26 +7923,26 @@
 { "op" : "parse_time", "args" : ["14:30:15", "medium", "he"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["2:30 pm", "h:mm a", "te"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "HH:mm", "sv"], "expect" : [9, 0, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "en_GB"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "en_GB"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 pm", "short", "en"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30", "h:mm a", "pt_BR"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "pt_BR"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["14:30", "medium", "fa"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "fi"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "fi"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30", "h:mm a", "zh"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "medium", "ar_EG"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "it"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "it"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "HH:mm", "ar_EG"], "expect" : [14, 30, 15] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "short", "fa"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "short", "fa"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["25:00", "short", "pt_BR"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["14:30", "h:mm a", "zh_Hant"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "es_PE"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["23:59:59", "h:mm a", "hi"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "fa"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "fa"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["25:00", "short", "he"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["2:30 PM", "short", "am"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "zh"], "expect" : [2, 30, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "he"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "he"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["10:70", "short", "en_GB"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["9", "h:mm a", "te"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["9", "HH:mm", "pl"], "expect" : [9, 0, 0] }
@@ -7954,56 +7954,56 @@
 { "op" : "parse_time", "args" : ["25:00", "h:mm a", "ta"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "ar"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["nothing", "h:mm a", "th"], "error" : "ParseError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "short", "ja"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "short", "ja"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "it"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "HH:mm", "fi"], "expect" : [2, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "th"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 pm", "HH:mm", "th"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["٢:٣٠", "medium", "it"], "expect" : [2, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30", "HH:mm", "ar"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "ru"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "am"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "am"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "short", "ca"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["23:59:59", "HH:mm", "am"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["25:00", "h:mm a", "el"], "error" : "ValueError" }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "pt_BR"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "de"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "pt_BR"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "de"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 pm", "short", "en_IN"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "sw"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "h:mm a", "te"], "expect" : [16, 5, 6] }
-{ "op" : "parse_time", "args" : ["4:05:06 PM", "short", "cs"], "expect" : [4, 5, 6] }
+{ "op" : "parse_time", "args" : ["4:05:06 PM", "short", "cs"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "my"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ca"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ca"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["25:00", "medium", "fr"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "ta"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "short", "te"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "cs"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "short", "te"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "cs"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["2:30 pm", "h:mm a", "ta"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30:15", "HH:mm", "tr"], "expect" : [14, 30, 15] }
 { "op" : "parse_time", "args" : ["9", "short", "ar_EG"], "expect" : [9, 0, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "pl"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "short", "ja"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "pl"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "short", "ja"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["9", "h:mm a", "vi"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["9", "h:mm a", "ar"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "short", "da"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["2:30 pm", "short", "nl"], "expect" : [2, 30, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "th"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["2:30 pm", "short", "nl"], "expect" : [14, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "th"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["2:30 PM", "medium", "ar_EG"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["nothing", "medium", "de"], "error" : "ParseError" }
 { "op" : "parse_time", "args" : ["9", "medium", "pl"], "expect" : [9, 0, 0] }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "h:mm a", "en"], "expect" : [16, 5, 6] }
 { "op" : "parse_time", "args" : ["9", "short", "uk"], "expect" : [9, 0, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ko"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "h:mm a", "ko"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "medium", "ta"], "expect" : [23, 59, 59] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "zh"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "HH:mm", "zh"], "expect" : [0, 0, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "HH:mm", "en"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["14:30", "h:mm a", "te"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["23:59:59", "HH:mm", "th"], "expect" : [23, 59, 59] }
 { "op" : "parse_time", "args" : ["14:30", "medium", "fr"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "ja"], "expect" : [12, 0, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "es"], "expect" : [2, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 pm", "short", "zh_Hant"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 AM", "medium", "ja"], "expect" : [0, 0, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "es"], "expect" : [14, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 pm", "short", "zh_Hant"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["14:30", "short", "da"], "expect" : [14, 30, 0] }
-{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "zh"], "expect" : [2, 30, 0] }
+{ "op" : "parse_time", "args" : ["2:30 PM", "medium", "zh"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["25:00", "medium", "el"], "error" : "ValueError" }
 { "op" : "parse_time", "args" : ["14:30", "HH:mm", "id"], "expect" : [14, 30, 0] }
 { "op" : "parse_time", "args" : ["4:05:06 PM", "h:mm a", "fi"], "expect" : [16, 5, 6] }
@@ -8460,214 +8460,236 @@
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "O", "America/St_Johns", "es_PE"], "expect" : "GMT-3:30" }
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "OOOO", "America/St_Johns", "es_PE"], "expect" : "GMT-03:30" }
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "SS", "Asia/Kolkata", "es_PE"], "expect" : "99" }
-{"op": "untokenize", "args": ["''"], "expect": ["''", true]}
-{"op": "untokenize", "args": ["'''"], "expect": ["''", true]}
-{"op": "untokenize", "args": ["'a''b'"], "expect": ["'a''b'", true]}
-{"op": "untokenize", "args": ["'l''heure' H"], "expect": ["'l''heure' H", true]}
-{"op": "untokenize", "args": ["'xyz'"], "expect": ["'xyz'", true]}
-{"op": "untokenize", "args": ["H''mm"], "expect": ["H''mm", true]}
-{"op": "untokenize", "args": ["HH 'h' mm 'min'"], "expect": ["HH 'h' mm 'min'", true]}
-{"op": "untokenize", "args": ["d '' M"], "expect": ["d '' M", true]}
-{"op": "untokenize", "args": ["h 'o''clock' a"], "expect": ["h 'o''clock' a", true]}
-{"op": "untokenize", "args": ["w'ª' 'semana' 'de' Y"], "expect": ["wª 'semana de' Y", true]}
-{"op": "untokenize", "args": ["y ''"], "expect": ["y ''", true]}
-{"op": "untokenize", "args": ["'Izu' w 'n' 'ime' Y"], "expect": ["'Izu' w 'n ime' Y", true]}
-{"op": "untokenize", "args": ["'Klock' H.mm:ss"], "expect": ["'Klock' H.mm:ss", true]}
-{"op": "untokenize", "args": ["'Woche' W 'im' MMMM"], "expect": ["'Woche' W 'im' MMMM", true]}
-{"op": "untokenize", "args": ["'aɖabaƒoƒo' mm:ss"], "expect": ["'aɖabaƒoƒo' mm:ss", true]}
-{"op": "untokenize", "args": ["'beke' 'ya' 'bo' W 'ya' MMM"], "expect": ["'beke ya bo' W 'ya' MMM", true]}
-{"op": "untokenize", "args": ["'edema' W MMMM"], "expect": ["'edema' W MMMM", true]}
-{"op": "untokenize", "args": ["'ga' h:mm 'le' E B 'me'"], "expect": ["'ga' h:mm 'le' E B 'me'", true]}
-{"op": "untokenize", "args": ["'ga' h:mm:ss 'le' E B 'me'"], "expect": ["'ga' h:mm:ss 'le' E B 'me'", true]}
-{"op": "untokenize", "args": ["'hefteya' w'em' 'ya' Y'an'"], "expect": ["'hefteya' w'em ya' Y'an'", true]}
-{"op": "untokenize", "args": ["'kɔsiɖa' w 'lia' 'le' 'ƒe' Y 'me'"], "expect": ["'kɔsiɖa' w 'lia le ƒe' Y 'me'", true]}
-{"op": "untokenize", "args": ["'linggo' w 'ng' Y"], "expect": ["'linggo' w 'ng' Y", true]}
-{"op": "untokenize", "args": ["'minggu' 'ke'-W MMMM"], "expect": ["'minggu ke'-W MMMM", true]}
-{"op": "untokenize", "args": ["'pekan' w 'ing' Y"], "expect": ["'pekan' w 'ing' Y", true]}
-{"op": "untokenize", "args": ["'sati' w 'cikin' Y"], "expect": ["'sati' w 'cikin' Y", true]}
-{"op": "untokenize", "args": ["'semana' w 'sa' Y"], "expect": ["'semana' w 'sa' Y", true]}
-{"op": "untokenize", "args": ["'setmana' w 'del' Y"], "expect": ["'setmana' w 'del' Y", true]}
-{"op": "untokenize", "args": ["'sizhun' W 'miz' MMMM"], "expect": ["'sizhun' W 'miz' MMMM", true]}
-{"op": "untokenize", "args": ["'săptămâna' W 'din' MMMM"], "expect": ["'săptămâna' W 'din' MMMM", true]}
-{"op": "untokenize", "args": ["'săptămâna' w 'din' Y"], "expect": ["'săptămâna' w 'din' Y", true]}
-{"op": "untokenize", "args": ["'toddobaadka' w 'ee' Y"], "expect": ["'toddobaadka' w 'ee' Y", true]}
-{"op": "untokenize", "args": ["'tuần' w 'của' 'năm' Y"], "expect": ["'tuần' w 'của năm' Y", true]}
-{"op": "untokenize", "args": ["'uke' w 'i' Y"], "expect": ["'uke' w 'i' Y", true]}
-{"op": "untokenize", "args": ["'vecka' W 'i' MMMM"], "expect": ["'vecka' W 'i' MMMM", true]}
-{"op": "untokenize", "args": ["'week' W 'of' MMMM"], "expect": ["'week' W 'of' MMMM", true]}
-{"op": "untokenize", "args": ["'wiki' w 'o' Y"], "expect": ["'wiki' w 'o' Y", true]}
-{"op": "untokenize", "args": ["'седмица' W 'мјесец' MMMM"], "expect": ["седмица W мјесец MMMM", true]}
-{"op": "untokenize", "args": ["'ҳафтаи' w, Y"], "expect": ["ҳафтаи w, Y", true]}
-{"op": "untokenize", "args": ["E d 'de 'MMM – "], "expect": ["E d 'de' MMM – ", true]}
-{"op": "untokenize", "args": ["E d 'de' MMM y"], "expect": ["E d 'de' MMM y", true]}
-{"op": "untokenize", "args": ["E, d 'de 'MMM 'de 'y G – "], "expect": ["E, d 'de' MMM 'de' y G – ", true]}
-{"op": "untokenize", "args": ["E, d 'de 'MMMM"], "expect": ["E, d 'de' MMMM", true]}
-{"op": "untokenize", "args": ["E, d 'de' MMM 'de' y G"], "expect": ["E, d 'de' MMM 'de' y G", true]}
-{"op": "untokenize", "args": ["E, d 'de' MMMM"], "expect": ["E, d 'de' MMMM", true]}
-{"op": "untokenize", "args": ["E, d 'de' MMMM 'de' y"], "expect": ["E, d 'de' MMMM 'de' y", true]}
-{"op": "untokenize", "args": ["E, d 'de' MMMM 'de' y G"], "expect": ["E, d 'de' MMMM 'de' y G", true]}
-{"op": "untokenize", "args": ["E, d 'ne 'MMM"], "expect": ["E, d 'ne' MMM", true]}
-{"op": "untokenize", "args": ["E, d 'ne 'MMM, y"], "expect": ["E, d 'ne' MMM, y", true]}
-{"op": "untokenize", "args": ["E, d 'ne' MMM"], "expect": ["E, d 'ne' MMM", true]}
-{"op": "untokenize", "args": ["E, d 'ta'’ MMM"], "expect": ["E, d 'ta'’ MMM", true]}
-{"op": "untokenize", "args": ["E, d MMM y 'г'. G"], "expect": ["E, d MMM y г. G", true]}
-{"op": "untokenize", "args": ["E, d MMM y 'ҫ'. G"], "expect": ["E, d MMM y ҫ. G", true]}
-{"op": "untokenize", "args": ["E, d MMMM y 'г'. G"], "expect": ["E, d MMMM y г. G", true]}
-{"op": "untokenize", "args": ["E, d'ê' MMM'ê'"], "expect": ["E, dê MMMê", true]}
-{"op": "untokenize", "args": ["E, d.MM.y 'г'. G"], "expect": ["E, d.MM.y г. G", true]}
-{"op": "untokenize", "args": ["E, h:mm'ê' B"], "expect": ["E, h:mmê B", true]}
-{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM"], "expect": ["E, y. 'gada' d. MMM", true]}
-{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM – "], "expect": ["E, y. 'gada' d. MMM – ", true]}
-{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM – "], "expect": ["E, y. 'gada' d. MMM – ", true]}
-{"op": "untokenize", "args": ["EEEE dd 'de' MMMM 'de' y"], "expect": ["EEEE dd 'de' MMMM 'de' y", true]}
-{"op": "untokenize", "args": ["EEEE, 'ils' d MMMM y"], "expect": ["EEEE, 'ils' d MMMM y", true]}
-{"op": "untokenize", "args": ["EEEE, d 'de' MMMM 'de' y"], "expect": ["EEEE, d 'de' MMMM 'de' y", true]}
-{"op": "untokenize", "args": ["EEEE, d MMMM 'dl' y"], "expect": ["EEEE, d MMMM 'dl' y", true]}
-{"op": "untokenize", "args": ["EEEE, y. 'gada' d. MMMM"], "expect": ["EEEE, y. 'gada' d. MMMM", true]}
-{"op": "untokenize", "args": ["G E, d 'ne 'MMM, y – "], "expect": ["G E, d 'ne' MMM, y – ", true]}
-{"op": "untokenize", "args": ["G MMM'a 'y'an – '"], "expect": ["G MMM'a' y'an' – ", true]}
-{"op": "untokenize", "args": ["G d 'ne 'MMM, y – "], "expect": ["G d 'ne' MMM, y – ", true]}
-{"op": "untokenize", "args": ["G dê MMM'a 'y'an – '"], "expect": ["G dê MMM'a' y'an' – ", true]}
-{"op": "untokenize", "args": ["G y-'ж'. d-MMM, E"], "expect": ["G y-ж. d-MMM, E", true]}
-{"op": "untokenize", "args": ["G y. 'g'."], "expect": ["G y. 'g'.", true]}
-{"op": "untokenize", "args": ["G y. 'gada 'd. MMM, E"], "expect": ["G y. 'gada' d. MMM, E", true]}
-{"op": "untokenize", "args": ["G y. 'gada 'd. MMM, E – "], "expect": ["G y. 'gada' d. MMM, E – ", true]}
-{"op": "untokenize", "args": ["G y. 'gada 'd.–"], "expect": ["G y. 'gada' d.–", true]}
-{"op": "untokenize", "args": ["G y. 'urteko' MMM"], "expect": ["G y. 'urteko' MMM", true]}
-{"op": "untokenize", "args": ["G y. 'urteko' MMM d('a')"], "expect": ["G y. 'urteko' MMM d('a')", true]}
-{"op": "untokenize", "args": ["G y. 'urteko' MMM d('a'), E"], "expect": ["G y. 'urteko' MMM d('a'), E", true]}
-{"op": "untokenize", "args": ["G y 'ел'"], "expect": ["G y ел", true]}
-{"op": "untokenize", "args": ["G y 'ж'."], "expect": ["G y ж.", true]}
-{"op": "untokenize", "args": ["G y 'ж'. MMM"], "expect": ["G y ж. MMM", true]}
-{"op": "untokenize", "args": ["G y 'оны' MMM'ын' d. E"], "expect": ["G y оны MMMын d. E", true]}
-{"op": "untokenize", "args": ["H 'h'"], "expect": ["H 'h'", true]}
-{"op": "untokenize", "args": ["H 'h.'"], "expect": ["H 'h'.", true]}
-{"op": "untokenize", "args": ["H:mm 'hodź'."], "expect": ["H:mm 'hod'ź.", true]}
-{"op": "untokenize", "args": ["H:mm 'hodź.'"], "expect": ["H:mm 'hod'ź.", true]}
-{"op": "untokenize", "args": ["H:mm:ss 'ч'. z"], "expect": ["H:mm:ss ч. z", true]}
-{"op": "untokenize", "args": ["HH 'Uhr 'v"], "expect": ["HH 'Uhr' v", true]}
-{"op": "untokenize", "args": ["HH 'a '"], "expect": ["HH 'a' ", true]}
-{"op": "untokenize", "args": ["HH 'h 'v"], "expect": ["HH 'h' v", true]}
-{"op": "untokenize", "args": ["HH 'h' mm 'min' ss 's'"], "expect": ["HH 'h' mm 'min' ss 's'", true]}
-{"op": "untokenize", "args": ["HH 'ц'"], "expect": ["HH ц", true]}
-{"op": "untokenize", "args": ["HH'h'"], "expect": ["HH'h'", true]}
-{"op": "untokenize", "args": ["HH'h'mm ss 'seg'."], "expect": ["HH'h'mm ss 'seg'.", true]}
-{"op": "untokenize", "args": ["HH:mm 'ч'."], "expect": ["HH:mm ч.", true]}
-{"op": "untokenize", "args": ["HH:mm:ss 'ч'."], "expect": ["HH:mm:ss ч.", true]}
-{"op": "untokenize", "args": ["LLL y 'р'."], "expect": ["LLL y р.", true]}
-{"op": "untokenize", "args": ["LLLL, 'tydz'. W"], "expect": ["LLLL, 'tydz'. W", true]}
-{"op": "untokenize", "args": ["M 'a '"], "expect": ["M 'a' ", true]}
-{"op": "untokenize", "args": ["MM.y 'г'."], "expect": ["MM.y г.", true]}
-{"op": "untokenize", "args": ["MM.y 'г'. G"], "expect": ["MM.y г. G", true]}
-{"op": "untokenize", "args": ["MM/y 'al '"], "expect": ["MM/y 'al' ", true]}
-{"op": "untokenize", "args": ["MMM 'de 'y"], "expect": ["MMM 'de' y", true]}
-{"op": "untokenize", "args": ["MMM 'de 'y – "], "expect": ["MMM 'de' y – ", true]}
-{"op": "untokenize", "args": ["MMM d('a), 'E – "], "expect": ["MMM d('a'), E – ", true]}
-{"op": "untokenize", "args": ["MMM y 'г'. G"], "expect": ["MMM y г. G", true]}
-{"op": "untokenize", "args": ["MMM'ын' d"], "expect": ["MMMын d", true]}
-{"op": "untokenize", "args": ["MMM'ын' d. E"], "expect": ["MMMын d. E", true]}
-{"op": "untokenize", "args": ["MMMM 'abɔkɔɩ' W'ja'"], "expect": ["MMMM 'abɔk'ɔɩ W'ja'", true]}
-{"op": "untokenize", "args": ["MMMM 'al '"], "expect": ["MMMM 'al' ", true]}
-{"op": "untokenize", "args": ["MMMM 'ayının' W. 'haftası'"], "expect": ["MMMM 'ayının' W. 'haftas'ı", true]}
-{"op": "untokenize", "args": ["MMMM 'de 'y – "], "expect": ["MMMM 'de' y – ", true]}
-{"op": "untokenize", "args": ["MMMM 'năm 'y"], "expect": ["MMMM 'năm' y", true]}
-{"op": "untokenize", "args": ["MMMM 'аеның' W 'атнасы'"], "expect": ["MMMM аеның W атнасы", true]}
-{"op": "untokenize", "args": ["MMMM -'acho' 'suman' W"], "expect": ["MMMM -'acho suman' W", true]}
-{"op": "untokenize", "args": ["MMMM W 'sav'."], "expect": ["MMMM W 'sav'.", true]}
-{"op": "untokenize", "args": ["MMMM W. 'hete'"], "expect": ["MMMM W. 'hete'", true]}
-{"op": "untokenize", "args": ["MMMM y 'г'. G"], "expect": ["MMMM y г. G", true]}
-{"op": "untokenize", "args": ["MMMM'a 'y'an – '"], "expect": ["MMMM'a' y'an' – ", true]}
-{"op": "untokenize", "args": ["MMMM, W 'həftə'"], "expect": ["MMMM, W 'həft'ə", true]}
-{"op": "untokenize", "args": ["MMMM, W 'һәфтә'"], "expect": ["MMMM, W һәфтә", true]}
-{"op": "untokenize", "args": ["MMMM, W-'ҳафта'"], "expect": ["MMMM, W-ҳафта", true]}
-{"op": "untokenize", "args": ["MMMM: W. 'nedelja'"], "expect": ["MMMM: W. 'nedelja'", true]}
-{"op": "untokenize", "args": ["MMMM:'a' 'vahkku' W"], "expect": ["MMMM:'a vahkku' W", true]}
-{"op": "untokenize", "args": ["QQQ'em' 'ya' y'an'"], "expect": ["QQQ'em ya' y'an'", true]}
-{"op": "untokenize", "args": ["W'ª' 'setemana' 'de' MMMM"], "expect": ["Wª 'setemana de' MMMM", true]}
-{"op": "untokenize", "args": ["W-'й' 'тиж'. MMMM"], "expect": ["W-й тиж. MMMM", true]}
-{"op": "untokenize", "args": ["W. 'tjedan' MMMM"], "expect": ["W. 'tjedan' MMMM", true]}
-{"op": "untokenize", "args": ["Y 'kaa' 'week' w"], "expect": ["Y 'kaa week' w", true]}
-{"op": "untokenize", "args": ["Y -'acho' 'suman' w"], "expect": ["Y -'acho suman' w", true]}
-{"op": "untokenize", "args": ["Y, 'tydz'. w"], "expect": ["Y, 'tydz'. w", true]}
-{"op": "untokenize", "args": ["Y, w 'һәфтә'"], "expect": ["Y, w һәфтә", true]}
-{"op": "untokenize", "args": ["a 'ga' h:mm 'le' v"], "expect": ["a 'ga' h:mm 'le' v", true]}
-{"op": "untokenize", "args": ["a 'ga' h:mm:ss"], "expect": ["a 'ga' h:mm:ss", true]}
-{"op": "untokenize", "args": ["ccc, d 'de 'MMMM – "], "expect": ["ccc, d 'de' MMMM – ", true]}
-{"op": "untokenize", "args": ["ccc, d 'de' MMMM 'de' y"], "expect": ["ccc, d 'de' MMMM 'de' y", true]}
-{"op": "untokenize", "args": ["d 'de 'MMM 'de 'y G"], "expect": ["d 'de' MMM 'de' y G", true]}
-{"op": "untokenize", "args": ["d 'de' MMMM 'de' 'su' y"], "expect": ["d 'de' MMMM 'de su' y", true]}
-{"op": "untokenize", "args": ["d 'de' MMMM 'de' y"], "expect": ["d 'de' MMMM 'de' y", true]}
-{"op": "untokenize", "args": ["d 'de' MMMM 'de' y G"], "expect": ["d 'de' MMMM 'de' y G", true]}
-{"op": "untokenize", "args": ["d 'lia , 'y"], "expect": ["d 'lia' , y", true]}
-{"op": "untokenize", "args": ["d 'ne' MMM"], "expect": ["d 'ne' MMM", true]}
-{"op": "untokenize", "args": ["d 'ne' MMMM"], "expect": ["d 'ne' MMMM", true]}
-{"op": "untokenize", "args": ["d MMM 'del' y"], "expect": ["d MMM 'del' y", true]}
-{"op": "untokenize", "args": ["d MMM y 'ҫ'."], "expect": ["d MMM y ҫ.", true]}
-{"op": "untokenize", "args": ["d MMM y 'ҫ'. G"], "expect": ["d MMM y ҫ. G", true]}
-{"op": "untokenize", "args": ["d'mh' MMM y"], "expect": ["d'mh' MMM y", true]}
-{"op": "untokenize", "args": ["d.MM.y 'г'."], "expect": ["d.MM.y г.", true]}
-{"op": "untokenize", "args": ["d/MM/y 'a '"], "expect": ["d/MM/y 'a' ", true]}
-{"op": "untokenize", "args": ["dd 'de 'MM"], "expect": ["dd 'de' MM", true]}
-{"op": "untokenize", "args": ["dd 'de 'MMM 'de 'y G"], "expect": ["dd 'de' MMM 'de' y G", true]}
-{"op": "untokenize", "args": ["dê MMM'a 'y'an – '"], "expect": ["dê MMM'a' y'an' – ", true]}
-{"op": "untokenize", "args": ["h 'Uhr' a"], "expect": ["h 'Uhr' a", true]}
-{"op": "untokenize", "args": ["h 'giờ 'B – "], "expect": ["h 'gi'ờ B – ", true]}
-{"op": "untokenize", "args": ["h 'h 'mm a – "], "expect": ["h 'h' mm a – ", true]}
-{"op": "untokenize", "args": ["h 'h – '"], "expect": ["h 'h' – ", true]}
-{"op": "untokenize", "args": ["h 'hodź. 'B – "], "expect": ["h 'hod'ź. B – ", true]}
-{"op": "untokenize", "args": ["h'h'mm:ss a"], "expect": ["h'h'mm:ss a", true]}
-{"op": "untokenize", "args": ["h'ê' B"], "expect": ["hê B", true]}
-{"op": "untokenize", "args": ["h:mm 'Uhr 'B"], "expect": ["h:mm 'Uhr' B", true]}
-{"op": "untokenize", "args": ["h:mm'ê' B"], "expect": ["h:mmê B", true]}
-{"op": "untokenize", "args": ["mm 'min' ss 's'"], "expect": ["mm 'min' ss 's'", true]}
-{"op": "untokenize", "args": ["w 'semana' Y 'watapa'"], "expect": ["w 'semana' Y 'watapa'", true]}
-{"op": "untokenize", "args": ["w 'тыдзень' Y"], "expect": ["w тыдзень Y", true]}
-{"op": "untokenize", "args": ["w-'мӗш' 'эрни' Y 'ҫ'."], "expect": ["w-мӗш эрни Y ҫ.", true]}
-{"op": "untokenize", "args": ["w. 'nedelja' 'u' Y."], "expect": ["w. 'nedelja u' Y.", true]}
-{"op": "untokenize", "args": ["w. 'sedmica' 'u' Y."], "expect": ["w. 'sedmica u' Y.", true]}
-{"op": "untokenize", "args": ["w. 'tyźeń' 'lěta' Y"], "expect": ["w. 'tyźeń lěta' Y", true]}
-{"op": "untokenize", "args": ["w. 'týždeň' 'roka' Y"], "expect": ["w. 'týždeň roka' Y", true]}
-{"op": "untokenize", "args": ["y 'a '"], "expect": ["y 'a' ", true]}
-{"op": "untokenize", "args": ["y 'al '"], "expect": ["y 'al' ", true]}
-{"op": "untokenize", "args": ["y 'm'. G, LLLL"], "expect": ["y 'm'. G, LLLL", true]}
-{"op": "untokenize", "args": ["y MMM d('a'), E"], "expect": ["y MMM d('a'), E", true]}
-{"op": "untokenize", "args": ["y('e')'ko' MMMM"], "expect": ["y('e)ko' MMMM", true]}
-{"op": "untokenize", "args": ["y('e')'ko' QQQQ"], "expect": ["y('e)ko' QQQQ", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMM"], "expect": ["y('e)''ko' MMM", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMM d('a)'"], "expect": ["y('e)''ko' MMM d('a')", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMM d('a) – '"], "expect": ["y('e)''ko' MMM d('a') – ", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMM d–"], "expect": ["y('e)''ko' MMM d–", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMMM – "], "expect": ["y('e)''ko' MMMM – ", true]}
-{"op": "untokenize", "args": ["y('e)''ko 'MMMM–"], "expect": ["y('e)''ko' MMMM–", true]}
-{"op": "untokenize", "args": ["y-'ж'. MMM"], "expect": ["y-ж. MMM", true]}
-{"op": "untokenize", "args": ["y-'ж'. d-MMM, E"], "expect": ["y-ж. d-MMM, E", true]}
-{"op": "untokenize", "args": ["y-'ж'., QQQ"], "expect": ["y-ж., QQQ", true]}
-{"op": "untokenize", "args": ["y. 'g'. MMM"], "expect": ["y. 'g'. MMM", true]}
-{"op": "untokenize", "args": ["y. 'g'. MMMM"], "expect": ["y. 'g'. MMMM", true]}
-{"op": "untokenize", "args": ["y. 'g'. d. MMM"], "expect": ["y. 'g'. d. MMM", true]}
-{"op": "untokenize", "args": ["y. 'gada 'MMMM – "], "expect": ["y. 'gada' MMMM – ", true]}
-{"op": "untokenize", "args": ["y. 'gada 'MMMM – "], "expect": ["y. 'gada' MMMM – ", true]}
-{"op": "untokenize", "args": ["y. 'gada 'MMM – "], "expect": ["y. 'gada' MMM – ", true]}
-{"op": "untokenize", "args": ["y. 'gada 'd. MMM – "], "expect": ["y. 'gada' d. MMM – ", true]}
-{"op": "untokenize", "args": ["y. 'gada 'd.–"], "expect": ["y. 'gada' d.–", true]}
-{"op": "untokenize", "args": ["y. 'gada' d. MMMM"], "expect": ["y. 'gada' d. MMMM", true]}
-{"op": "untokenize", "args": ["y 'г'."], "expect": ["y г.", true]}
-{"op": "untokenize", "args": ["y 'г'. G"], "expect": ["y г. G", true]}
-{"op": "untokenize", "args": ["y 'ел', QQQQ"], "expect": ["y ел, QQQQ", true]}
-{"op": "untokenize", "args": ["y 'ж'. MMMM"], "expect": ["y ж. MMMM", true]}
-{"op": "untokenize", "args": ["y 'оны' MMMM"], "expect": ["y оны MMMM", true]}
-{"op": "untokenize", "args": ["y 'оны' MMMM'ын' d, EEEE 'гараг'"], "expect": ["y оны MMMMын d, EEEE гараг", true]}
-{"op": "untokenize", "args": ["y 'оны' QQQQ"], "expect": ["y оны QQQQ", true]}
-{"op": "untokenize", "args": ["y 'с'. G"], "expect": ["y с. G", true]}
-{"op": "untokenize", "args": ["y 'сыл' MMMM d 'күнэ', EEEE"], "expect": ["y сыл MMMM d күнэ, EEEE", true]}
-{"op": "untokenize", "args": ["{1} 'fọ' {0}"], "expect": ["{1} 'f'ọ {0}", true]}
-{"op": "untokenize", "args": ["{1} 'jam' {0}"], "expect": ["{1} 'jam' {0}", true]}
-{"op": "untokenize", "args": ["{1} 'klo' {0}"], "expect": ["{1} 'klo' {0}", true]}
-{"op": "untokenize", "args": ["{1} 'na' {0}"], "expect": ["{1} 'na' {0}", true]}
-{"op": "untokenize", "args": ["{1} 'ní' {0}"], "expect": ["{1} 'n'í {0}", true]}
-{"op": "untokenize", "args": ["{1} 'pukul' {0}"], "expect": ["{1} 'pukul' {0}", true]}
-{"op": "untokenize", "args": ["{1} 'ye' {0}"], "expect": ["{1} 'ye' {0}", true]}
-{"op": "untokenize", "args": ["{1} 'à' {0}"], "expect": ["{1} à {0}", true]}
-{"op": "untokenize", "args": ["{1} 'às' {0}"], "expect": ["{1} à's' {0}", true]}
-{"op": "untokenize", "args": ["{1}, 'a' 'les' {0}"], "expect": ["{1}, 'a les' {0}", true]}
-{"op": "untokenize", "args": ["{1}, 'во' {0}"], "expect": ["{1}, во {0}", true]}
+{ "op" : "untokenize", "args" : ["''"], "expect" : ["''", true] }
+{ "op" : "untokenize", "args" : ["'''"], "expect" : ["''", true] }
+{ "op" : "untokenize", "args" : ["'a''b'"], "expect" : ["'a''b'", true] }
+{ "op" : "untokenize", "args" : ["'l''heure' H"], "expect" : ["'l''heure' H", true] }
+{ "op" : "untokenize", "args" : ["'xyz'"], "expect" : ["'xyz'", true] }
+{ "op" : "untokenize", "args" : ["H''mm"], "expect" : ["H''mm", true] }
+{ "op" : "untokenize", "args" : ["HH 'h' mm 'min'"], "expect" : ["HH 'h' mm 'min'", true] }
+{ "op" : "untokenize", "args" : ["d '' M"], "expect" : ["d '' M", true] }
+{ "op" : "untokenize", "args" : ["h 'o''clock' a"], "expect" : ["h 'o''clock' a", true] }
+{ "op" : "untokenize", "args" : ["w'ª' 'semana' 'de' Y"], "expect" : ["wª 'semana de' Y", true] }
+{ "op" : "untokenize", "args" : ["y ''"], "expect" : ["y ''", true] }
+{ "op" : "untokenize", "args" : ["'Izu' w 'n' 'ime' Y"], "expect" : ["'Izu' w 'n ime' Y", true] }
+{ "op" : "untokenize", "args" : ["'Klock' H.mm:ss"], "expect" : ["'Klock' H.mm:ss", true] }
+{ "op" : "untokenize", "args" : ["'Woche' W 'im' MMMM"], "expect" : ["'Woche' W 'im' MMMM", true] }
+{ "op" : "untokenize", "args" : ["'aɖabaƒoƒo' mm:ss"], "expect" : ["'aɖabaƒoƒo' mm:ss", true] }
+{ "op" : "untokenize", "args" : ["'beke' 'ya' 'bo' W 'ya' MMM"], "expect" : ["'beke ya bo' W 'ya' MMM", true] }
+{ "op" : "untokenize", "args" : ["'edema' W MMMM"], "expect" : ["'edema' W MMMM", true] }
+{ "op" : "untokenize", "args" : ["'ga' h:mm 'le' E B 'me'"], "expect" : ["'ga' h:mm 'le' E B 'me'", true] }
+{ "op" : "untokenize", "args" : ["'ga' h:mm:ss 'le' E B 'me'"], "expect" : ["'ga' h:mm:ss 'le' E B 'me'", true] }
+{ "op" : "untokenize", "args" : ["'hefteya' w'em' 'ya' Y'an'"], "expect" : ["'hefteya' w'em ya' Y'an'", true] }
+{ "op" : "untokenize", "args" : ["'kɔsiɖa' w 'lia' 'le' 'ƒe' Y 'me'"], "expect" : ["'kɔsiɖa' w 'lia le ƒe' Y 'me'", true] }
+{ "op" : "untokenize", "args" : ["'linggo' w 'ng' Y"], "expect" : ["'linggo' w 'ng' Y", true] }
+{ "op" : "untokenize", "args" : ["'minggu' 'ke'-W MMMM"], "expect" : ["'minggu ke'-W MMMM", true] }
+{ "op" : "untokenize", "args" : ["'pekan' w 'ing' Y"], "expect" : ["'pekan' w 'ing' Y", true] }
+{ "op" : "untokenize", "args" : ["'sati' w 'cikin' Y"], "expect" : ["'sati' w 'cikin' Y", true] }
+{ "op" : "untokenize", "args" : ["'semana' w 'sa' Y"], "expect" : ["'semana' w 'sa' Y", true] }
+{ "op" : "untokenize", "args" : ["'setmana' w 'del' Y"], "expect" : ["'setmana' w 'del' Y", true] }
+{ "op" : "untokenize", "args" : ["'sizhun' W 'miz' MMMM"], "expect" : ["'sizhun' W 'miz' MMMM", true] }
+{ "op" : "untokenize", "args" : ["'săptămâna' W 'din' MMMM"], "expect" : ["'săptămâna' W 'din' MMMM", true] }
+{ "op" : "untokenize", "args" : ["'săptămâna' w 'din' Y"], "expect" : ["'săptămâna' w 'din' Y", true] }
+{ "op" : "untokenize", "args" : ["'toddobaadka' w 'ee' Y"], "expect" : ["'toddobaadka' w 'ee' Y", true] }
+{ "op" : "untokenize", "args" : ["'tuần' w 'của' 'năm' Y"], "expect" : ["'tuần' w 'của năm' Y", true] }
+{ "op" : "untokenize", "args" : ["'uke' w 'i' Y"], "expect" : ["'uke' w 'i' Y", true] }
+{ "op" : "untokenize", "args" : ["'vecka' W 'i' MMMM"], "expect" : ["'vecka' W 'i' MMMM", true] }
+{ "op" : "untokenize", "args" : ["'week' W 'of' MMMM"], "expect" : ["'week' W 'of' MMMM", true] }
+{ "op" : "untokenize", "args" : ["'wiki' w 'o' Y"], "expect" : ["'wiki' w 'o' Y", true] }
+{ "op" : "untokenize", "args" : ["'седмица' W 'мјесец' MMMM"], "expect" : ["седмица W мјесец MMMM", true] }
+{ "op" : "untokenize", "args" : ["'ҳафтаи' w, Y"], "expect" : ["ҳафтаи w, Y", true] }
+{ "op" : "untokenize", "args" : ["E d 'de 'MMM – "], "expect" : ["E d 'de' MMM – ", true] }
+{ "op" : "untokenize", "args" : ["E d 'de' MMM y"], "expect" : ["E d 'de' MMM y", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de 'MMM 'de 'y G – "], "expect" : ["E, d 'de' MMM 'de' y G – ", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de 'MMMM"], "expect" : ["E, d 'de' MMMM", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de' MMM 'de' y G"], "expect" : ["E, d 'de' MMM 'de' y G", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de' MMMM"], "expect" : ["E, d 'de' MMMM", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de' MMMM 'de' y"], "expect" : ["E, d 'de' MMMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["E, d 'de' MMMM 'de' y G"], "expect" : ["E, d 'de' MMMM 'de' y G", true] }
+{ "op" : "untokenize", "args" : ["E, d 'ne 'MMM"], "expect" : ["E, d 'ne' MMM", true] }
+{ "op" : "untokenize", "args" : ["E, d 'ne 'MMM, y"], "expect" : ["E, d 'ne' MMM, y", true] }
+{ "op" : "untokenize", "args" : ["E, d 'ne' MMM"], "expect" : ["E, d 'ne' MMM", true] }
+{ "op" : "untokenize", "args" : ["E, d 'ta'’ MMM"], "expect" : ["E, d 'ta'’ MMM", true] }
+{ "op" : "untokenize", "args" : ["E, d MMM y 'г'. G"], "expect" : ["E, d MMM y г. G", true] }
+{ "op" : "untokenize", "args" : ["E, d MMM y 'ҫ'. G"], "expect" : ["E, d MMM y ҫ. G", true] }
+{ "op" : "untokenize", "args" : ["E, d MMMM y 'г'. G"], "expect" : ["E, d MMMM y г. G", true] }
+{ "op" : "untokenize", "args" : ["E, d'ê' MMM'ê'"], "expect" : ["E, dê MMMê", true] }
+{ "op" : "untokenize", "args" : ["E, d.MM.y 'г'. G"], "expect" : ["E, d.MM.y г. G", true] }
+{ "op" : "untokenize", "args" : ["E, h:mm'ê' B"], "expect" : ["E, h:mmê B", true] }
+{ "op" : "untokenize", "args" : ["E, y. 'gada 'd. MMM"], "expect" : ["E, y. 'gada' d. MMM", true] }
+{ "op" : "untokenize", "args" : ["E, y. 'gada 'd. MMM – "], "expect" : ["E, y. 'gada' d. MMM – ", true] }
+{ "op" : "untokenize", "args" : ["E, y. 'gada 'd. MMM – "], "expect" : ["E, y. 'gada' d. MMM – ", true] }
+{ "op" : "untokenize", "args" : ["EEEE dd 'de' MMMM 'de' y"], "expect" : ["EEEE dd 'de' MMMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["EEEE, 'ils' d MMMM y"], "expect" : ["EEEE, 'ils' d MMMM y", true] }
+{ "op" : "untokenize", "args" : ["EEEE, d 'de' MMMM 'de' y"], "expect" : ["EEEE, d 'de' MMMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["EEEE, d MMMM 'dl' y"], "expect" : ["EEEE, d MMMM 'dl' y", true] }
+{ "op" : "untokenize", "args" : ["EEEE, y. 'gada' d. MMMM"], "expect" : ["EEEE, y. 'gada' d. MMMM", true] }
+{ "op" : "untokenize", "args" : ["G E, d 'ne 'MMM, y – "], "expect" : ["G E, d 'ne' MMM, y – ", true] }
+{ "op" : "untokenize", "args" : ["G MMM'a 'y'an – '"], "expect" : ["G MMM'a' y'an' – ", true] }
+{ "op" : "untokenize", "args" : ["G d 'ne 'MMM, y – "], "expect" : ["G d 'ne' MMM, y – ", true] }
+{ "op" : "untokenize", "args" : ["G dê MMM'a 'y'an – '"], "expect" : ["G dê MMM'a' y'an' – ", true] }
+{ "op" : "untokenize", "args" : ["G y-'ж'. d-MMM, E"], "expect" : ["G y-ж. d-MMM, E", true] }
+{ "op" : "untokenize", "args" : ["G y. 'g'."], "expect" : ["G y. 'g'.", true] }
+{ "op" : "untokenize", "args" : ["G y. 'gada 'd. MMM, E"], "expect" : ["G y. 'gada' d. MMM, E", true] }
+{ "op" : "untokenize", "args" : ["G y. 'gada 'd. MMM, E – "], "expect" : ["G y. 'gada' d. MMM, E – ", true] }
+{ "op" : "untokenize", "args" : ["G y. 'gada 'd.–"], "expect" : ["G y. 'gada' d.–", true] }
+{ "op" : "untokenize", "args" : ["G y. 'urteko' MMM"], "expect" : ["G y. 'urteko' MMM", true] }
+{ "op" : "untokenize", "args" : ["G y. 'urteko' MMM d('a')"], "expect" : ["G y. 'urteko' MMM d('a')", true] }
+{ "op" : "untokenize", "args" : ["G y. 'urteko' MMM d('a'), E"], "expect" : ["G y. 'urteko' MMM d('a'), E", true] }
+{ "op" : "untokenize", "args" : ["G y 'ел'"], "expect" : ["G y ел", true] }
+{ "op" : "untokenize", "args" : ["G y 'ж'."], "expect" : ["G y ж.", true] }
+{ "op" : "untokenize", "args" : ["G y 'ж'. MMM"], "expect" : ["G y ж. MMM", true] }
+{ "op" : "untokenize", "args" : ["G y 'оны' MMM'ын' d. E"], "expect" : ["G y оны MMMын d. E", true] }
+{ "op" : "untokenize", "args" : ["H 'h'"], "expect" : ["H 'h'", true] }
+{ "op" : "untokenize", "args" : ["H 'h.'"], "expect" : ["H 'h'.", true] }
+{ "op" : "untokenize", "args" : ["H:mm 'hodź'."], "expect" : ["H:mm 'hod'ź.", true] }
+{ "op" : "untokenize", "args" : ["H:mm 'hodź.'"], "expect" : ["H:mm 'hod'ź.", true] }
+{ "op" : "untokenize", "args" : ["H:mm:ss 'ч'. z"], "expect" : ["H:mm:ss ч. z", true] }
+{ "op" : "untokenize", "args" : ["HH 'Uhr 'v"], "expect" : ["HH 'Uhr' v", true] }
+{ "op" : "untokenize", "args" : ["HH 'a '"], "expect" : ["HH 'a' ", true] }
+{ "op" : "untokenize", "args" : ["HH 'h 'v"], "expect" : ["HH 'h' v", true] }
+{ "op" : "untokenize", "args" : ["HH 'h' mm 'min' ss 's'"], "expect" : ["HH 'h' mm 'min' ss 's'", true] }
+{ "op" : "untokenize", "args" : ["HH 'ц'"], "expect" : ["HH ц", true] }
+{ "op" : "untokenize", "args" : ["HH'h'"], "expect" : ["HH'h'", true] }
+{ "op" : "untokenize", "args" : ["HH'h'mm ss 'seg'."], "expect" : ["HH'h'mm ss 'seg'.", true] }
+{ "op" : "untokenize", "args" : ["HH:mm 'ч'."], "expect" : ["HH:mm ч.", true] }
+{ "op" : "untokenize", "args" : ["HH:mm:ss 'ч'."], "expect" : ["HH:mm:ss ч.", true] }
+{ "op" : "untokenize", "args" : ["LLL y 'р'."], "expect" : ["LLL y р.", true] }
+{ "op" : "untokenize", "args" : ["LLLL, 'tydz'. W"], "expect" : ["LLLL, 'tydz'. W", true] }
+{ "op" : "untokenize", "args" : ["M 'a '"], "expect" : ["M 'a' ", true] }
+{ "op" : "untokenize", "args" : ["MM.y 'г'."], "expect" : ["MM.y г.", true] }
+{ "op" : "untokenize", "args" : ["MM.y 'г'. G"], "expect" : ["MM.y г. G", true] }
+{ "op" : "untokenize", "args" : ["MM/y 'al '"], "expect" : ["MM/y 'al' ", true] }
+{ "op" : "untokenize", "args" : ["MMM 'de 'y"], "expect" : ["MMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["MMM 'de 'y – "], "expect" : ["MMM 'de' y – ", true] }
+{ "op" : "untokenize", "args" : ["MMM d('a), 'E – "], "expect" : ["MMM d('a'), E – ", true] }
+{ "op" : "untokenize", "args" : ["MMM y 'г'. G"], "expect" : ["MMM y г. G", true] }
+{ "op" : "untokenize", "args" : ["MMM'ын' d"], "expect" : ["MMMын d", true] }
+{ "op" : "untokenize", "args" : ["MMM'ын' d. E"], "expect" : ["MMMын d. E", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'abɔkɔɩ' W'ja'"], "expect" : ["MMMM 'abɔk'ɔɩ W'ja'", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'al '"], "expect" : ["MMMM 'al' ", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'ayının' W. 'haftası'"], "expect" : ["MMMM 'ayının' W. 'haftas'ı", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'de 'y – "], "expect" : ["MMMM 'de' y – ", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'năm 'y"], "expect" : ["MMMM 'năm' y", true] }
+{ "op" : "untokenize", "args" : ["MMMM 'аеның' W 'атнасы'"], "expect" : ["MMMM аеның W атнасы", true] }
+{ "op" : "untokenize", "args" : ["MMMM -'acho' 'suman' W"], "expect" : ["MMMM -'acho suman' W", true] }
+{ "op" : "untokenize", "args" : ["MMMM W 'sav'."], "expect" : ["MMMM W 'sav'.", true] }
+{ "op" : "untokenize", "args" : ["MMMM W. 'hete'"], "expect" : ["MMMM W. 'hete'", true] }
+{ "op" : "untokenize", "args" : ["MMMM y 'г'. G"], "expect" : ["MMMM y г. G", true] }
+{ "op" : "untokenize", "args" : ["MMMM'a 'y'an – '"], "expect" : ["MMMM'a' y'an' – ", true] }
+{ "op" : "untokenize", "args" : ["MMMM, W 'həftə'"], "expect" : ["MMMM, W 'həft'ə", true] }
+{ "op" : "untokenize", "args" : ["MMMM, W 'һәфтә'"], "expect" : ["MMMM, W һәфтә", true] }
+{ "op" : "untokenize", "args" : ["MMMM, W-'ҳафта'"], "expect" : ["MMMM, W-ҳафта", true] }
+{ "op" : "untokenize", "args" : ["MMMM: W. 'nedelja'"], "expect" : ["MMMM: W. 'nedelja'", true] }
+{ "op" : "untokenize", "args" : ["MMMM:'a' 'vahkku' W"], "expect" : ["MMMM:'a vahkku' W", true] }
+{ "op" : "untokenize", "args" : ["QQQ'em' 'ya' y'an'"], "expect" : ["QQQ'em ya' y'an'", true] }
+{ "op" : "untokenize", "args" : ["W'ª' 'setemana' 'de' MMMM"], "expect" : ["Wª 'setemana de' MMMM", true] }
+{ "op" : "untokenize", "args" : ["W-'й' 'тиж'. MMMM"], "expect" : ["W-й тиж. MMMM", true] }
+{ "op" : "untokenize", "args" : ["W. 'tjedan' MMMM"], "expect" : ["W. 'tjedan' MMMM", true] }
+{ "op" : "untokenize", "args" : ["Y 'kaa' 'week' w"], "expect" : ["Y 'kaa week' w", true] }
+{ "op" : "untokenize", "args" : ["Y -'acho' 'suman' w"], "expect" : ["Y -'acho suman' w", true] }
+{ "op" : "untokenize", "args" : ["Y, 'tydz'. w"], "expect" : ["Y, 'tydz'. w", true] }
+{ "op" : "untokenize", "args" : ["Y, w 'һәфтә'"], "expect" : ["Y, w һәфтә", true] }
+{ "op" : "untokenize", "args" : ["a 'ga' h:mm 'le' v"], "expect" : ["a 'ga' h:mm 'le' v", true] }
+{ "op" : "untokenize", "args" : ["a 'ga' h:mm:ss"], "expect" : ["a 'ga' h:mm:ss", true] }
+{ "op" : "untokenize", "args" : ["ccc, d 'de 'MMMM – "], "expect" : ["ccc, d 'de' MMMM – ", true] }
+{ "op" : "untokenize", "args" : ["ccc, d 'de' MMMM 'de' y"], "expect" : ["ccc, d 'de' MMMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["d 'de 'MMM 'de 'y G"], "expect" : ["d 'de' MMM 'de' y G", true] }
+{ "op" : "untokenize", "args" : ["d 'de' MMMM 'de' 'su' y"], "expect" : ["d 'de' MMMM 'de su' y", true] }
+{ "op" : "untokenize", "args" : ["d 'de' MMMM 'de' y"], "expect" : ["d 'de' MMMM 'de' y", true] }
+{ "op" : "untokenize", "args" : ["d 'de' MMMM 'de' y G"], "expect" : ["d 'de' MMMM 'de' y G", true] }
+{ "op" : "untokenize", "args" : ["d 'lia , 'y"], "expect" : ["d 'lia' , y", true] }
+{ "op" : "untokenize", "args" : ["d 'ne' MMM"], "expect" : ["d 'ne' MMM", true] }
+{ "op" : "untokenize", "args" : ["d 'ne' MMMM"], "expect" : ["d 'ne' MMMM", true] }
+{ "op" : "untokenize", "args" : ["d MMM 'del' y"], "expect" : ["d MMM 'del' y", true] }
+{ "op" : "untokenize", "args" : ["d MMM y 'ҫ'."], "expect" : ["d MMM y ҫ.", true] }
+{ "op" : "untokenize", "args" : ["d MMM y 'ҫ'. G"], "expect" : ["d MMM y ҫ. G", true] }
+{ "op" : "untokenize", "args" : ["d'mh' MMM y"], "expect" : ["d'mh' MMM y", true] }
+{ "op" : "untokenize", "args" : ["d.MM.y 'г'."], "expect" : ["d.MM.y г.", true] }
+{ "op" : "untokenize", "args" : ["d/MM/y 'a '"], "expect" : ["d/MM/y 'a' ", true] }
+{ "op" : "untokenize", "args" : ["dd 'de 'MM"], "expect" : ["dd 'de' MM", true] }
+{ "op" : "untokenize", "args" : ["dd 'de 'MMM 'de 'y G"], "expect" : ["dd 'de' MMM 'de' y G", true] }
+{ "op" : "untokenize", "args" : ["dê MMM'a 'y'an – '"], "expect" : ["dê MMM'a' y'an' – ", true] }
+{ "op" : "untokenize", "args" : ["h 'Uhr' a"], "expect" : ["h 'Uhr' a", true] }
+{ "op" : "untokenize", "args" : ["h 'giờ 'B – "], "expect" : ["h 'gi'ờ B – ", true] }
+{ "op" : "untokenize", "args" : ["h 'h 'mm a – "], "expect" : ["h 'h' mm a – ", true] }
+{ "op" : "untokenize", "args" : ["h 'h – '"], "expect" : ["h 'h' – ", true] }
+{ "op" : "untokenize", "args" : ["h 'hodź. 'B – "], "expect" : ["h 'hod'ź. B – ", true] }
+{ "op" : "untokenize", "args" : ["h'h'mm:ss a"], "expect" : ["h'h'mm:ss a", true] }
+{ "op" : "untokenize", "args" : ["h'ê' B"], "expect" : ["hê B", true] }
+{ "op" : "untokenize", "args" : ["h:mm 'Uhr 'B"], "expect" : ["h:mm 'Uhr' B", true] }
+{ "op" : "untokenize", "args" : ["h:mm'ê' B"], "expect" : ["h:mmê B", true] }
+{ "op" : "untokenize", "args" : ["mm 'min' ss 's'"], "expect" : ["mm 'min' ss 's'", true] }
+{ "op" : "untokenize", "args" : ["w 'semana' Y 'watapa'"], "expect" : ["w 'semana' Y 'watapa'", true] }
+{ "op" : "untokenize", "args" : ["w 'тыдзень' Y"], "expect" : ["w тыдзень Y", true] }
+{ "op" : "untokenize", "args" : ["w-'мӗш' 'эрни' Y 'ҫ'."], "expect" : ["w-мӗш эрни Y ҫ.", true] }
+{ "op" : "untokenize", "args" : ["w. 'nedelja' 'u' Y."], "expect" : ["w. 'nedelja u' Y.", true] }
+{ "op" : "untokenize", "args" : ["w. 'sedmica' 'u' Y."], "expect" : ["w. 'sedmica u' Y.", true] }
+{ "op" : "untokenize", "args" : ["w. 'tyźeń' 'lěta' Y"], "expect" : ["w. 'tyźeń lěta' Y", true] }
+{ "op" : "untokenize", "args" : ["w. 'týždeň' 'roka' Y"], "expect" : ["w. 'týždeň roka' Y", true] }
+{ "op" : "untokenize", "args" : ["y 'a '"], "expect" : ["y 'a' ", true] }
+{ "op" : "untokenize", "args" : ["y 'al '"], "expect" : ["y 'al' ", true] }
+{ "op" : "untokenize", "args" : ["y 'm'. G, LLLL"], "expect" : ["y 'm'. G, LLLL", true] }
+{ "op" : "untokenize", "args" : ["y MMM d('a'), E"], "expect" : ["y MMM d('a'), E", true] }
+{ "op" : "untokenize", "args" : ["y('e')'ko' MMMM"], "expect" : ["y('e)ko' MMMM", true] }
+{ "op" : "untokenize", "args" : ["y('e')'ko' QQQQ"], "expect" : ["y('e)ko' QQQQ", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMM"], "expect" : ["y('e)''ko' MMM", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMM d('a)'"], "expect" : ["y('e)''ko' MMM d('a')", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMM d('a) – '"], "expect" : ["y('e)''ko' MMM d('a') – ", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMM d–"], "expect" : ["y('e)''ko' MMM d–", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMMM – "], "expect" : ["y('e)''ko' MMMM – ", true] }
+{ "op" : "untokenize", "args" : ["y('e)''ko 'MMMM–"], "expect" : ["y('e)''ko' MMMM–", true] }
+{ "op" : "untokenize", "args" : ["y-'ж'. MMM"], "expect" : ["y-ж. MMM", true] }
+{ "op" : "untokenize", "args" : ["y-'ж'. d-MMM, E"], "expect" : ["y-ж. d-MMM, E", true] }
+{ "op" : "untokenize", "args" : ["y-'ж'., QQQ"], "expect" : ["y-ж., QQQ", true] }
+{ "op" : "untokenize", "args" : ["y. 'g'. MMM"], "expect" : ["y. 'g'. MMM", true] }
+{ "op" : "untokenize", "args" : ["y. 'g'. MMMM"], "expect" : ["y. 'g'. MMMM", true] }
+{ "op" : "untokenize", "args" : ["y. 'g'. d. MMM"], "expect" : ["y. 'g'. d. MMM", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada 'MMMM – "], "expect" : ["y. 'gada' MMMM – ", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada 'MMMM – "], "expect" : ["y. 'gada' MMMM – ", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada 'MMM – "], "expect" : ["y. 'gada' MMM – ", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada 'd. MMM – "], "expect" : ["y. 'gada' d. MMM – ", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada 'd.–"], "expect" : ["y. 'gada' d.–", true] }
+{ "op" : "untokenize", "args" : ["y. 'gada' d. MMMM"], "expect" : ["y. 'gada' d. MMMM", true] }
+{ "op" : "untokenize", "args" : ["y 'г'."], "expect" : ["y г.", true] }
+{ "op" : "untokenize", "args" : ["y 'г'. G"], "expect" : ["y г. G", true] }
+{ "op" : "untokenize", "args" : ["y 'ел', QQQQ"], "expect" : ["y ел, QQQQ", true] }
+{ "op" : "untokenize", "args" : ["y 'ж'. MMMM"], "expect" : ["y ж. MMMM", true] }
+{ "op" : "untokenize", "args" : ["y 'оны' MMMM"], "expect" : ["y оны MMMM", true] }
+{ "op" : "untokenize", "args" : ["y 'оны' MMMM'ын' d, EEEE 'гараг'"], "expect" : ["y оны MMMMын d, EEEE гараг", true] }
+{ "op" : "untokenize", "args" : ["y 'оны' QQQQ"], "expect" : ["y оны QQQQ", true] }
+{ "op" : "untokenize", "args" : ["y 'с'. G"], "expect" : ["y с. G", true] }
+{ "op" : "untokenize", "args" : ["y 'сыл' MMMM d 'күнэ', EEEE"], "expect" : ["y сыл MMMM d күнэ, EEEE", true] }
+{ "op" : "untokenize", "args" : ["{1} 'fọ' {0}"], "expect" : ["{1} 'f'ọ {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'jam' {0}"], "expect" : ["{1} 'jam' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'klo' {0}"], "expect" : ["{1} 'klo' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'na' {0}"], "expect" : ["{1} 'na' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'ní' {0}"], "expect" : ["{1} 'n'í {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'pukul' {0}"], "expect" : ["{1} 'pukul' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'ye' {0}"], "expect" : ["{1} 'ye' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'à' {0}"], "expect" : ["{1} à {0}", true] }
+{ "op" : "untokenize", "args" : ["{1} 'às' {0}"], "expect" : ["{1} à's' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1}, 'a' 'les' {0}"], "expect" : ["{1}, 'a les' {0}", true] }
+{ "op" : "untokenize", "args" : ["{1}, 'во' {0}"], "expect" : ["{1}, во {0}", true] }
+{ "op" : "parse_time", "args" : ["12:30 PM", "short", "en"], "expect" : [12, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:30 AM", "short", "en"], "expect" : [0, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:00 pm", "short", "en"], "expect" : [12, 0, 0] }
+{ "op" : "parse_time", "args" : ["11:59 PM", "short", "en"], "expect" : [23, 59, 0] }
+{ "op" : "parse_time", "args" : ["1:05 AM", "short", "en"], "expect" : [1, 5, 0] }
+{ "op" : "parse_time", "args" : ["12:30 p. m.", "short", "es"], "expect" : [12, 30, 0] }
+{ "op" : "parse_time", "args" : ["12:30 a. m.", "short", "es"], "expect" : [0, 30, 0] }
+{ "op" : "parse_time", "args" : ["3:15 p. m.", "short", "es_PE"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["午後3:15", "short", "ja"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["오후 3:15", "short", "ko"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["15:15", "short", "de"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["9 apples 30", "short", "en"], "expect" : [9, 30, 0] }
+{ "op" : "parse_date", "args" : ["Oct 13, 2026", "medium", "en"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["October 13, 2026", "long", "en"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["13 oct 2026", "medium", "es"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["13 de octubre de 2026", "long", "es"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["13 Okt. 2026", "medium", "de"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["13 OCT 2026", "medium", "en_GB"], "expect" : [2026, 10, 13] }
+{ "op" : "parse_date", "args" : ["martes 13/3/2026", "short", "es"], "expect" : [2026, 3, 13] }
+{ "op" : "parse_date", "args" : ["Oct 13", "medium", "en"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["13/10", "short", "es"], "error" : "ParseError" }
+{ "op" : "parse_date", "args" : ["5", "short", "en"], "error" : "ParseError" }

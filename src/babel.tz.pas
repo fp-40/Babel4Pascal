@@ -3,14 +3,13 @@
   CLDR names time zones; the rules (the offset from UTC and whether
   daylight saving time is in effect at an instant) come from the IANA tz
   database, which Linux installs as TZif files under /usr/share/zoneinfo
-  (one file per zone: Europe/Madrid, America/Lima, ...). This unit reads
-  those files as Python's zoneinfo module does, with the same results:
+  (one file per zone: Europe/Madrid, America/Lima, ...). This unit reads:
   - the transitions of the file (version 2+ data, 64-bit times);
   - after the last transition, the POSIX TZ rule of the file's footer
     ('CET-1CEST,M3.5.0,M10.5.0/3'), computed for the year of the instant;
   - before the first transition, the first standard-time type of the file;
-  - the DST offset (zoneinfo's dst()) inferred from the isdst flags as
-    zoneinfo infers it.
+  - the DST offset, which TZif files do not store: inferred from the
+    isdst flags as the difference from the nearest standard-time offset.
 
   GetTimeZone('') is UTC. LocalTimeZoneName gives the zone of the machine
   (the TZ variable, then /etc/localtime's link, then /etc/timezone).
@@ -36,16 +35,14 @@ type
   { What applies at one instant. }
   TZoneInfo = record
     UTCOffset: Integer;     { seconds east of UTC }
-    DSTOffset: Integer;     { seconds of daylight saving time (zoneinfo's dst()); 0 in standard time }
+    DSTOffset: Integer;     { seconds of daylight saving time; 0 in standard time }
     Abbreviation: string;   { 'CEST', '-05' }
   end;
-
-  TZoneData = class;
 
   TTimeZone = record
   private
     FName: string;
-    FData: TZoneData;       { nil for UTC }
+    FData: TObject;         { the zone's parsed file; nil for UTC }
   public
     { The zone's name ('Europe/Madrid'; 'UTC' for GetTimeZone('')). }
     property Name: string read FName;
@@ -56,13 +53,35 @@ type
     { The local time of an instant given in UTC. }
     function ToLocal(UTC: TDateTime): TDateTime;
     { The rules at a local wall-clock time (seconds since 1970 as if the
-      local time were UTC), as zoneinfo's utcoffset() and dst() of a
-      datetime with this zone: Fold 0 takes the first of two repeated
+      local time were UTC): Fold 0 takes the first of two repeated
       times, 1 the second. }
     function InfoAtLocal(LocalSeconds: Int64; Fold: Integer = 0): TZoneInfo;
   end;
 
-  { The parsed contents of a TZif file (internal; one per zone). }
+{ The zone; '' and 'UTC'-like names that have no file are UTC. Raises
+  EUnknownTimeZoneError when no file has that name. }
+function GetTimeZone(const Name: string): TTimeZone;
+{ The machine's zone name ('UTC' when none is found). }
+function LocalTimeZoneName: string;
+{ Where the zone files are read (default /usr/share/zoneinfo, or the
+  variable TZDIR when set). }
+function ZoneInfoPath: string;
+procedure SetZoneInfoPath(const Path: string);
+{ Seconds since 1970-01-01 of a TDateTime taken as UTC (exact to the
+  second, from its decoded fields), and back. }
+function UnixSeconds(DT: TDateTime): Int64;
+function DateTimeOfUnix(Seconds: Int64): TDateTime;
+{ The fields of a TDateTime rounded to the nearest millisecond
+  (DecodeDateTime truncates: a value encoded with 123 ms gives 122). }
+procedure DecodeDateTimeMs(DT: TDateTime; out Y, M, D, H, N, S, MS: Word);
+
+implementation
+
+uses
+  DateUtils, BaseUnix;
+
+type
+  { The parsed contents of a TZif file (one per zone). }
   TZoneData = class
   private
     Trans: array of Int64;            { UTC seconds }
@@ -80,7 +99,7 @@ type
       M, W, D: Integer;               { M: month, week, weekday; J/N: day number in D }
       Time: Integer;                  { seconds after midnight, may be negative or > 24h }
     end;
-    TransLocal: array[0..1] of array of Int64;   { zoneinfo's _trans_local }
+    TransLocal: array[0..1] of array of Int64;   { the transitions in local time, before (0) and after (1) each }
     function RuleInfo(UTCSeconds: Int64): TZoneInfo;
     function RuleInfoLocal(LocalSeconds: Int64; Fold: Integer): TZoneInfo;
     function TypeInfo(T: Integer): TZoneInfo;
@@ -89,27 +108,6 @@ type
     function InfoAtLocal(LocalSeconds: Int64; Fold: Integer): TZoneInfo;
   end;
 
-{ The zone; '' and 'UTC'-like names that have no file are UTC. Raises
-  EUnknownTimeZoneError when no file has that name. }
-function GetTimeZone(const Name: string): TTimeZone;
-{ The machine's zone name ('UTC' when none is found). }
-function LocalTimeZoneName: string;
-{ Where the zone files are read (default /usr/share/zoneinfo, or the
-  PYTHONTZPATH-like variable TZDIR when set). }
-function ZoneInfoPath: string;
-procedure SetZoneInfoPath(const Path: string);
-{ Seconds since 1970-01-01 of a TDateTime taken as UTC (exact to the
-  second, from its decoded fields), and back. }
-function UnixSeconds(DT: TDateTime): Int64;
-function DateTimeOfUnix(Seconds: Int64): TDateTime;
-{ The fields of a TDateTime rounded to the nearest millisecond
-  (DecodeDateTime truncates: a value encoded with 123 ms gives 122). }
-procedure DecodeDateTimeMs(DT: TDateTime; out Y, M, D, H, N, S, MS: Word);
-
-implementation
-
-uses
-  DateUtils, BaseUnix;
 
 var
   Lock: TRTLCriticalSection;
@@ -240,8 +238,8 @@ begin
   Result.CharCnt := ReadBE32(B, P);
 end;
 
-{ zoneinfo's _utcoff_to_dstoff: the DST offset of each type, inferred
-  from the neighbouring standard-time types. }
+{ The DST offset of each type, inferred from the neighbouring
+  standard-time types. }
 procedure InferDstOffsets(Z: TZoneData);
 var
   TypeCnt, DstCnt, DstFound, I, Idx, CompIdx, Dstoff: Integer;
@@ -456,8 +454,8 @@ begin
   ParseRuleDate(Parts[1], Z.EndRule.Kind, Z.EndRule.M, Z.EndRule.W, Z.EndRule.D, Z.EndRule.Time);
 end;
 
-{ zoneinfo's _ts_to_local: the transitions in local wall-clock time, for
-  fold 0 (the larger of the two offsets around each) and fold 1. }
+{ The transitions in local wall-clock time, for fold 0 (the larger of
+  the two offsets around each) and fold 1. }
 procedure ComputeTransLocal(Z: TZoneData);
 var
   I, N: Integer;
@@ -593,7 +591,7 @@ begin
   end;
 end;
 
-{ ---- lookups (zoneinfo's fromutc) ---- }
+{ ---- lookups ---- }
 
 function TZoneData.TypeInfo(T: Integer): TZoneInfo;
 begin
@@ -618,8 +616,7 @@ begin
         Result := (DaysFromCivil(Year, 1, 1) - 1 + Days) * 86400 + Time;
       end;
     'N':
-      { CPython's zoneinfo counts n from December 31 of the year before
-        (POSIX: from January 1); its result is followed }
+      { n is taken as 1-based (n = 1 is January 1; POSIX counts from 0) }
       Result := (DaysFromCivil(Year, 1, 1) - 1 + D) * 86400 + Time;
   else
     begin
@@ -650,7 +647,7 @@ begin
     Result.Abbreviation := StdAbbr;
     Exit;
   end;
-  { the year of the instant in UTC, as zoneinfo uses }
+  { the rule of the year of the instant in UTC }
   CivilFromDays(FloorDiv(UTCSeconds, 86400), Y, Mo, Dd);
   StartT := RuleEpoch(StartRule.Kind, StartRule.M, StartRule.W, StartRule.D, StartRule.Time, Y) - StdOffset;
   EndT := RuleEpoch(EndRule.Kind, EndRule.M, EndRule.W, EndRule.D, EndRule.Time, Y) - DstOffsetRule;
@@ -706,7 +703,8 @@ begin
   end;
 end;
 
-{ zoneinfo's _find_trans }
+{ The type in effect at a local time: the last transition at or before
+  it, for the given fold. }
 function TZoneData.InfoAtLocal(LocalSeconds: Int64; Fold: Integer): TZoneInfo;
 var
   Lo, Hi, Mid, N: Integer;
@@ -780,7 +778,7 @@ begin
     Result.Abbreviation := 'UTC';
   end
   else
-    Result := FData.InfoAt(UTCSeconds);
+    Result := TZoneData(FData).InfoAt(UTCSeconds);
 end;
 
 function TTimeZone.InfoAt(UTC: TDateTime): TZoneInfo;
@@ -793,7 +791,7 @@ begin
   if FData = nil then
     Result := InfoAt(0)
   else
-    Result := FData.InfoAtLocal(LocalSeconds, Fold);
+    Result := TZoneData(FData).InfoAtLocal(LocalSeconds, Fold);
 end;
 
 function TTimeZone.ToLocal(UTC: TDateTime): TDateTime;
@@ -823,7 +821,7 @@ begin
   end;
 end;
 
-{ A zone name as zoneinfo accepts it: relative, without '..' parts. }
+{ A valid zone name: relative, without '..' parts. }
 function ValidZoneName(const Name: string): Boolean;
 var
   Part: string;

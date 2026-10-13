@@ -164,7 +164,6 @@ Options of `FormatTimedelta`.
 ```pascal
 TTimeZoneNameOptions = record
   Width: string;
-  Uncommon: Boolean;
   ZoneVariant: string;
   ReturnZone: Boolean;
   function WithWidth(const Value: string): TTimeZoneNameOptions;
@@ -180,7 +179,6 @@ Options of `GetTimezoneName`.
 | Field | Default | Meaning |
 |---|---|---|
 | `Width` | `'long'` | `'long'` ('Pacific Time') or `'short'` ('PT') |
-| `Uncommon` | `False` | accepted and ignored |
 | `ZoneVariant` | `''` | `'generic'`, `'standard'`, `'daylight'`; `''` takes it from the date (generic without a date) |
 | `ReturnZone` | `False` | return the canonical zone name instead of a display name |
 
@@ -540,14 +538,19 @@ of the locale's pattern for `Format` (or of `Format` itself when it is a
 pattern). Digits of any script are read. A two-digit year is in
 2000–2099; a month above 12 is swapped with the day; `YYYY-MM-DD` and
 `YYYYMMDD` are read as ISO 8601 when `Format` is a predefined length.
-The result has no time part.
+When `S` contains a month name of the locale (wide or abbreviated,
+format or stand-alone, as a whole word; ASCII letters without case; a
+trailing period optional), that is the month, and the numbers give the
+day and the year in the pattern's order. The result has no time part.
 
-Raises `EDateParseError` for a text without digits, `EBabelIndexError`
-for fewer numbers than needed, `EBabelValueError` for an invalid date or
-a pattern without year, month or day.
+Raises `EDateParseError` for a text without digits or with fewer numbers
+than needed, `EBabelValueError` for an invalid date or a pattern without
+year, month or day.
 
 ```pascal
-WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('13.10.2026', 'de')));   // 2026-10-13
+WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('13.10.2026', 'de')));     // 2026-10-13
+WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('Oct 13, 2026', 'en')));   // 2026-10-13
+WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('13 oct 2026', 'es')));    // 2026-10-13
 ```
 
 #### ParseTime
@@ -558,16 +561,19 @@ function ParseTime(const S: string; const Locale: TLocale;
 ```
 
 A time from the numbers of `S`, read as hour, minute and second in the
-order of the locale's pattern; minute and second may be missing. When
-the pattern has a day period and `S` contains `pm` (any case), 12 is
-added to the hour (so `12 pm` gives 24 and raises, and `12 am` gives
-12:00). The result has no date part.
+order of the locale's pattern; minute and second may be missing. An am
+or pm marker in `S` (the locale's am/pm names in every width, format and
+stand-alone, or `am`/`pm`; as a whole word, ASCII letters without case,
+no-break spaces read as spaces) reads the hour on the 12-hour clock:
+12 am is 0, 1 pm to 11 pm are 13 to 23. The result has no date part.
 
 Raises `EDateParseError` for a text without digits and
 `EBabelValueError` for a value out of range.
 
 ```pascal
-WriteLn(FormatDateTime('hh:nn:ss', ParseTime('3:30:15 PM', 'en')));    // 15:30:15
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('3:30:15 PM', 'en')));          // 15:30:15
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 AM', 'en', 'short')));   // 00:30:00
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 p. m.', 'es', 'short'))); // 12:30:00
 ```
 
 ### Patterns
@@ -702,10 +708,6 @@ Info := Z.InfoAtLocal(UnixSeconds(EncodeDateTime(2026, 10, 25, 2, 30, 0, 0)), 0)
 Info := Z.InfoAtLocal(UnixSeconds(EncodeDateTime(2026, 10, 25, 2, 30, 0, 0)), 1);
 // 3600 CET
 ```
-
-### TZoneData
-
-The parsed contents of a zone file; internal to the unit.
 
 ### GetTimeZone
 

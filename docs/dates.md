@@ -510,8 +510,9 @@ WriteLn(FormatTimedelta(3 * 86400, 'ar_EG',
 ## Parsing
 
 `ParseDate` and `ParseTime` read the numbers of a text in the order of
-the fields of the locale's pattern; they do not read month or day names.
-Digits of any script are accepted.
+the fields of the locale's pattern. `ParseDate` also reads a month name
+of the locale, and `ParseTime` an am/pm marker. Digits of any script are
+accepted.
 
 ```pascal
 WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('10/13/26', 'en', 'short')));  // 2026-10-13
@@ -521,6 +522,11 @@ WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('2026-10-13', 'en')));         //
 WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('١٣/١٠/٢٠٢٦', 'ar')));          // 2026-10-13
 WriteLn(FormatDateTime('hh:nn:ss', ParseTime('15:30', 'de')));                // 15:30:00
 WriteLn(FormatDateTime('hh:nn:ss', ParseTime('3:30:15 PM', 'en')));           // 15:30:15
+WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('Oct 13, 2026', 'en')));       // 2026-10-13
+WriteLn(FormatDateTime('yyyy-mm-dd', ParseDate('13 de octubre de 2026', 'es', 'long'))); // 2026-10-13
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 PM', 'en', 'short')));    // 12:30:00
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 AM', 'en', 'short')));    // 00:30:00
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 a. m.', 'es', 'short'))); // 00:30:00
 ```
 
 The rules:
@@ -530,13 +536,18 @@ The rules:
   is in 2000–2099. When the month read is above 12, month and day are
   swapped. A text of the form `YYYY-MM-DD` or `YYYYMMDD` is read as
   ISO 8601 when `Format` is one of the four lengths.
+- When the text contains a month name of the locale (wide or
+  abbreviated, format or stand-alone; a trailing period optional), that
+  is the month, and the numbers give the day and the year in the
+  pattern's order. Names are matched as whole words; ASCII letters are
+  compared without case.
 - A time is read as hour, minute and second (the minute and second may
-  be missing); when the pattern has a day period and the text contains
-  `pm` (in any case), 12 is added to the hour. A text with `12` and `pm`
-  gives hour 24 and raises `EBabelValueError`; `12` with `am` reads as
-  12:00.
-- A text without digits raises `EDateParseError`; fewer numbers than the
-  date needs raises `EBabelIndexError`; a value out of range raises
+  be missing). An am or pm marker in the text (the locale's names in any
+  width, or `am`/`pm`, ASCII letters without case) reads the hour on the
+  12-hour clock: 12 am is 0:00, 12 pm is 12:00, 1 pm to 11 pm are 13:00
+  to 23:00.
+- A text without digits, or with fewer numbers than the date needs,
+  raises `EDateParseError`; a value out of range raises
   `EBabelValueError`.
 
 ---

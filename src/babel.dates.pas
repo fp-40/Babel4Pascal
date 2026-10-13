@@ -12,15 +12,15 @@
   value as it is, without a zone. Precision: milliseconds (TDateTime is
   decoded to milliseconds; the 'S' field shows microseconds as 0).
 
-  The results follow CLDR as ICU applies it (tests/icu compares them with
-  ICU4C): time zone names (localized GMT from the locale's hourFormat,
-  zone aliases, generic names with partial locations, rearguard daylight
-  time), day periods (noon only at 12:00 exactly, no midnight), skeleton
-  field lengths adjusted to the request, the atTime date-time patterns,
-  the week data of the locale's likely region, relative-time field
-  aliases. FormatTimedelta counts months of 30 days and years of 365.
-  NumberingSystem (options): the digits of the numeric fields and of the
-  localized GMT ('latn' by default; 'default' for the locale's, as ICU).
+  The results follow CLDR: time zone names (localized GMT from the
+  locale's hourFormat, zone aliases, generic names with partial
+  locations, rearguard daylight time), day periods (noon only at 12:00
+  exactly, no midnight), skeleton field lengths adjusted to the request,
+  the atTime date-time patterns, the week data of the locale's likely
+  region, relative-time field aliases. FormatTimedelta counts months of
+  30 days and years of 365. NumberingSystem (options): the digits of the
+  numeric fields and of the localized GMT ('latn' by default; 'default'
+  for the locale's).
 
   The date-and-time function is FormatDateAndTime: FormatDateTime is
   taken by SysUtils.
@@ -89,7 +89,6 @@ type
 
   TTimeZoneNameOptions = record
     Width: string;          { 'long' (default) or 'short' }
-    Uncommon: Boolean;      { accepted and ignored }
     ZoneVariant: string;    { '' = from the date ('generic' without one), 'generic', 'standard', 'daylight' }
     ReturnZone: Boolean;    { the canonical zone name instead }
     function WithWidth(const Value: string): TTimeZoneNameOptions;
@@ -893,7 +892,7 @@ var
   HourFormat, Part, Hour: string;
   P, H, M, Hours, Minutes, Secs: Integer;
 begin
-  { as ICU: a zero offset is written with the positive pattern ('GMT+0',
+  { a zero offset is written with the positive pattern ('GMT+0',
     'GMT+00:00'); CLDR's gmtZeroFormat is not used }
   HourFormat := Locale.Data.Path(['gmt_formats']).Str('hour', '+HH:mm;-HH:mm');
   P := Pos(';', HourFormat);
@@ -908,8 +907,8 @@ begin
   H := Pos('H', Part);
   if (H = 0) or (M = 0) then
     raise EBabelValueError.CreateFmt('Invalid hour format %s', [HourFormat]);
-  { short without minutes: the pattern up to the hours (ICU's
-    truncateOffsetPattern drops what follows them) }
+  { short without minutes: the pattern up to the hours (what follows
+    them is dropped) }
   if Short and (Minutes = 0) then
     Part := Copy(Part, 1, H + Ord(Copy(Part, H, 2) = 'HH'));
   { the hours have one digit or more in the short form, two in the long
@@ -1046,7 +1045,7 @@ begin
 end;
 
 { The zone's exemplar city: the locale's, else the last part of the id
-  ('Los Angeles'). Unknown (the VVV field, as ICU): for an id that names
+  ('Los Angeles'). Unknown (the VVV field): for an id that names
   no place (Etc/UTC, Etc/GMT+5, EST5EDT), the name of the unknown city
   ('Unknown Location') instead of the id's last part. }
 function ExemplarCity(const Zone: string; const Locale: TLocale; Unknown: Boolean = False): string;
@@ -1106,8 +1105,8 @@ begin
     Result := PercentS(Need(Locale.Data, 'zone_formats').Str('region'), ExemplarCity(Zone, Locale));
 end;
 
-{ The zone's offsets at an instant in tzdata's rearguard form, which ICU
-  and CLDR's names follow: the system's (vanguard) data gives
+{ The zone's offsets at an instant in tzdata's rearguard form, which
+  CLDR's names follow: the system's (vanguard) data gives
   Europe/Dublin a negative daylight saving time in winter (Irish Standard
   Time is then the summer's standard time) and Africa/Casablanca one
   during Ramadan; in the rearguard form those periods are standard time
@@ -1135,7 +1134,7 @@ begin
 end;
 
 { Whether the zone has daylight saving time within 184 days of an
-  instant (ICU's check before it uses the standard name as the generic
+  instant (checked before the standard name is used as the generic
   one), sampled daily. }
 function DstNear(const Zone: string; UTCSeconds: Int64): Boolean;
 var
@@ -1196,8 +1195,7 @@ begin
   end;
 end;
 
-{ CLDR's generic non-location format ('Pacific Time'), as ICU builds it
-  for an instant (TimeZoneGenericNames::formatGenericNonLocationName):
+{ CLDR's generic non-location format ('Pacific Time') for an instant:
   the zone's own generic name; else, from its metazone, the standard name
   when the zone has no daylight time within 184 days ('India Standard
   Time') and that name differs from the generic one; else the metazone's
@@ -1224,7 +1222,7 @@ begin
   if HasDate and (ZI.DSTOffset = 0) and not DstNear(Zone, UTCSeconds) then
   begin
     Standard := SpecificName(Zone, Width, 'standard', Locale);
-    { ICU compares ignoring case; the names that match are identical }
+    { a standard name equal to the generic one is not used }
     if (Standard <> '') and (Standard <> NameIn(MetaInfo, Width, 'generic')) then
       Exit(Standard);
   end;
@@ -1285,7 +1283,7 @@ begin
     Zone := 'UTC';
   if Options.ReturnZone then
     Exit(CanonicalZone(Zone));
-  { the fallbacks, as ICU: a generic name falls back to the generic
+  { the fallbacks: a generic name falls back to the generic
     location ('Spain Time'), a specific one to the localized GMT }
   if Variant = 'generic' then
     Result := GenericName(Zone, Width, HasDate, UTCSeconds, Locale)
@@ -1453,7 +1451,7 @@ begin
   end;
 end;
 
-{ The zone fields, as ICU formats them: z the specific name ('PDT',
+{ The zone fields: z the specific name ('PDT',
   'Pacific Daylight Time'), v the generic one ('PT', 'Pacific Time'), both
   falling back to the localized GMT; O the localized GMT; V the BCP 47 id
   ('usnyc'), the IANA id, the exemplar city or the generic location;
@@ -1506,7 +1504,7 @@ begin
             else
               Result := Bcp.AsString;
           end;
-        2: Result := V.ZoneName;          { the id as given, as ICU }
+        2: Result := V.ZoneName;          { the id as given }
         3: Result := ExemplarCity(V.ZoneName, Locale, True);
       else
         Result := GenericLocation(V.ZoneName, Locale);
@@ -1542,10 +1540,10 @@ begin
   Result := '';
 end;
 
-{ a, b and B as ICU formats them. b and B: noon only when the time shown
-  is 12:00 exactly (the minutes and seconds the pattern shows are zero)
-  and the locale has it; midnight is not used (ICU suppresses it: it
-  could be the start or the end of the day); B is otherwise the day
+{ a, b and B. b and B: noon only when the time shown is 12:00 exactly
+  (the minutes and seconds the pattern shows are zero) and the locale has
+  it; midnight is not used (it could be the start or the end of the
+  day); B is otherwise the day
   period of the time. A missing name falls back to the day period, then
   to AM/PM. }
 function FormatPeriodField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
@@ -1805,7 +1803,7 @@ begin
 end;
 
 { The pattern that combines a date of length Format with a time: CLDR's
-  atTime variant when the locale has one, as ICU uses it ('Tuesday,
+  atTime variant when the locale has one ('Tuesday,
   October 13, 2026 at 9:30 AM'; '13/10/2026, 09:30' in pt_BR), else the
   standard one. }
 function DateTimeCombination(const Locale: TLocale; const Format: string): string;
@@ -1928,7 +1926,7 @@ begin
   end;
 end;
 
-{ The kind of field of a pattern letter (ICU's field types): letters of
+{ The kind of field of a pattern letter: letters of
   the same kind are variants of one field (M and L, E e and c). }
 function FieldKind(C: Char): Char;
 begin
@@ -1977,7 +1975,7 @@ begin
     end;
 end;
 
-{ A skeleton as ICU's pattern generator reads it: a 12-hour skeleton
+{ A skeleton as the pattern matching reads it: a 12-hour skeleton
   without a day period gets 'a' ('hm' is 'ahm': the pattern's B becomes
   a, as in zh_Hant); a 24-hour one loses its day period. }
 function WithDayPeriod(const Skeleton: string): string;
@@ -2006,8 +2004,8 @@ begin
 end;
 
 { The pattern of the Matched skeleton with its field lengths adjusted to
-  the Requested skeleton, as ICU's DateTimePatternGenerator does
-  (adjustFieldTypes): 'MMM d, y' for yMMMd gives 'MMMM d, y' for yMMMMd.
+  the Requested skeleton: 'MMM d, y' for yMMMd gives 'MMMM d, y' for
+  yMMMMd.
   Hours, minutes and seconds keep their length; a field keeps it too when
   the matched skeleton already has the requested length, or when one of
   the pattern and the skeleton has it as a number and the other as text. }
@@ -2053,7 +2051,7 @@ begin
 end;
 
 { The fields of a skeleton or pattern, sorted ('E4,M4,d1,y1'). The
-  stand-alone letters (L, c) differ from the format ones, as in ICU. }
+  stand-alone letters (L, c) differ from the format ones. }
 function FieldSet(const S: string): string;
 var
   T: TPatternToken;
@@ -2072,9 +2070,8 @@ begin
 end;
 
 { The locale's standard date or time pattern with exactly the fields of
-  the skeleton; '' if none. ICU's pattern generator has these patterns
-  besides the available formats ('EEEE 'den' d. MMMM y' for yMMMMEEEEd
-  in da). }
+  the skeleton; '' if none. These patterns are candidates besides the
+  available formats ('EEEE 'den' d. MMMM y' for yMMMMEEEEd in da). }
 function StandardPatternFor(const Skeleton: string; const Locale: TLocale): string;
 const
   Lengths: array[0..3] of string = ('full', 'long', 'medium', 'short');
@@ -2328,7 +2325,7 @@ end;
 
 { ---- parsing ---- }
 
-{ The runs of decimal digits of S (any script), as re.findall(r'\d+'). }
+{ The runs of decimal digits of S (any script, as ASCII digits). }
 function DigitRuns(const S: string): TStringArray;
 var
   I, L, D: Integer;
@@ -2363,23 +2360,16 @@ begin
   end;
 end;
 
-function NumberAt(const Numbers: TStringArray; I: Integer): Int64;
-begin
-  if I > High(Numbers) then
-    raise EBabelIndexError.Create('list index out of range');
-  Result := StrToInt64(Numbers[I]);
-end;
-
-{ The order (0, 1, 2) of three positions, sorted by position, then by
-  name. }
+{ The order (0, 1, ...) of the positions, sorted by position, then by
+  index. }
 procedure OrderOf(const P: array of Double; out Order: array of Integer);
 var
   I, J: Integer;
 begin
-  for I := 0 to 2 do
+  for I := 0 to High(P) do
   begin
     Order[I] := 0;
-    for J := 0 to 2 do
+    for J := 0 to High(P) do
       if (P[J] < P[I]) or ((P[J] = P[I]) and (J < I)) then
         Inc(Order[I]);
   end;
@@ -2394,7 +2384,7 @@ begin
   for I := 1 to Length(S) do
     if not (S[I] in ['0'..'9', '-']) then
       Exit;
-  (* ^(\d{4})-?([01]\d)-?([0-3]\d)$ *)
+  { yyyy-mm-dd or yyyymmdd }
   T := S;
   if (Length(T) < 8) or not TryStrToInt(Copy(T, 1, 4), Y) or (Pos('-', Copy(T, 1, 4)) > 0) then
     Exit;
@@ -2411,14 +2401,126 @@ begin
   Result := True;
 end;
 
+{ S with no-break, narrow no-break and thin spaces (U+00A0, U+202F,
+  U+2009) as ordinary spaces. }
+function SpacesOf(const S: string): string;
+begin
+  Result := StringReplace(S, #$C2#$A0, ' ', [rfReplaceAll]);
+  Result := StringReplace(Result, #$E2#$80#$AF, ' ', [rfReplaceAll]);
+  Result := StringReplace(Result, #$E2#$80#$89, ' ', [rfReplaceAll]);
+end;
+
+{ The index in Names of the longest name found in S as a word (not
+  preceded or followed by an ASCII letter), ASCII letters compared
+  without case and those spaces as ordinary ones; a trailing '.' of a
+  name is optional. -1 when none is
+  found. }
+function FindName(const S: string; const Names: array of string): Integer;
+var
+  Text, N: string;
+  I, Best, P, From: Integer;
+  Found: Boolean;
+
+  function IsLetter(C: Char): Boolean;
+  begin
+    Result := C in ['a'..'z', 'A'..'Z'];
+  end;
+
+begin
+  Text := SpacesOf(LowerCase(S));
+  Result := -1;
+  Best := 0;
+  for I := 0 to High(Names) do
+  begin
+    N := SpacesOf(LowerCase(Names[I]));
+    if (N <> '') and (N[Length(N)] = '.') then
+      SetLength(N, Length(N) - 1);
+    if (N = '') or (Length(N) <= Best) then
+      Continue;
+    From := 1;
+    Found := False;
+    repeat
+      P := Pos(N, Copy(Text, From, MaxInt));
+      if P = 0 then
+        Break;
+      P := P + From - 1;
+      if ((P = 1) or not IsLetter(Text[P - 1])) and
+         ((P + Length(N) > Length(Text)) or not IsLetter(Text[P + Length(N)])) then
+        Found := True
+      else
+        From := P + 1;
+    until Found;
+    if Found then
+    begin
+      Result := I;
+      Best := Length(N);
+    end;
+  end;
+end;
+
+type
+  TNamedValues = record
+    Names: TStringArray;
+    Values: array of Integer;
+    procedure Add(const Name: string; Value: Integer);
+  end;
+
+procedure TNamedValues.Add(const Name: string; Value: Integer);
+begin
+  if Name = '' then
+    Exit;
+  SetLength(Names, Length(Names) + 1);
+  SetLength(Values, Length(Values) + 1);
+  Names[High(Names)] := Name;
+  Values[High(Values)] := Value;
+end;
+
+{ The month (1..12) whose name appears in S: the locale's wide and
+  abbreviated names, format and stand-alone; 0 when none appears. }
+function MonthInText(const S: string; const Locale: TLocale): Integer;
+const
+  Widths: array[0..1] of string = ('wide', 'abbreviated');
+  Contexts: array[0..1] of string = ('format', 'stand-alone');
+var
+  NV: TNamedValues;
+  M, Idx: Integer;
+  W, C: string;
+  Map: TCLDRValue;
+begin
+  NV := Default(TNamedValues);
+  for C in Contexts do
+    for W in Widths do
+    begin
+      Map := GetMonthNames(Locale, W, C);
+      for M := 1 to 12 do
+        if Map.GetInt(M) <> nil then
+          NV.Add(Map.GetInt(M).AsString, M);
+    end;
+  Idx := FindName(S, NV.Names);
+  if Idx < 0 then
+    Result := 0
+  else
+    Result := NV.Values[Idx];
+end;
+
+function NotEnoughNumbers(const What: string; Want, Found: Integer): EDateParseError;
+begin
+  Result := EDateParseError.CreateFmt('Expected %d numbers for the %s, found %d', [Want, What, Found]);
+end;
+
+{ The date read from S: the numbers of the text taken in the order of the
+  year, month and day fields of the pattern; a month name of the locale
+  in the text gives the month, and the numbers then give the day and the
+  year. A predefined format also accepts ISO 8601 (2026-10-13). }
 function ParseDate(const S: string; const Locale: TLocale; const Format: string): TDateTime;
 var
   Numbers: TStringArray;
-  FormatStr: string;
+  FormatStr, YearText: string;
   YearIdx, MonthIdx, DayIdx: Integer;
-  Order: array[0..2] of Integer;
+  Order3: array[0..2] of Integer;
+  Order2: array[0..1] of Integer;
   Year, Month, Day, T: Int64;
-  IY, IM, ID: Integer;
+  IY, IM, ID, NamedMonth: Integer;
 begin
   Numbers := DigitRuns(S);
   if Length(Numbers) = 0 then
@@ -2432,33 +2534,85 @@ begin
     FormatStr := LowerCase(ParseDatePattern(Format).Pattern);
   YearIdx := Pos('y', FormatStr) - 1;
   if YearIdx < 0 then
-    raise EBabelValueError.Create('substring not found');
+    raise EBabelValueError.Create('The pattern has no year field');
   MonthIdx := Pos('m', FormatStr) - 1;
   if MonthIdx < 0 then
   begin
     MonthIdx := Pos('l', FormatStr) - 1;
     if MonthIdx < 0 then
-      raise EBabelValueError.Create('substring not found');
+      raise EBabelValueError.Create('The pattern has no month field');
   end;
   DayIdx := Pos('d', FormatStr) - 1;
   if DayIdx < 0 then
-    raise EBabelValueError.Create('substring not found');
-  OrderOf([YearIdx, MonthIdx, DayIdx], Order);
-  Year := NumberAt(Numbers, Order[0]);
-  if Length(Numbers[Order[0]]) = 2 then
-    Year := 2000 + Year;
-  Month := NumberAt(Numbers, Order[1]);
-  Day := NumberAt(Numbers, Order[2]);
-  if Month > 12 then
+    raise EBabelValueError.Create('The pattern has no day field');
+  NamedMonth := MonthInText(S, Locale);
+  if NamedMonth > 0 then
   begin
-    T := Month; Month := Day; Day := T;
+    if Length(Numbers) < 2 then
+      raise NotEnoughNumbers('day and year', 2, Length(Numbers));
+    OrderOf([YearIdx, DayIdx], Order2);
+    YearText := Numbers[Order2[0]];
+    Day := StrToInt64(Numbers[Order2[1]]);
+    Month := NamedMonth;
+  end
+  else
+  begin
+    if Length(Numbers) < 3 then
+      raise NotEnoughNumbers('year, month and day', 3, Length(Numbers));
+    OrderOf([YearIdx, MonthIdx, DayIdx], Order3);
+    YearText := Numbers[Order3[0]];
+    Month := StrToInt64(Numbers[Order3[1]]);
+    Day := StrToInt64(Numbers[Order3[2]]);
+    if Month > 12 then
+    begin
+      T := Month; Month := Day; Day := T;
+    end;
   end;
+  Year := StrToInt64(YearText);
+  if Length(YearText) = 2 then
+    Year := 2000 + Year;
   if (Year < 1) or (Year > 9999) or (Month < 1) or (Month > 12) or (Day < 1) or
      not IsValidDate(Year, Month, Day) then
     raise EBabelValueError.Create('day is out of range for month');
   Result := EncodeDate(Year, Month, Day);
 end;
 
+{ The AM/PM marker in S: 1 for pm, 0 for am, -1 for none. The markers
+  are the locale's am and pm names (every width, format and stand-alone)
+  and 'am'/'pm'. }
+function AmPmInText(const S: string; const Locale: TLocale): Integer;
+const
+  Widths: array[0..2] of string = ('wide', 'abbreviated', 'narrow');
+  Contexts: array[0..1] of string = ('format', 'stand-alone');
+var
+  NV: TNamedValues;
+  Idx: Integer;
+  W, C: string;
+  Map: TCLDRValue;
+begin
+  NV := Default(TNamedValues);
+  NV.Add('am', 0);
+  NV.Add('pm', 1);
+  for C in Contexts do
+    for W in Widths do
+    begin
+      Map := GetPeriodNames(Locale, W, C);
+      if Map.Has('am') then
+        NV.Add(Map.Str('am'), 0);
+      if Map.Has('pm') then
+        NV.Add(Map.Str('pm'), 1);
+    end;
+  Idx := FindName(S, NV.Names);
+  if Idx < 0 then
+    Result := -1
+  else
+    Result := NV.Values[Idx];
+end;
+
+{ The time read from S: the numbers of the text taken in the order of the
+  hour, minute and second fields of the pattern (the minute and second
+  may be missing). An am or pm marker in the text reads the hour on the
+  12-hour clock: 12 am is 0, 1 pm to 11 pm are 13 to 23. }
 function ParseTime(const S: string; const Locale: TLocale; const Format: string): TDateTime;
 var
   Numbers: TStringArray;
@@ -2466,7 +2620,16 @@ var
   HourIdx, MinIdx: Integer;
   SecIdx: Double;
   Order: array[0..2] of Integer;
-  Hour, Minute, Second, Offset: Int64;
+  Hour, Minute, Second: Int64;
+  Marker: Integer;
+
+  function NumberAt(I: Integer): Int64;
+  begin
+    if I > High(Numbers) then
+      raise NotEnoughNumbers('hour, minute and second', I + 1, Length(Numbers));
+    Result := StrToInt64(Numbers[I]);
+  end;
+
 begin
   Numbers := DigitRuns(S);
   if Length(Numbers) = 0 then
@@ -2480,28 +2643,30 @@ begin
   begin
     HourIdx := Pos('k', FormatStr) - 1;
     if HourIdx < 0 then
-      raise EBabelValueError.Create('substring not found');
+      raise EBabelValueError.Create('The pattern has no hour field');
   end;
   MinIdx := Pos('m', FormatStr) - 1;
   if MinIdx < 0 then
-    raise EBabelValueError.Create('substring not found');
+    raise EBabelValueError.Create('The pattern has no minute field');
   if Pos('s', FormatStr) > 0 then
     SecIdx := Pos('s', FormatStr) - 1
   else
     SecIdx := Infinity;
   OrderOf([HourIdx, MinIdx, SecIdx], Order);
-  Offset := 0;
-  if (Pos('a', FormatStr) > 0) and (Pos('pm', LowerCase(S)) > 0) then
-    Offset := 12;
   Minute := 0;
   Second := 0;
-  Hour := NumberAt(Numbers, Order[0]) + Offset;
+  Hour := NumberAt(Order[0]);
   if Length(Numbers) > 1 then
   begin
-    Minute := NumberAt(Numbers, Order[1]);
+    Minute := NumberAt(Order[1]);
     if Length(Numbers) > 2 then
-      Second := NumberAt(Numbers, Order[2]);
+      Second := NumberAt(Order[2]);
   end;
+  Marker := AmPmInText(S, Locale);
+  if (Marker = 1) and (Hour >= 1) and (Hour <= 11) then
+    Inc(Hour, 12)
+  else if (Marker = 0) and (Hour = 12) then
+    Hour := 0;
   if (Hour > 23) or (Minute > 59) or (Second > 59) then
     raise EBabelValueError.Create('hour must be in 0..23');
   Result := EncodeTime(Hour, Minute, Second, 0);
