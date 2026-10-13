@@ -2,7 +2,10 @@
   tests/python/gen_numbers_vectors.py (the results of Python Babel 2.18.0
   for the same inputs).
 
-  Usage: test_numbers VECTORS.jsonl   (exit status 1 when a case fails) }
+  Usage: test_numbers VECTORS.jsonl   (exit status 1 when a case fails)
+         test_numbers VECTORS.jsonl --update OUT.jsonl
+           (writes the cases with the results obtained, to update
+           tests/numbers/reference.jsonl after a deliberate change) }
 program test_numbers;
 
 {$mode objfpc}{$H+}
@@ -183,9 +186,14 @@ begin
 end;
 
 begin
+  if (ParamCount = 3) and (ParamStr(2) = '--update') then
+  begin
+    RunVectors(ParamStr(1), @Handle, nil, ParamStr(3));
+    Exit;
+  end;
   if ParamCount <> 1 then
   begin
-    WriteLn('usage: test_numbers VECTORS.jsonl');
+    WriteLn('usage: test_numbers VECTORS.jsonl [--update OUT.jsonl]');
     Halt(2);
   end;
   if RunVectors(ParamStr(1), @Handle) > 0 then
