@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Compare the output of tests/data/dumpdata (the locale data as the Pascal
 library loads it: encoded, merged along the parent chain, aliases
 resolved) with the same data built here from tools/cldrgen/importer.py:
@@ -15,6 +14,7 @@ Usage: dumpdata | tests/python/compare_dump.py
        dumpdata --global | tests/python/compare_dump.py --global
 Exit status 1 when any locale differs.
 """
+
 import copy
 import json
 import os
@@ -22,9 +22,9 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(ROOT, 'tools'))
-from cldrgen import importer, locales  # noqa: E402
-from cldrgen.model import Alias  # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+from cldrgen import importer, locales
+from cldrgen.model import Alias
 
 
 def merge(dict1, dict2):
@@ -76,7 +76,7 @@ def dump_value(value, top):
     a dictionary, lists for sequences), aliases resolved."""
     value = resolve_alias(value, top)
     if isinstance(value, dict):
-        return {'m': [[k, dump_value(v, top)] for k, v in value.items()]}
+        return {"m": [[k, dump_value(v, top)] for k, v in value.items()]}
     if isinstance(value, (list, tuple)):
         return [dump_value(v, top) for v in value]
     return value
@@ -84,12 +84,16 @@ def dump_value(value, top):
 
 def first_difference(a, b, path=()):
     if isinstance(a, dict) and isinstance(b, dict):
-        ka, kb = [k for k, _ in a['m']], [k for k, _ in b['m']]
+        ka, kb = [k for k, _ in a["m"]], [k for k, _ in b["m"]]
         if ka != kb:
             extra = [k for k in ka if k not in kb][:5]
             missing = [k for k in kb if k not in ka][:5]
-            return path, f'keys differ: extra {extra} missing {missing} (or order)', None
-        for (k, x), (_, y) in zip(a['m'], b['m']):
+            return (
+                path,
+                f"keys differ: extra {extra} missing {missing} (or order)",
+                None,
+            )
+        for (k, x), (_, y) in zip(a["m"], b["m"]):
             d = first_difference(x, y, path + (k,))
             if d:
                 return d
@@ -106,17 +110,21 @@ def first_difference(a, b, path=()):
 
 
 def main(argv):
-    srcdir = subprocess.run([sys.executable, '-I', os.path.join(ROOT, 'tools', 'gencldr.py'), 'fetch'],
-                            check=True, capture_output=True, text=True).stdout.strip()
+    srcdir = subprocess.run(
+        [sys.executable, "-I", os.path.join(ROOT, "tools", "gencldr.py"), "fetch"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
     global_data = importer.parse_global(srcdir)
-    is_global = '--global' in argv
+    is_global = "--global" in argv
     imp = importer.LocaleImporter(srcdir)
     built = {}
 
     def build(name):
         if name not in built:
             own = imp.import_locale(name)
-            if name == 'root':
+            if name == "root":
                 data = own
             else:
                 data = copy.deepcopy(build(locales.parent_of(name, global_data)))
@@ -126,7 +134,7 @@ def main(argv):
 
     count = bad = 0
     for line in sys.stdin:
-        name, _, js = line.rstrip('\n').partition('\t')
+        name, _, js = line.rstrip("\n").partition("\t")
         got = json.loads(js)
         if is_global:
             want = dump_value(global_data[name], global_data)
@@ -137,10 +145,10 @@ def main(argv):
         d = first_difference(got, want)
         if d:
             bad += 1
-            print(f'{name}: at {d[0]}: ours {d[1]!r:.150} importer {d[2]!r:.150}')
-    print(f'{count} compared, {bad} differ')
+            print(f"{name}: at {d[0]}: ours {d[1]!r:.150} importer {d[2]!r:.150}")
+    print(f"{count} compared, {bad} differ")
     return 1 if bad or not count else 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main(sys.argv))

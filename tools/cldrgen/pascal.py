@@ -4,6 +4,7 @@ generated locale (babel.cldr_all).
 
 The locale identifier is part of a single identifier after "babel." because
 some language codes alone are Pascal reserved words (as, is, or, to)."""
+
 import os
 
 HEADER = """{{ {unit} - CLDR {cldr} data{what}.
@@ -15,30 +16,34 @@ HEADER = """{{ {unit} - CLDR {cldr} data{what}.
 
 
 def unit_name(locale):
-    return 'babel.cldr_' + locale
+    return "babel.cldr_" + locale
 
 
 def file_name(unit):
-    return unit.lower() + '.pas'
+    return unit.lower() + ".pas"
 
 
 def _bytes_const(name, blob):
-    lines = [f'  {name}: array[0..{len(blob) - 1}] of Byte = (']
+    lines = [f"  {name}: array[0..{len(blob) - 1}] of Byte = ("]
     for i in range(0, len(blob), 32):
-        chunk = ','.join(str(b) for b in blob[i:i + 32])
-        lines.append('    ' + chunk + (',' if i + 32 < len(blob) else ''))
-    lines.append('  );')
-    return '\n'.join(lines)
+        chunk = ",".join(str(b) for b in blob[i : i + 32])
+        lines.append("    " + chunk + ("," if i + 32 < len(blob) else ""))
+    lines.append("  );")
+    return "\n".join(lines)
 
 
 def write_locale_unit(outdir, cldr_version, locale, parent, blob):
     unit = unit_name(locale)
-    uses = ['babel.localedata'] + ([unit_name(parent)] if parent else [])
-    extra = ('\n  A program that uses this unit can format for the locale "{0}"\n'
-             '  and every locale it inherits from{1}.\n').format(
-        locale, f' (this unit uses {unit_name(parent)})' if parent else '')
-    text = HEADER.format(unit=unit, cldr=cldr_version, what=f' for the locale "{locale}"',
-                         extra=extra)
+    uses = ["babel.localedata"] + ([unit_name(parent)] if parent else [])
+    extra = (
+        f'\n  A program that uses this unit can format for the locale "{locale}"\n'
+        "  and every locale it inherits from"
+        f' (this unit uses {unit_name(parent)})' if parent else ''
+        ".\n"
+    )
+    text = HEADER.format(
+        unit=unit, cldr=cldr_version, what=f' for the locale "{locale}"', extra=extra
+    )
     text += f"""unit {unit};
 
 {{$mode objfpc}}{{$H+}}
@@ -48,13 +53,13 @@ interface
 implementation
 
 uses
-  {', '.join(uses)};
+  {", ".join(uses)};
 
 const
-{_bytes_const('Data', blob)}
+{_bytes_const("Data", blob)}
 
 initialization
-  RegisterLocaleData('{locale}', '{parent or ''}', @Data[0], Length(Data));
+  RegisterLocaleData('{locale}', '{parent or ""}', @Data[0], Length(Data));
 end.
 """
     _write(outdir, unit, text)
@@ -62,10 +67,14 @@ end.
 
 
 def write_global_unit(outdir, cldr_version, blob):
-    unit = 'babel.cldr_global'
-    text = HEADER.format(unit=unit, cldr=cldr_version, what=' that is not per locale',
-                         extra='\n  Likely subtags, aliases, parent locales, currencies of territories,\n'
-                               '  time zone mappings.\n')
+    unit = "babel.cldr_global"
+    text = HEADER.format(
+        unit=unit,
+        cldr=cldr_version,
+        what=" that is not per locale",
+        extra="\n  Likely subtags, aliases, parent locales, currencies of territories,\n"
+        "  time zone mappings.\n",
+    )
     text += f"""unit {unit};
 
 {{$mode objfpc}}{{$H+}}
@@ -78,7 +87,7 @@ uses
   babel.localedata;
 
 const
-{_bytes_const('Data', blob)}
+{_bytes_const("Data", blob)}
 
 initialization
   RegisterGlobalData(@Data[0], Length(Data));
@@ -89,27 +98,37 @@ end.
 
 
 def write_all_unit(outdir, cldr_version, units):
-    unit = 'babel.cldr_all'
-    text = HEADER.format(unit=unit, cldr=cldr_version, what=': every generated locale',
-                         extra=f'\n  Uses the {len(units)} locale units, so a program that uses this\n'
-                               '  unit can format for any of them.\n')
-    text += f"""unit {unit};
+    unit = "babel.cldr_all"
+    text = HEADER.format(
+        unit=unit,
+        cldr=cldr_version,
+        what=": every generated locale",
+        extra=f"\n  Uses the {len(units)} locale units, so a program that uses this\n"
+        "  unit can format for any of them.\n",
+    )
+    text += (
+        f"""unit {unit};
 
 {{$mode objfpc}}{{$H+}}
 
 interface
 
 uses
-""" + ',\n'.join('  ' + u for u in units) + """;
+"""
+        + ",\n".join("  " + u for u in units)
+        + """;
 
 implementation
 
 end.
 """
+    )
     _write(outdir, unit, text)
     return unit
 
 
 def _write(outdir, unit, text):
-    with open(os.path.join(outdir, file_name(unit)), 'w', encoding='utf-8', newline='\n') as f:
+    with open(
+        os.path.join(outdir, file_name(unit)), "w", encoding="utf-8", newline="\n"
+    ) as f:
         f.write(text)

@@ -168,5 +168,5 @@ differences of the ICU comparisons.
 
 ## Licenses
 
-MIT (LICENSE). The CLDR data is under the Unicode License v3 (LICENSE-CLDR);
-see tools/cldrgen/NOTICE.
+MIT (LICENSE).
+The CLDR data is under the Unicode License v3 (LICENSE-CLDR).
