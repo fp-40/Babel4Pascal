@@ -24,6 +24,8 @@
 #    tests/dates/README.md), and, when gcc and the ICU development headers
 #    are installed, against ICU4C (tests/icu/README.md): differences other
 #    than the known data differences between CLDR 47 and 48 fail the run.
+# 8. babel.lists and babel.units against their reference cases
+#    (tests/lists/reference.jsonl, tests/units/reference.jsonl).
 #
 # The importer corrects errors of Babel's data import and leaves out
 # unconfirmed data. Check 2 runs it reproducing Babel (babel_compat);
@@ -64,7 +66,8 @@ check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '
 echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
-for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates; do
+for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \
+    lists/test_lists units/test_units; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
@@ -95,4 +98,7 @@ if command -v gcc > /dev/null && gcc -O2 tests/icu/icu_dates.c -o "$OUT/bin/icu_
 else
   echo "(babel.dates vs ICU4C skipped: no gcc or ICU headers; see $OUT/icu_dates.build.log)"
 fi
+echo "== babel.lists and babel.units vs their reference cases"
+check lists "$OUT/bin/test_lists" "$ROOT/tests/lists/reference.jsonl"
+check units "$OUT/bin/test_units" "$ROOT/tests/units/reference.jsonl"
 echo "== all passed"

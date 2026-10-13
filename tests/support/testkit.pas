@@ -39,7 +39,7 @@ function DoubleOfHex(const S: string): Double;
 implementation
 
 uses
-  babel.errors, babel.core, babel.plural, babel.numbers, babel.tz, babel.dates;
+  babel.errors, babel.core, babel.plural, babel.numbers, babel.tz, babel.dates, babel.units;
 
 var
   Failures, Total: Integer;
@@ -56,6 +56,7 @@ begin
   else if E is EUnknownCurrencyFormatError then Result := 'UnknownCurrencyFormatError'
   else if E is ENumberFormatError then Result := 'NumberFormatError'
   else if E is EDateParseError then Result := 'ParseError'
+  else if E is EUnknownUnitError then Result := 'UnknownUnitError'
   else if E is EUnknownTimeZoneError then Result := 'LookupError'
   else if E is EBabelIndexError then Result := 'IndexError'
   else if E is EBabelNotImplementedError then Result := 'NotImplementedError'

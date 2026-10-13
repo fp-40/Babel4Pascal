@@ -23,7 +23,9 @@ Work in progress. Done so far:
   names, simple parsing (`babel.dates`), with the time zone rules of the
   system's tz database (`babel.tz`).
 
-Not written yet: lists, units.
+- lists ('A, B, and C') in the locale's styles (`babel.lists`);
+- measurement units ('12 kilometers', '150 km/h'), unit names, compound
+  units (`babel.units`).
 
 The API follows Python Babel 2.18.0, which uses CLDR 47. The library
 started as an exact reproduction of Babel's output and then departed
@@ -184,7 +186,10 @@ options.
    (tests/dates/README.md). When gcc and the ICU development headers are
    installed, the results are also compared with ICU4C's on 90 720 cases
    (tests/icu/README.md); the only differences allowed are those from the
-   CLDR 47/48 data.
+   CLDR 47/48 data;
+8. `tests/lists/test_lists` and `tests/units/test_units` with their
+   reference files (tests/lists/README.md, tests/units/README.md),
+   sampled from the cases on which the modules matched Babel.
 
 Each comparison must report 0 differences, except the listed data
 differences of the ICU comparisons.

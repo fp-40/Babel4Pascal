@@ -1,7 +1,7 @@
 { babel.pystr - the parts of Python's str semantics that Babel's results
   depend on, for UTF-8 strings: code points, str.isspace and str.strip,
-  and the Unicode decimal digits that int() and Decimal() accept
-  ('١٢٣' is 123).
+  the Unicode decimal digits that int() and Decimal() accept
+  ('١٢٣' is 123), and str.format with positional fields.
 
   The tables are those of Unicode 16.0, the version of the Python (3.14)
   the oracle runs on: 76 runs of ten decimal digits (category Nd, each run
@@ -36,8 +36,71 @@ function AsciiDigits(const S: string): string;
   Z (separators): the complement of CLDR's currencySpacing currencyMatch
   [[:^S:]&[:^Z:]]. }
 function IsSymbolOrSeparator(C: Cardinal): Boolean;
+(* Fmt.format( *Args) for positional fields: '{0}', '{1}', '{}' (numbered
+  in order), '{{' and '}}' for braces, in one pass (an argument's text is
+  not read as a field). Raises EBabelIndexError for a field without an
+  argument and EBabelValueError for a malformed or unsupported field
+  ('{0:>5}', a single '}'), as Python's ValueError. *)
+function PyFormat(const Fmt: string; const Args: array of string): string;
 
 implementation
+
+uses
+  SysUtils, babel.errors;
+
+function PyFormat(const Fmt: string; const Args: array of string): string;
+var
+  I, J, Index, Auto: Integer;
+  Field: string;
+begin
+  Result := '';
+  Auto := 0;
+  I := 1;
+  while I <= Length(Fmt) do
+  begin
+    if Fmt[I] = '{' then
+    begin
+      if (I < Length(Fmt)) and (Fmt[I + 1] = '{') then
+      begin
+        Result := Result + '{';
+        Inc(I, 2);
+        Continue;
+      end;
+      J := I + 1;
+      while (J <= Length(Fmt)) and (Fmt[J] <> '}') do
+        Inc(J);
+      if J > Length(Fmt) then
+        raise EBabelValueError.Create('Single ''{'' encountered in format string');
+      Field := Copy(Fmt, I + 1, J - I - 1);
+      if Field = '' then
+      begin
+        Index := Auto;
+        Inc(Auto);
+      end
+      else if not TryStrToInt(Field, Index) or (Index < 0) or (Field[1] in ['+', '-', ' ']) then
+        raise EBabelValueError.CreateFmt('Unsupported format field {%s}', [Field]);
+      if Index > High(Args) then
+        raise EBabelIndexError.CreateFmt('Replacement index %d out of range for positional args tuple', [Index]);
+      Result := Result + Args[Index];
+      I := J + 1;
+    end
+    else if Fmt[I] = '}' then
+    begin
+      if (I < Length(Fmt)) and (Fmt[I + 1] = '}') then
+      begin
+        Result := Result + '}';
+        Inc(I, 2);
+        Continue;
+      end;
+      raise EBabelValueError.Create('Single ''}'' encountered in format string');
+    end
+    else
+    begin
+      Result := Result + Fmt[I];
+      Inc(I);
+    end;
+  end;
+end;
 
 const
   DigitZeros: array[0..75] of Cardinal = (
