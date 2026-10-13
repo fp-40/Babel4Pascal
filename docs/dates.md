@@ -4,8 +4,9 @@ The unit `babel.dates` formats dates, times and date-times with the
 locale's CLDR patterns, formats durations and intervals, gives the
 localized names of time zones, and reads simple dates and times back.
 
-In the example outputs, no-break spaces (U+00A0) and narrow no-break
-spaces (U+202F) are shown as ordinary spaces.
+>[!NOTE]
+> In the example outputs, no-break spaces (U+00A0) and narrow no-break
+> spaces (U+202F) are shown as ordinary spaces.
 
 ```pascal
 uses SysUtils, DateUtils, babel.core, babel.dates, babel.cldr_all;

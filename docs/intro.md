@@ -39,18 +39,4 @@ A program links the data of the locales it uses and no others: each
 locale's data is a unit (`babel.cldr_es_PE`), and `babel.cldr_all` links
 every generated locale.
 
-## How this documentation is organized
-
-The user documentation explains how to install the library and how to
-use each area, with examples:
-
-- [Installation](installation.md)
-- [Locale Data](locale.md)
-- [Date and Time](dates.md)
-- [Number Formatting](numbers.md)
-- [Support Classes and Functions](support.md)
-
-The [API Reference](api/index.md) lists every public type and function of
-each unit, with its declaration, parameters, results and errors.
-
 [Index](index.md)

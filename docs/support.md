@@ -6,8 +6,9 @@ a time zone and a numbering system to the formatting functions of
 values for one user creates one `TFormat` and calls its methods, instead
 of passing the locale and the options to every call.
 
-In the example outputs, no-break spaces (U+00A0) and narrow no-break
-spaces (U+202F) are shown as ordinary spaces.
+>[!NOTE]
+> In the example outputs, no-break spaces (U+00A0) and narrow no-break
+> spaces (U+202F) are shown as ordinary spaces.
 
 This page also shows the smaller helpers that applications use next to
 it: lists (`babel.lists`), measurement units (`babel.units`) and the

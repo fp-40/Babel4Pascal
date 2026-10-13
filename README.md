@@ -1,11 +1,20 @@
 # Babel4Pascal
 
-A library that provides an integrated collection of utilities that assist with internationalizing and localizing Object Pascal applications (in particular web-based applications).
+A library that provides an integrated collection of utilities that help internationalizing and localizing Object Pascal applications (in particular web-based applications).
 
-It includes data extracted from the [Common Locale Data Repository (CLDR)](https://unicode.org/cldr/), and provides a number of convenient methods for accessing and using this data for formatting dates and numbers or to access the localized names of countries, languages, time-zones, etc.
+The documentation is in [docs/](docs/index.md): a user guide and the API reference of every unit.
 
-The documentation is in [docs/](docs/index.md): a user guide and the API
-reference of every unit.
+## Features
+
+- **Locale data.** A `TLocale` record for each locale identifier (`'es_PE'`, `'zh_Hant_TW'`, `'de_DE'`) with the localized names of languages, territories, scripts, currencies and calendar elements, the week data, the text direction and the plural rules.
+- **Dates and times.** Formatting with the locale's standard formats (`'short'` to `'full'`), with any CLDR date pattern or skeleton, intervals ("Oct 13 – 16, 2026"), durations ("3 hours", "in 2 days"), day periods and time zone names, with the time zone rules of the system's IANA tz database. Simple parsing of dates and times.
+- **Numbers.** Decimal, percent, scientific, compact ("1.2M") and currency formats (standard, accounting, currency names), with the locale's symbols and digits, exact decimal arithmetic, and parsing of localized numbers. Currency data: names, symbols, fraction digits and the currencies of each territory.
+- **Units.** Measurements such as "12 kilometers", "150 km/h" and the names of units.
+- **Lists.** "A, B, and C" and "A, B, or C" in each locale's styles.
+- **Languages.** The official languages of a territory and their share of the population.
+- **Plural rules.** The plural category (one, few, many, other, ...) of a number in each language, and the rules as C-style and JavaScript expressions.
+- **`TFormat`.** A helper class with the formatting functions bound to a locale, a time zone and a numbering system.
+
 
 ## Using it
 
@@ -84,16 +93,10 @@ options.
 
 ## The data
 
-The data is CLDR 47. Where CLDR leaves the use of its data to the
-implementation, the library does what ICU (the reference implementation
-of CLDR) does, and the checks compare its results with ICU's. The
-generator reads the week of a locale without a region from its likely
-region (`en` is US, weeks from Sunday), gives a territory that CLDR's
-week data does not list the world's values, leaves out alternate
-skeletons and interval formats (`alt="ascii"`) and the variants of the
-region format, and leaves out the data of unconfirmed or provisional
-status (`draft` attribute), whose values are then inherited from the
-parent locale (tools/cldrgen/importer.py).
+The data is the [Unicode Common Locale Data Repository (CLDR)](https://unicode.org/cldr/). Where CLDR leaves the use of its data to the implementation, the library does what ICU (the reference implementation of CLDR) does, and the checks compare its results with ICU's.
+
+The generator reads the week of a locale without a region from its likely region (`en` is US, weeks from Sunday), gives a territory that CLDR's week data does not list the world's values, leaves out alternate skeletons and interval formats (`alt="ascii"`) and the variants of the region format, and leaves out the data of unconfirmed or provisional status (`draft` attribute), whose values are then inherited from the parent locale (tools/cldrgen/importer.py).
+
 
 ### How it works
 

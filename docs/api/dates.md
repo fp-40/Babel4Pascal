@@ -62,11 +62,11 @@ function DateTimeOptions: TDateTimeOptions;
 
 Options of `FormatDate`, `FormatTime` and `FormatDateAndTime`.
 
-| Field | Default | Meaning |
-|---|---|---|
-| `Format` | `'medium'` | `'full'`, `'long'`, `'medium'`, `'short'`, or a date pattern |
-| `TimeZone` | `''` (UTC) | the zone to show the instant in; ignored by `FormatDate` |
-| `NumberingSystem` | `'latn'` | digits of the numeric fields and of the localized GMT: `'latn'`, `'default'` (the locale's) or a CLDR numbering system id |
+| Field             | Default    | Meaning |
+|-------------------|------------|---------|
+| `Format`          | `'medium'` | `'full'`, `'long'`, `'medium'`, `'short'`, or a date pattern |
+| `TimeZone`        | `''` (UTC) | the zone to show the instant in; ignored by `FormatDate` |
+| `NumberingSystem` | `'latn'`   | digits of the numeric fields and of the localized GMT: `'latn'`, `'default'` (the locale's) or a CLDR numbering system id |
 
 #### TSkeletonOptions
 
@@ -85,11 +85,11 @@ function SkeletonOptions: TSkeletonOptions;
 
 Options of `FormatSkeleton`.
 
-| Field | Default | Meaning |
-|---|---|---|
-| `TimeZone` | `''` (UTC) | the zone to show the instant in |
-| `Fuzzy` | `True` | use the closest skeleton when the locale lacks the one asked for |
-| `NumberingSystem` | `'latn'` | as in `TDateTimeOptions` |
+| Field             | Default    | Meaning |
+|-------------------|------------|---------|
+| `TimeZone`        | `''` (UTC) | the zone to show the instant in |
+| `Fuzzy`           | `True`     | use the closest skeleton when the locale lacks the one asked for |
+| `NumberingSystem` | `'latn'`   | as in `TDateTimeOptions` |
 
 #### TIntervalKind
 
@@ -122,13 +122,13 @@ function IntervalOptions: TIntervalOptions;
 
 Options of `FormatInterval`.
 
-| Field | Default | Meaning |
-|---|---|---|
-| `Skeleton` | `''` (none) | the fields to show (`'yMMMd'`) |
-| `TimeZone` | `''` (UTC) | the zone to show the instants in |
-| `Fuzzy` | `True` | use the closest skeleton when the locale lacks the one asked for |
-| `Kind` | `ikDateTime` | what the values stand for |
-| `NumberingSystem` | `'latn'` | as in `TDateTimeOptions` |
+| Field             | Default      | Meaning |
+|-------------------|--------------|---------|
+| `Skeleton`        | `''` (none)  | the fields to show (`'yMMMd'`) |
+| `TimeZone`        | `''` (UTC)   | the zone to show the instants in |
+| `Fuzzy`           | `True`       | use the closest skeleton when the locale lacks the one asked for |
+| `Kind`            | `ikDateTime` | what the values stand for |
+| `NumberingSystem` | `'latn'`     | as in `TDateTimeOptions` |
 
 #### TTimedeltaOptions
 
@@ -151,13 +151,13 @@ function TimedeltaOptions: TTimedeltaOptions;
 
 Options of `FormatTimedelta`.
 
-| Field | Default | Meaning |
-|---|---|---|
-| `Granularity` | `'second'` | the smallest unit: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'` |
-| `Threshold` | `0.85` | the fraction of a unit from which that unit is used |
-| `AddDirection` | `False` | write the duration relative to now ('in 3 hours', '3 hours ago') |
-| `Format` | `'long'` | `'long'`, `'short'` or `'narrow'`; `'medium'` is `'long'` |
-| `NumberingSystem` | `'latn'` | digits of the number |
+| Field             | Default    | Meaning |
+|-------------------|------------|---------|
+| `Granularity`     | `'second'` | the smallest unit: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'` |
+| `Threshold`       | `0.85`     | the fraction of a unit from which that unit is used |
+| `AddDirection`    | `False`    | write the duration relative to now ('in 3 hours', '3 hours ago') |
+| `Format`          | `'long'`   | `'long'`, `'short'` or `'narrow'`; `'medium'` is `'long'` |
+| `NumberingSystem` | `'latn'`   | digits of the number |
 
 #### TTimeZoneNameOptions
 
@@ -176,11 +176,11 @@ function TimeZoneNameOptions: TTimeZoneNameOptions;
 
 Options of `GetTimezoneName`.
 
-| Field | Default | Meaning |
-|---|---|---|
-| `Width` | `'long'` | `'long'` ('Pacific Time') or `'short'` ('PT') |
-| `ZoneVariant` | `''` | `'generic'`, `'standard'`, `'daylight'`; `''` takes it from the date (generic without a date) |
-| `ReturnZone` | `False` | return the canonical zone name instead of a display name |
+| Field         | Default  | Meaning |
+|---------------|----------|---------|
+| `Width`       | `'long'` | `'long'` ('Pacific Time') or `'short'` ('PT') |
+| `ZoneVariant` | `''`     | `'generic'`, `'standard'`, `'daylight'`; `''` takes it from the date (generic without a date) |
+| `ReturnZone`  | `False`  | return the canonical zone name instead of a display name |
 
 ### Pattern types
 
@@ -320,13 +320,13 @@ function GetTimezoneGmt(UTC: TDateTime; const TimeZone: string; const Locale: TL
 
 The offset of `TimeZone` at the instant `UTC`.
 
-| Width | Example |
-|---|---|
-| `'long'` | GMT-05:00 (the locale's localized GMT format) |
+| Width               | Example |
+|---------------------|---------|
+| `'long'`            | GMT-05:00 (the locale's localized GMT format) |
 | `'localized_short'` | GMT-5 |
-| `'short'` | -0500 |
-| `'iso8601'` | -05:00 |
-| `'iso8601_short'` | -05 |
+| `'short'`           | -0500 |
+| `'iso8601'`         | -05:00 |
+| `'iso8601_short'`   | -05 |
 
 `ReturnZ`: `'Z'` for a zero offset.
 

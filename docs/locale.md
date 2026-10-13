@@ -1,13 +1,16 @@
 # Locale Data
 
-The Unicode Common Locale Data Repository (CLDR) describes, for each
+The [Unicode Common Locale Data Repository (CLDR)](https://unicode.org/cldr/) describes, for each
 locale, how its language and region write names, dates and numbers.
+
 Babel4Pascal holds that data in one unit per locale and gives access to
 it through the `TLocale` record (unit `babel.core`). The formatting
 functions of the other units take a `TLocale` too.
 
-In the example outputs, no-break spaces (U+00A0) and narrow no-break
-spaces (U+202F) are shown as ordinary spaces.
+>[!NOTE]
+> In the example outputs, no-break spaces (U+00A0) and narrow no-break
+> spaces (U+202F) are shown as ordinary spaces.
+
 
 ## The `TLocale` record
 

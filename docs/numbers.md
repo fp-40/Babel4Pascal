@@ -6,8 +6,9 @@ percentages with the patterns and symbols of a locale. The numbers are
 `Int64`, `Double` and `string`, so every function accepts `1234`,
 `1234.5` or `'1234.50'`.
 
-In the example outputs, no-break spaces (U+00A0) and narrow no-break
-spaces (U+202F) are shown as ordinary spaces.
+>[!NOTE]
+> In the example outputs, no-break spaces (U+00A0) and narrow no-break
+> spaces (U+202F) are shown as ordinary spaces.
 
 ```pascal
 uses babel.numbers, babel.cldr_all;
@@ -117,21 +118,21 @@ reaches the next magnitude, that magnitude is used (`999999` is `1M`).
 A pattern given in the `Format` option replaces the locale's pattern. The
 syntax is CLDR's number pattern syntax (UTS #35, Part 3):
 
-| Symbol | Meaning |
-|--------|---------|
-| `0` | A digit, shown even when it is a leading or trailing zero |
-| `#` | A digit, not shown when it is a leading or trailing zero |
-| `@` | A significant digit (cannot be combined with `0` or `.`) |
-| `.` | The decimal separator (written as the locale's symbol) |
-| `,` | The group separator (written as the locale's symbol); its positions give the group sizes |
-| `;` | Separates the positive and the negative subpattern |
-| `-` | The minus sign (written as the locale's symbol) |
-| `+` | The plus sign (written as the locale's symbol) |
-| `%` | Multiplies by 100 and shows the percent sign |
-| `‰` | Multiplies by 1000 and shows the per mille sign |
-| `E` | Separates the mantissa and the exponent (scientific notation) |
-| `¤` | The currency symbol (`¤¤` the code, `¤¤¤` the name) |
-| `'` | Quotes literal text; `''` is an apostrophe |
+Symbol | Meaning
+------ | ---------
+`0`    | A digit, shown even when it is a leading or trailing zero
+`#`    | A digit, not shown when it is a leading or trailing zero
+`@`    | A significant digit (cannot be combined with `0` or `.`)
+`.`    | The decimal separator (written as the locale's symbol)
+`,`    | The group separator (written as the locale's symbol); its positions give the group sizes
+`;`    | Separates the positive and the negative subpattern
+`-`    | The minus sign (written as the locale's symbol)
+`+`    | The plus sign (written as the locale's symbol)
+`%`    | Multiplies by 100 and shows the percent sign
+`‰`    | Multiplies by 1000 and shows the per mille sign
+`E`    | Separates the mantissa and the exponent (scientific notation)
+`¤`    | The currency symbol (`¤¤` the code, `¤¤¤` the name)
+`'`    | Quotes literal text; `''` is an apostrophe
 
 ```pascal
 FormatDecimal(1.2345, 'en', NumberOptions.WithFormat('#,##0.##'));   // 1.23

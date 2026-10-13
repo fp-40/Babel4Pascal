@@ -52,12 +52,12 @@ FormatDecimal(X, 'en', NumberOptions.WithFormat('#,##0.00').WithGroupSeparator(F
 Options of `FormatDecimal`, `FormatPercent` and `FormatScientific`.
 Defaults: `NumberOptions`.
 
-| Field | Default | Meaning |
-|-------|---------|---------|
-| `Format: string` | `''` | The number pattern; `''` is the locale's |
-| `DecimalQuantization: Boolean` | `True` | Round to the pattern's maximum fraction digits; `False` shows every fraction digit of the number |
-| `GroupSeparator: Boolean` | `True` | Write group separators |
-| `NumberingSystem: string` | `'latn'` | The numbering system; `'default'` is the locale's |
+| Field                          | Default  | Meaning |
+|--------------------------------|----------|---------|
+| `Format: string`               | `''`     | The number pattern; `''` is the locale's |
+| `DecimalQuantization: Boolean` | `True`   | Round to the pattern's maximum fraction digits; `False` shows every fraction digit of the number |
+| `GroupSeparator: Boolean`      | `True`   | Write group separators |
+| `NumberingSystem: string`      | `'latn'` | The numbering system; `'default'` is the locale's |
 
 Methods: `WithFormat`, `WithDecimalQuantization`, `WithGroupSeparator`,
 `WithNumberingSystem`.
@@ -66,14 +66,14 @@ Methods: `WithFormat`, `WithDecimalQuantization`, `WithGroupSeparator`,
 
 Options of `FormatCurrency`. Defaults: `CurrencyOptions`.
 
-| Field | Default | Meaning |
-|-------|---------|---------|
-| `Format: string` | `''` | The pattern; `''` is the locale's pattern for `FormatType` |
-| `CurrencyDigits: Boolean` | `True` | Use the currency's fraction digits (2 for USD, 0 for JPY) instead of the pattern's |
-| `FormatType: string` | `'standard'` | `'standard'`, `'accounting'` or `'name'` (the currency's name, in the plural form of the number as shown) |
-| `DecimalQuantization: Boolean` | `True` | As in `TNumberOptions` |
-| `GroupSeparator: Boolean` | `True` | As in `TNumberOptions` |
-| `NumberingSystem: string` | `'latn'` | As in `TNumberOptions` |
+| Field                          | Default      | Meaning |
+|--------------------------------|--------------|---------|
+| `Format: string`               | `''`         | The pattern; `''` is the locale's pattern for `FormatType` |
+| `CurrencyDigits: Boolean`      | `True`       | Use the currency's fraction digits (2 for USD, 0 for JPY) instead of the pattern's |
+| `FormatType: string`           | `'standard'` | `'standard'`, `'accounting'` or `'name'` (the currency's name, in the plural form of the number as shown) |
+| `DecimalQuantization: Boolean` | `True`       | As in `TNumberOptions` |
+| `GroupSeparator: Boolean`      | `True`       | As in `TNumberOptions` |
+| `NumberingSystem: string`      | `'latn'`     | As in `TNumberOptions` |
 
 Methods: `WithFormat`, `WithCurrencyDigits`, `WithFormatType`,
 `WithDecimalQuantization`, `WithGroupSeparator`, `WithNumberingSystem`.
@@ -83,11 +83,11 @@ Methods: `WithFormat`, `WithCurrencyDigits`, `WithFormatType`,
 Options of `FormatCompactDecimal` and `FormatCompactCurrency`. Defaults:
 `CompactOptions`.
 
-| Field | Default | Meaning |
-|-------|---------|---------|
-| `FormatType: string` | `'short'` | `'short'` (`1M`) or `'long'` (`1 million`); currencies have `'short'` only |
-| `FractionDigits: Integer` | `0` | The fraction digits of the abbreviated number |
-| `NumberingSystem: string` | `'latn'` | As in `TNumberOptions` |
+| Field                     | Default   | Meaning |
+|---------------------------|-----------|---------|
+| `FormatType: string`      | `'short'` | `'short'` (`1M`) or `'long'` (`1 million`); currencies have `'short'` only |
+| `FractionDigits: Integer` | `0`       | The fraction digits of the abbreviated number |
+| `NumberingSystem: string` | `'latn'`  | As in `TNumberOptions` |
 
 Methods: `WithFormatType`, `WithFractionDigits`, `WithNumberingSystem`.
 
@@ -95,9 +95,9 @@ Methods: `WithFormatType`, `WithFractionDigits`, `WithNumberingSystem`.
 
 Options of `ParseNumber` and `ParseDecimal`. Defaults: `ParseOptions`.
 
-| Field | Default | Meaning |
-|-------|---------|---------|
-| `StrictMode: Boolean` | `False` | `ParseDecimal` only: reject group symbols in wrong places |
+| Field                     | Default  | Meaning |
+|---------------------------|----------|---------|
+| `StrictMode: Boolean`     | `False`  | `ParseDecimal` only: reject group symbols in wrong places |
 | `NumberingSystem: string` | `'latn'` | The symbols to read; `'default'` is the locale's |
 
 Methods: `WithStrict`, `WithNumberingSystem`.
@@ -107,12 +107,12 @@ Methods: `WithStrict`, `WithNumberingSystem`.
 Options of `GetTerritoryCurrencies` and `GetTerritoryCurrencyDetails`.
 Defaults: `TerritoryCurrencyOptions`.
 
-| Field | Default | Meaning |
-|-------|---------|---------|
-| `StartDate: TDateTime` | `0` | The start of the period; `0` is today |
-| `EndDate: TDateTime` | `0` | The end of the period; `0` is the start date |
-| `Tender: Boolean` | `True` | Include currencies that are legal tender |
-| `NonTender: Boolean` | `False` | Include currencies that are not legal tender |
+| Field                  | Default | Meaning |
+|------------------------|---------|---------|
+| `StartDate: TDateTime` | `0`     | The start of the period; `0` is today |
+| `EndDate: TDateTime`   | `0`     | The end of the period; `0` is the start date |
+| `Tender: Boolean`      | `True`  | Include currencies that are legal tender |
+| `NonTender: Boolean`   | `False` | Include currencies that are not legal tender |
 
 Methods: `WithStartDate`, `WithEndDate`, `WithTender`, `WithNonTender`.
 
@@ -364,35 +364,35 @@ finite value from its parts (ASCII digits, may be `''` for zero).
 
 #### Properties and tests
 
-| Member | Meaning |
-|--------|---------|
-| `Kind: TDecimalKind` | `dkFinite`, `dkInfinity` or `dkNaN` |
-| `Negative: Boolean` | The sign |
-| `Digits: string` | The coefficient digits (`''` for NaN, `'0'` for Infinity) |
-| `Exponent: Int64` | The exponent (finite values) |
+| Member                            | Meaning |
+|-----------------------------------|---------|
+| `Kind: TDecimalKind`              | `dkFinite`, `dkInfinity` or `dkNaN` |
+| `Negative: Boolean`               | The sign |
+| `Digits: string`                  | The coefficient digits (`''` for NaN, `'0'` for Infinity) |
+| `Exponent: Int64`                 | The exponent (finite values) |
 | `IsFinite`, `IsNaN`, `IsInfinite` | The kind |
-| `IsZero` | Finite and zero |
-| `IsIntegral` | Finite with no fraction |
-| `IsSigned` | The sign bit (also for −0 and −NaN) |
-| `Adjusted: Int64` | The exponent of the most significant digit (0 for Infinity and NaN) |
+| `IsZero`                          | Finite and zero |
+| `IsIntegral`                      | Finite with no fraction |
+| `IsSigned`                        | The sign bit (also for −0 and −NaN) |
+| `Adjusted: Int64`                 | The exponent of the most significant digit (0 for Infinity and NaN) |
 
 #### Operations
 
-| Method | Result |
-|--------|--------|
-| `ToString: string` | The value in scientific-string notation: `'12.50'`, `'1E+3'`, `'1E-7'`, `'-0'`, `'Infinity'`, `'NaN'` |
-| `FormatFixed: string` | Every digit in positional notation (`'1.2E+3'` is `'1200'`) |
-| `Abs` | The absolute value |
-| `Truncate` | The value truncated toward zero, as an integer; raises `EBabelValueError` for NaN and Infinity |
-| `Normalize` | Trailing zeros removed (`1200` is `1.2E+3`) |
-| `ScaleB(N)` | The value times 10<sup>N</sup> |
-| `Multiply(B)` | The exact product |
-| `Divide(B, Precision = 28)` | The quotient rounded half to even to `Precision` significant digits; raises `EBabelDecimalError` for a division by zero |
-| `Quantize(Exp)` | Rounded half to even to the exponent `Exp`; raises `EBabelDecimalError` for Infinity |
-| `Round(N)` | `Quantize(-N)`: `N` fraction digits |
+| Method                        | Result |
+|-------------------------------|--------|
+| `ToString: string`            | The value in scientific-string notation: `'12.50'`, `'1E+3'`, `'1E-7'`, `'-0'`, `'Infinity'`, `'NaN'` |
+| `FormatFixed: string`         | Every digit in positional notation (`'1.2E+3'` is `'1200'`) |
+| `Abs                          | The absolute value |
+| `Truncate`                    | The value truncated toward zero, as an integer; raises `EBabelValueError` for NaN and Infinity |
+| `Normalize`                   | Trailing zeros removed (`1200` is `1.2E+3`) |
+| `ScaleB(N)`                   | The value times 10<sup>N</sup> |
+| `Multiply(B)`                 | The exact product |
+| `Divide(B, Precision = 28)`   | The quotient rounded half to even to `Precision` significant digits; raises `EBabelDecimalError` for a division by zero |
+| `Quantize(Exp)`               | Rounded half to even to the exponent `Exp`; raises `EBabelDecimalError` for Infinity |
+| `Round(N)`                    | `Quantize(-N)`: `N` fraction digits |
 | `Compare(B)`, `CompareInt(B)` | −1, 0 or 1; raises `EBabelValueError` for NaN |
-| `ModInt(M)` | The remainder of the division by `M` (> 0), with the value's sign; finite values |
-| `TryToInt64(out V)` | The value as `Int64` when it is an integer that fits |
+| `ModInt(M)`                   | The remainder of the division by `M` (> 0), with the value's sign; finite values |
+| `TryToInt64(out V)`           | The value as `Int64` when it is an integer that fits |
 
 ```pascal
 TDecimal('1.50').Multiply('2').ToString;   // 3.00
