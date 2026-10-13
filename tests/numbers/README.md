@@ -20,7 +20,3 @@ build/bin/test_numbers tests/numbers/reference.jsonl --update /tmp/new.jsonl
 mv /tmp/new.jsonl tests/numbers/reference.jsonl
 git diff tests/numbers/reference.jsonl
 ```
-
-`tests/python/gen_numbers_vectors.py` still generates the full set of
-cases from Babel (about 263 000), useful to see every difference from
-Babel at once.

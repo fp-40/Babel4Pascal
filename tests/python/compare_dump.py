@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """Compare the output of tests/data/dumpdata (the locale data as the Pascal
-library loads it) with Python Babel's data for the same locales: what
-babel.localedata.load returns, read through LocaleDataDict (aliases
-resolved), as in a fresh process.
+library loads it: encoded, merged along the parent chain, aliases
+resolved) with the same data built here from tools/cldrgen/importer.py:
+each locale's own data merged over its parent's (CLDR's parent chain,
+cldrgen.locales.parent_of), dictionaries merged key by key, and the
+aliases of root (months, days, quarters, eras, currency formats) resolved
+against the locale's merged data. The global data is compared with
+importer.parse_global as it is.
 
-The reference is the oracle, Babel 2.18.0 with CLDR 47 (tools/oracle.py
-downloads it into .cache/oracle).
-
-Babel reads each locale's data from the importer
-(oracle.correct_babel_data), which corrects errors of Babel's import, so
-the comparison checks the encoding, merge and alias resolution of the
-Pascal library against Babel's on the same data.
+This checks the generator's encoding and the library's decoding,
+inheritance and alias resolution, independently of the Pascal code.
 
 Usage: dumpdata | tests/python/compare_dump.py
        dumpdata --global | tests/python/compare_dump.py --global
@@ -19,39 +18,68 @@ Exit status 1 when any locale differs.
 import copy
 import json
 import os
+import subprocess
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.abspath(__file__)))), 'tools'))
-import oracle  # noqa: E402
-from cldrgen.importer import EXTRA_LOCALE_KEYS  # noqa: E402
-
-def ref_value(v):
-    """Babel's value in the dump's representation."""
-    from babel.dates import DateTimePattern
-    from babel.localedata import LocaleDataDict
-    from babel.numbers import NumberPattern
-    from babel.plural import PluralRule
-    if isinstance(v, (dict, LocaleDataDict)):
-        return {'m': [[k, ref_value(v[k])] for k in v]}
-    if isinstance(v, (list, tuple)):
-        return [ref_value(x) for x in v]
-    if isinstance(v, (NumberPattern, DateTimePattern)):
-        return v.pattern
-    if isinstance(v, PluralRule):
-        return ('plural', sorted(v.rules.items()))
-    return v
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+from cldrgen import importer, locales  # noqa: E402
+from cldrgen.model import Alias  # noqa: E402
 
 
-def ours_value(v, key=None):
-    from babel.plural import PluralRule
-    if isinstance(v, dict):
-        return {'m': [[k, ours_value(x, k)] for k, x in v['m']]}
-    if key in ('plural_form', 'ordinal_form'):
-        return ('plural', sorted(PluralRule([tuple(p) for p in v]).rules.items()))
-    if isinstance(v, list):
-        return [ours_value(x) for x in v]
-    return v
+def merge(dict1, dict2):
+    """dict2 merged into dict1, key by key: a nested dictionary is merged
+    into the inherited one; an alias with local additions becomes the pair
+    (alias, additions), resolved later."""
+    for key, val2 in dict2.items():
+        if val2 is None:
+            continue
+        val1 = dict1.get(key)
+        if isinstance(val2, dict):
+            if val1 is None:
+                val1 = {}
+            if isinstance(val1, Alias):
+                val1 = (val1, val2)
+            elif isinstance(val1, tuple):
+                alias, others = val1
+                others = copy.copy(others)
+                merge(others, val2)
+                val1 = (alias, others)
+            else:
+                val1 = copy.copy(val1)
+                merge(val1, val2)
+        else:
+            val1 = val2
+        dict1[key] = val1
+
+
+def lookup(top, keys):
+    value = top
+    for k in keys:
+        value = resolve_alias(value, top)[k]
+    return value
+
+
+def resolve_alias(value, top):
+    """The value an alias, or an (alias, additions) pair, stands for."""
+    if isinstance(value, Alias):
+        return resolve_alias(lookup(top, value.keys), top)
+    if isinstance(value, tuple) and len(value) == 2 and isinstance(value[0], Alias):
+        base = copy.deepcopy(resolve_alias(value[0], top))
+        merge(base, value[1])
+        return base
+    return value
+
+
+def dump_value(value, top):
+    """A value in the dump's representation ({'m': [[key, value], ...]} for
+    a dictionary, lists for sequences), aliases resolved."""
+    value = resolve_alias(value, top)
+    if isinstance(value, dict):
+        return {'m': [[k, dump_value(v, top)] for k, v in value.items()]}
+    if isinstance(value, (list, tuple)):
+        return [dump_value(v, top) for v in value]
+    return value
 
 
 def first_difference(a, b, path=()):
@@ -78,30 +106,38 @@ def first_difference(a, b, path=()):
 
 
 def main(argv):
-    oracle.ensure()
-    from babel import localedata
-    from babel.core import get_global
+    srcdir = subprocess.run([sys.executable, '-I', os.path.join(ROOT, 'tools', 'gencldr.py'), 'fetch'],
+                            check=True, capture_output=True, text=True).stdout.strip()
+    global_data = importer.parse_global(srcdir)
     is_global = '--global' in argv
-    if not is_global:
-        oracle.correct_babel_data()
+    imp = importer.LocaleImporter(srcdir)
+    built = {}
+
+    def build(name):
+        if name not in built:
+            own = imp.import_locale(name)
+            if name == 'root':
+                data = own
+            else:
+                data = copy.deepcopy(build(locales.parent_of(name, global_data)))
+                merge(data, own)
+            built[name] = data
+        return built[name]
+
     count = bad = 0
     for line in sys.stdin:
         name, _, js = line.rstrip('\n').partition('\t')
-        got = ours_value(json.loads(js))
-        if not is_global:
-            # keys babel.numbers uses that Babel does not import
-            got = {'m': [kv for kv in got['m'] if kv[0] not in EXTRA_LOCALE_KEYS]}
+        got = json.loads(js)
         if is_global:
-            want = ref_value(get_global(name))
+            want = dump_value(global_data[name], global_data)
         else:
-            # A deep copy, so that resolving aliases does not change the
-            # cached dicts that later loads copy (Babel resolves in place).
-            want = ref_value(localedata.LocaleDataDict(copy.deepcopy(localedata.load(name))))
+            data = copy.deepcopy(build(name))
+            want = dump_value(data, data)
         count += 1
         d = first_difference(got, want)
         if d:
             bad += 1
-            print(f'{name}: at {d[0]}: ours {d[1]!r:.150} babel {d[2]!r:.150}')
+            print(f'{name}: at {d[0]}: ours {d[1]!r:.150} importer {d[2]!r:.150}')
     print(f'{count} compared, {bad} differ')
     return 1 if bad or not count else 0
 

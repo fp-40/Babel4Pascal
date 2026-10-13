@@ -1,0 +1,186 @@
+[
+ {
+  "env": {},
+  "category": "",
+  "expect": [
+   "",
+   "TypeError"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "fr_FR.UTF-8"
+  },
+  "category": "",
+  "expect": [
+   "fr_FR",
+   "fr_FR"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "C"
+  },
+  "category": "",
+  "expect": [
+   "en_US_POSIX",
+   "en_US_POSIX"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "POSIX"
+  },
+  "category": "",
+  "expect": [
+   "en_US_POSIX",
+   "en_US_POSIX"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "C.UTF-8"
+  },
+  "category": "",
+  "expect": [
+   "en_US_POSIX",
+   "en_US_POSIX"
+  ]
+ },
+ {
+  "env": {
+   "LANGUAGE": "de:en",
+   "LANG": "fr_FR"
+  },
+  "category": "",
+  "expect": [
+   "de_DE",
+   "de_DE"
+  ]
+ },
+ {
+  "env": {
+   "LANGUAGE": ":de",
+   "LANG": "fr_FR"
+  },
+  "category": "",
+  "expect": [
+   "fr_FR",
+   "fr_FR"
+  ]
+ },
+ {
+  "env": {
+   "LC_ALL": "es_PE.UTF-8",
+   "LANG": "fr"
+  },
+  "category": "",
+  "expect": [
+   "es_PE",
+   "es_PE"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "en"
+  },
+  "category": "",
+  "expect": [
+   "en_US",
+   "en_US"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "no"
+  },
+  "category": "",
+  "expect": [
+   "nb_NO",
+   "nb_NO"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "bad_locale_X"
+  },
+  "category": "",
+  "expect": [
+   "",
+   "TypeError"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "bad_locale_X",
+   "LC_CTYPE": "pt_BR"
+  },
+  "category": "",
+  "expect": [
+   "pt_BR",
+   "pt_BR"
+  ]
+ },
+ {
+  "env": {
+   "LC_TIME": "ja_JP",
+   "LANG": "en"
+  },
+  "category": "LC_TIME",
+  "expect": [
+   "ja_JP",
+   "ja_JP"
+  ]
+ },
+ {
+  "env": {
+   "LC_TIME": "",
+   "LANG": "sv_SE"
+  },
+  "category": "LC_TIME",
+  "expect": [
+   "sv_SE",
+   "sv_SE"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "de_DE@euro"
+  },
+  "category": "",
+  "expect": [
+   "de_DE@euro",
+   "de_DE@euro"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "xx_YY"
+  },
+  "category": "",
+  "expect": [
+   "xx_YY",
+   "UnknownLocaleError"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "zh_TW.Big5"
+  },
+  "category": "",
+  "expect": [
+   "zh_TW",
+   "zh_Hant_TW"
+  ]
+ },
+ {
+  "env": {
+   "LANG": "sr_RS@latin"
+  },
+  "category": "",
+  "expect": [
+   "sr_RS@latin",
+   "sr_Cyrl_RS"
+  ]
+ }
+]

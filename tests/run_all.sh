@@ -2,61 +2,54 @@
 # Runs every check of Babel4Pascal. Exit status 0 only when all pass.
 #
 # 1. Generator unit tests (tests/python/test_cldrgen.py).
-# 2. The importer against the data files of the oracle, Python Babel 2.18.0
-#    (tools/check_import.py): every locale of the release.
-# 3. The Pascal library's loaded data against the oracle's
+# 2. The Pascal library's loaded data against the importer's
 #    (tests/data/dumpdata + tests/python/compare_dump.py): every generated
-#    locale, and the global data.
-# 4. babel.core, babel.plural and babel.decimal against vectors of the
-#    oracle's results (tests/python/gen_core_vectors.py +
-#    tests/core/test_core), and DefaultLocale under several environments
-#    (tests/python/check_default_locale.py + tests/core/print_default).
-# 5. babel.numbers against its reference cases (tests/numbers/reference.jsonl,
+#    locale merged along its parent chain with root's aliases resolved,
+#    and the global data.
+# 3. babel.core, babel.plural and babel.decimal against their reference
+#    cases (tests/core/reference.jsonl + tests/core/test_core), and
+#    DefaultLocale under several environments
+#    (tests/core/default_locale.json, tests/python/check_default_locale.py
+#    + tests/core/print_default).
+# 4. babel.numbers against its reference cases (tests/numbers/reference.jsonl,
 #    tests/numbers/README.md), and, when node is installed, against ICU
 #    (tests/js/README.md): differences other than the known data
 #    differences between CLDR 47 and 48 fail the run. Round trips
 #    (tests/numbers/test_roundtrip): ParseDecimal(FormatDecimal(x)) = x in
 #    every locale and numbering system.
-# 6. babel.tz against Python's zoneinfo on the system's tz database: every
+# 5. babel.tz against Python's zoneinfo on the system's tz database: every
 #    zone, offsets and DST at UTC instants and local times
 #    (tests/python/gen_tz_vectors.py + tests/tz/test_tz).
-# 7. babel.dates against its reference cases (tests/dates/reference.jsonl,
+# 6. babel.dates against its reference cases (tests/dates/reference.jsonl,
 #    tests/dates/README.md), and, when gcc and the ICU development headers
 #    are installed, against ICU4C (tests/icu/README.md): differences other
 #    than the known data differences between CLDR 47 and 48 fail the run.
-# 8. babel.lists and babel.units against their reference cases
+# 7. babel.lists and babel.units against their reference cases
 #    (tests/lists/reference.jsonl, tests/units/reference.jsonl), and
-#    against ICU4C as in 7.
-# 9. babel.languages and babel.support (TFormat) against their reference
+#    against ICU4C as in 6.
+# 8. babel.languages and babel.support (TFormat) against their reference
 #    cases (tests/languages/reference.jsonl, tests/format/reference.jsonl).
 #
-# The importer corrects errors of Babel's data import and leaves out
-# unconfirmed data. Check 2 runs it reproducing Babel (babel_compat);
-# checks 3 and 4 run Babel's code on the importer's data
-# (tools/oracle.py, correct_babel_data).
-#
-# The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
-# are downloaded once when absent.
+# The CLDR release (.cache/cldr) is downloaded once when absent. Python 3
+# runs the generator and the checkers; Python Babel is not used.
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 OUT=$ROOT/build
 mkdir -p "$OUT/units" "$OUT/bin"
-COMMON=$(python3 -I tools/gencldr.py fetch)
+python3 -I tools/gencldr.py fetch > /dev/null   # the CLDR release, downloaded once
 
 echo "== generator tests"
 python3 -I tests/python/test_cldrgen.py
 
-echo "== importer vs Babel's data files"
 # Run from /tmp: Python must not import modules from this checkout's cwd.
 check() { # name, command...: run, show the last lines, fail on failure
   name=$1; shift
   if (cd /tmp && "$@") > "$OUT/$name.log" 2>&1; then tail -n 3 "$OUT/$name.log"
   else tail -n 20 "$OUT/$name.log"; echo "FAILED: $name (see $OUT/$name.log)"; exit 1; fi
 }
-check import python3 -I "$ROOT/tools/check_import.py" "$COMMON"
 
-echo "== Pascal loaded data vs Babel"
+echo "== Pascal loaded data vs the importer's"
 # Regenerate, so the units match the generator and the CLDR release.
 python3 -I tools/gencldr.py generate
 fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
@@ -66,16 +59,15 @@ fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
 "$OUT/bin/dumpdata" --global > "$OUT/dump-global.txt"
 check locales sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' < '$OUT/dump-locales.txt'"
 check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '$OUT/dump-global.txt'"
-echo "== babel.core, babel.plural, babel.decimal vs Babel"
+echo "== babel.core, babel.plural, babel.decimal vs their reference cases"
 mkdir -p "$OUT/vectors"
-check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
 for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \
     lists/test_lists units/test_units languages/test_languages format/test_format; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
 done
-check core "$OUT/bin/test_core" "$OUT/vectors/core.jsonl"
+check core "$OUT/bin/test_core" "$ROOT/tests/core/reference.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
 echo "== babel.numbers vs its reference cases, round trips"
 check numbers "$OUT/bin/test_numbers" "$ROOT/tests/numbers/reference.jsonl"

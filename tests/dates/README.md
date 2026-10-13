@@ -21,9 +21,6 @@ mv /tmp/new.jsonl tests/dates/reference.jsonl
 git diff tests/dates/reference.jsonl
 ```
 
-`tests/python/gen_dates_vectors.py` still generates the full set of cases
-from Babel, useful to see every difference from Babel at once.
-
 ## Where babel.dates departs from Babel
 
 Checked against ICU4C (tests/icu/README.md):

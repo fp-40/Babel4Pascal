@@ -2,8 +2,7 @@
 
 `reference.jsonl` holds the expected results of 4 000 calls of
 `FormatList` (one JSON object per line: `op`, `args`, and `expect` or
-`error`), a stratified sample of the 61 440 cases of
-`tests/python/gen_lists_vectors.py`. `babel.lists` matched Python Babel
+`error`), a stratified sample of 61 440 cases. `babel.lists` matched Python Babel
 2.18.0 on all of them (commit 5656de7) and then departed from it to
 follow CLDR as ICU applies it: each part of a style is resolved through
 CLDR's aliases (Babel raised KeyError on partial styles and repeated the

@@ -30,8 +30,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from cldrgen import encode, importer, locales, pascal  # noqa: E402
 
-# The release Python Babel 2.18.0 is built from (its
-# scripts/download_import_cldr.py).
+# CLDR 47, the release of Python Babel 2.18.0, against which the library
+# was first validated.
 CLDR_VERSION = '47.0'
 CLDR_URL = 'https://unicode.org/Public/cldr/47/cldr-common-47.zip'
 CLDR_SHA512 = ('3b1eb2a046dae23cf16f611f452833e2a95affb1aa2ae3fa599753d229d15257'

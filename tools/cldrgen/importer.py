@@ -1,25 +1,31 @@
 """Read the CLDR XML release (the cldr-common-<version>.zip of unicode.org,
 extracted) into Python dicts: one dict of global data and one sparse dict
-per locale.
+per locale (its own data; the library merges the parent chain).
 
-The dicts have the same keys and values as the global.dat and
-locale-data/*.dat files of Python Babel 2.18.0 (plus the keys listed in
-EXTRA_GLOBAL_KEYS, which Babel does not have), which its
-scripts/import_cldr.py builds from the same XML release. This module
-follows that script rule by rule (which elements are skipped as drafts or
-alternates, how aliases are recorded, which numbering systems are kept),
-so that the Pascal library formats exactly as Babel does. Differences in
-representation, all reversible:
+The structure of the data (keys and values) and most import rules come
+from Python Babel's scripts/import_cldr.py, which the first versions of
+this module reproduced exactly. It departs from that script where Babel
+does not follow CLDR or ICU:
 
-- number and date patterns are kept as their pattern strings (Babel
-  stores parsed NumberPattern and DateTimePattern objects);
+- elements of draft status unconfirmed or provisional are left out (and
+  the containers they leave empty), so their values are inherited;
+- the week data of a locale without a region is its likely region's (en:
+  US), and a key a territory does not list has the world's value;
+- alternate skeletons and interval formats (alt="ascii", "variant") are
+  left out; Babel let them replace the standard ones;
+- the plain regionFormat is taken, not its daylight or standard variant;
+- data Babel does not import: numbering system digits and formats,
+  minimum grouping digits, currency spacing, GMT formats, atTime
+  date-time patterns, relative-time field aliases, time data, primary
+  zones, metazone reference zones, BCP 47 zone ids.
+
+Representation:
+
+- number and date patterns are kept as their pattern strings;
 - a plural rule is a list of [category, condition] pairs, the condition
-  as written in CLDR without its samples (Babel stores a parsed
-  PluralRule);
+  as written in CLDR without its samples;
+- an alias of root is a model.Alias (the path of keys it refers to);
 - tuples are lists, and sets do not occur.
-
-tools/check_import.py compares the output with the .dat files of an
-installed Babel.
 
 Babel's import_cldr.py is Copyright (C) 2007-2011 Edgewall Software,
 2013-2026 the Babel team, BSD-3-Clause; see tools/cldrgen/NOTICE.
@@ -30,12 +36,6 @@ import re
 from xml.etree import ElementTree
 
 from .model import Alias
-
-# Data that Babel does not import (babel.numbers uses it to follow CLDR).
-EXTRA_GLOBAL_KEYS = {'numbering_system_digits', 'time_data', 'primary_zones',
-                     'metazone_golden_zones', 'zone_bcp47'}
-EXTRA_LOCALE_KEYS = {'min_grouping_digits', 'currency_spacing', 'numbering_system_formats',
-                     'gmt_formats', 'datetime_formats_at_time', 'date_field_aliases'}
 
 WEEKDAYS = {'mon': 0, 'tue': 1, 'wed': 2, 'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6}
 
@@ -403,12 +403,8 @@ class LocaleImporter:
     """Holds the supplemental data shared by every locale and imports one
     locale file at a time (import_locale)."""
 
-    def __init__(self, srcdir, babel_compat=False):
-        """babel_compat: reproduce Babel 2.18's data exactly, including the
-        errors corrected here (see _parse_calendar_datetime_skeletons), to
-        compare the importer with Babel's pickles."""
+    def __init__(self, srcdir):
         self.srcdir = srcdir
-        self.babel_compat = babel_compat
         sup_dir = os.path.join(srcdir, 'supplemental')
         self.sup = _parse(os.path.join(sup_dir, 'supplementalData.xml'))
         self.day_period_rules = _parse_day_period_rules(_parse(os.path.join(sup_dir, 'dayPeriods.xml')))
@@ -438,8 +434,7 @@ class LocaleImporter:
 
     def import_locale(self, name):
         tree = _parse(os.path.join(self.srcdir, 'main', name + '.xml'))
-        if not self.babel_compat:
-            _drop_unconfirmed(tree)
+        _drop_unconfirmed(tree)
         language = None
         elem = tree.find('.//identity/language')
         if elem is not None:
@@ -465,13 +460,13 @@ class LocaleImporter:
         # US, Sunday), as CLDR specifies and ICU does; Babel used the
         # world's (Monday).
         week_territory, week_regions = territory, regions
-        if not self.babel_compat and territory == '001' and name != 'root':
+        if territory == '001' and name != 'root':
             # by the full name first: zh_Hant is TW, zh is CN
             likely = self.likely_subtags.get(name, self.likely_subtags.get(locale_id, '')).split('_')
             if len(likely) >= 2 and re.fullmatch(r'[A-Z]{2}|[0-9]{3}', likely[-1]):
                 week_territory = likely[-1]
                 week_regions = self.territory_containment.get(week_territory, [])
-        _parse_dates(data, tree, self.sup, week_regions, week_territory, self.babel_compat)
+        _parse_dates(data, tree, self.sup, week_regions, week_territory)
         for calendar in tree.findall('.//calendars/calendar'):
             if calendar.attrib['type'] != 'gregorian':
                 continue
@@ -484,8 +479,8 @@ class LocaleImporter:
                                     'date_formats', 'dateFormat/pattern')
             _parse_calendar_formats(data, calendar, 'timeFormats', 'timeFormatLength',
                                     'time_formats', 'timeFormat/pattern')
-            _parse_calendar_datetime_skeletons(data, calendar, self.babel_compat)
-            _parse_interval_formats(data, calendar, self.babel_compat)
+            _parse_calendar_datetime_skeletons(data, calendar)
+            _parse_interval_formats(data, calendar)
         _parse_number_symbols(data, tree)
         _parse_numbering_systems(data, tree)
         _parse_decimal_formats(data, tree)
@@ -549,7 +544,7 @@ def _parse_list_patterns(data, tree):
             list_patterns.setdefault(pattern_type, {})[part.attrib['type']] = _text(part)
 
 
-def _parse_dates(data, tree, sup, regions, territory, babel_compat=False):
+def _parse_dates(data, tree, sup, regions, territory):
     week_data = data.setdefault('week_data', {})
     supelem = sup.find('.//weekData')
     for tag, key, convert in (('minDays', 'min_days', None),
@@ -565,7 +560,7 @@ def _parse_dates(data, tree, sup, regions, territory, babel_compat=False):
                     else WEEKDAYS[elem.attrib['day']]
         # A territory not listed has the world's value (CLDR); Babel left
         # the key out, so fr_CA inherited fr's minimal days (4, not 1).
-        if not babel_compat and key not in week_data:
+        if key not in week_data:
             for elem in supelem.findall(tag):
                 if not _should_skip_elem(elem) and '001' in elem.attrib['territories'].split():
                     week_data[key] = int(elem.attrib['count']) if convert is None \
@@ -581,7 +576,7 @@ def _parse_dates(data, tree, sup, regions, territory, babel_compat=False):
         for elem in tree.findall('.//timeZoneNames/' + tag):
             # the plain regionFormat; Babel took the first one, which in
             # fr_CA is the daylight variant ('{0} (heure avancée)')
-            if not _should_skip_elem(elem) and (babel_compat or 'type' not in elem.attrib):
+            if not _should_skip_elem(elem) and 'type' not in elem.attrib:
                 zone_formats[key] = convert(str(elem.text))
                 break
 
@@ -656,11 +651,11 @@ def _parse_calendar_formats(data, calendar, container_tag, length_tag, key, patt
                 formats = Alias(_translate_alias([key], elem.attrib['path']))
 
 
-def _parse_calendar_datetime_skeletons(data, calendar, babel_compat=False):
+def _parse_calendar_datetime_skeletons(data, calendar):
     """datetime_formats and datetime_skeletons. Babel takes every
     dateFormatItem, so an alternate (alt="ascii": 'h:mm a' for 'h:mm\u202fa'
     in en; alt="variant") that follows the item replaces it; here
-    alternates are skipped, as ICU does, unless babel_compat."""
+    alternates are skipped, as ICU does."""
     datetime_formats = data.setdefault('datetime_formats', {})
     datetime_skeletons = data.setdefault('datetime_skeletons', {})
     for container in calendar.findall('dateTimeFormats'):
@@ -674,12 +669,12 @@ def _parse_calendar_datetime_skeletons(data, calendar, babel_compat=False):
                 datetime_formats = Alias(_translate_alias(['datetime_formats'], elem.attrib['path']))
             elif elem.tag == 'availableFormats':
                 for skeleton in elem.findall('dateFormatItem'):
-                    if not babel_compat and 'alt' in skeleton.attrib:
+                    if 'alt' in skeleton.attrib:
                         continue
                     datetime_skeletons[skeleton.attrib['id']] = str(skeleton.text)
 
 
-def _parse_interval_formats(data, calendar, babel_compat=False):
+def _parse_interval_formats(data, calendar):
     """interval_formats; alternate differences skipped as for skeletons."""
     interval_formats = data.setdefault('interval_formats', {})
     for elem in calendar.findall('dateTimeFormats/intervalFormats/*'):
@@ -692,7 +687,7 @@ def _parse_interval_formats(data, calendar, babel_compat=False):
             for item_sub in elem:
                 if item_sub.tag != 'greatestDifference':
                     raise NotImplementedError(f'{item_sub.tag}({item_sub.attrib!r})')
-                if not babel_compat and 'alt' in item_sub.attrib:
+                if 'alt' in item_sub.attrib:
                     continue
                 skel_data[item_sub.attrib['id']] = split_interval_pattern(item_sub.text)
 

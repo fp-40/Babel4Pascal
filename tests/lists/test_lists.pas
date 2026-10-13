@@ -1,7 +1,6 @@
 { test_lists - checks babel.lists against vector files: its reference
   cases (tests/lists/reference.jsonl), ICU4C's results
-  (tests/icu/icu_lists_units.c, the icu_list operation) or Python Babel's
-  (tests/python/gen_lists_vectors.py).
+  (tests/icu/icu_lists_units.c, the icu_list operation).
 
   Usage: test_lists VECTORS.jsonl   (exit status 1 when a case fails)
          test_lists VECTORS.jsonl --update OUT.jsonl }

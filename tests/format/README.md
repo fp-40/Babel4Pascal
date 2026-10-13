@@ -3,8 +3,8 @@
 `reference.jsonl` holds 3 000 calls of the `TFormat` methods (date,
 datetime, time, timedelta, number, decimal, compact decimal, currency,
 compact currency, percent, scientific) in 20 locales, 4 time zones and
-the 'latn' and 'default' numbering systems: a stratified sample of the
-7 280 cases of `tests/python/gen_format_vectors.py`.
+the 'latn' and 'default' numbering systems: a stratified sample of 7 280
+cases compared with Python Babel 2.18.0's `Format`.
 
 `TFormat` only binds the arguments of the functions of `babel.dates` and
 `babel.numbers`; its results differ from Babel's `Format` where those

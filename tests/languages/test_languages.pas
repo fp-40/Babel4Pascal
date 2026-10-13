@@ -1,6 +1,5 @@
 { test_languages - checks babel.languages against vector files: its
-  reference cases (tests/languages/reference.jsonl) or Python Babel's
-  (tests/python/gen_languages_vectors.py).
+  reference cases (tests/languages/reference.jsonl).
 
   Usage: test_languages VECTORS.jsonl   (exit status 1 when a case fails)
          test_languages VECTORS.jsonl --update OUT.jsonl }

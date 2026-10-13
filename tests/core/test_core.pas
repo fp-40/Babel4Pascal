@@ -1,6 +1,9 @@
-{ test_core - checks babel.core, babel.plural and babel.decimal against the
-  vectors of tests/python/gen_core_vectors.py (the results of Python Babel
-  2.18.0 for the same inputs).
+{ test_core - checks babel.core, babel.plural and babel.decimal against
+  tests/core/reference.jsonl: 66 245 cases (identifiers, Locale.parse,
+  negotiation, names and properties of every locale, plural rules and
+  operands, Decimal parsing, float-to-decimal conversion of 30 000
+  doubles, decimal arithmetic), recorded from Python Babel 2.18.0 and
+  Python's decimal module run on the same data.
 
   Usage: test_core VECTORS.jsonl
   Prints each failing case (up to 40) and a count per operation; exit

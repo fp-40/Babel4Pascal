@@ -36,26 +36,25 @@ Not ported: Babel's gettext support (`babel.messages`, and the
 `LazyProxy`, a deferred evaluation of Python objects.
 
 The API follows Python Babel 2.18.0, which uses CLDR 47. The library
-started as an exact reproduction of Babel's output and then departed
-from it where Babel does not follow CLDR, taking ICU (the reference
-implementation of CLDR) as the reference for those cases: the numbers
-and dates checks compare with ICU's results. The importer corrects a few
-errors of Babel's data import: the week of locales without a region
-(CLDR uses the likely region: `en` is US, weeks from Sunday), week keys
-of unlisted territories, alternate skeletons and interval formats
-(`alt="ascii"`), the region format's variants; and, as ICU, it leaves out
-the data of unconfirmed or provisional status (`draft` attribute), which
-Babel imports: those values are inherited from the parent locale. In its
-`babel_compat` mode it reproduces Babel's files exactly. The other checks
-compare
-against Babel 2.18.0, the "oracle" (`tools/oracle.py` downloads its wheel
-from PyPI into `.cache/oracle`; no install is needed).
+started as an exact reproduction of Babel's output (validated against it
+module by module) and then departed from it where Babel does not follow
+CLDR, taking ICU (the reference implementation of CLDR) as the reference
+for those cases. The importer departs from Babel's data import in the
+same way: the week of locales without a region (CLDR uses the likely
+region: `en` is US, weeks from Sunday), week keys of unlisted
+territories, alternate skeletons and interval formats (`alt="ascii"`),
+the region format's variants; and, as ICU, it leaves out the data of
+unconfirmed or provisional status (`draft` attribute), whose values are
+then inherited from the parent locale (tools/cldrgen/importer.py).
+
+Python Babel is no longer used: the checks run against the library's
+own reference files, recorded from the validated behavior, and against
+ICU.
 
 ## How the data works
 
 - `tools/gencldr.py` reads the official CLDR XML release
-  (`cldr-common-47.zip` from unicode.org, the same source Babel's own
-  importer reads) and writes one Pascal unit per locale into `src/data/`:
+  (`cldr-common-47.zip` from unicode.org) and writes one Pascal unit per locale into `src/data/`:
   `babel.cldr_es_PE` holds the data of `es_PE` and uses the unit of the
   locale it inherits from (`babel.cldr_es_419`, then `babel.cldr_es`,
   then `babel.cldr_root`). `babel.cldr_global` holds the data that is not
@@ -153,24 +152,22 @@ options.
 `tests/run_all.sh` runs:
 
 1. the generator's unit tests;
-2. `tools/check_import.py`: the data the generator reads, against the
-   `global.dat` and `locale-data/*.dat` files of the oracle, for all 1083
-   locale files of the release (with the importer reproducing Babel's
-   errors, `babel_compat`);
-3. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
-   the Pascal library loads it (merged and alias-resolved), against
-   the oracle's `load()` reading the importer's data
-   (`oracle.correct_babel_data`), for every generated locale and the
+2. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
+   the Pascal library loads it (decoded, merged along the parent chain,
+   root's aliases resolved), against the importer's data merged and
+   resolved independently in Python, for every generated locale and the
    global data;
-4. `tests/core/test_core` with vectors from
-   `tests/python/gen_core_vectors.py`: identifiers, `Locale.parse`,
+3. `tests/core/test_core` with `tests/core/reference.jsonl` (66 245
+   cases recorded from Babel 2.18.0 and Python's `decimal`): identifiers,
+   `Locale.parse`,
    negotiation, names and properties of every generated locale, plural
    rules (evaluation, `rules`, gettext and JavaScript forms), plural
    operands, `Decimal` parsing and float-to-decimal conversion (30 000
    doubles), and the decimal arithmetic against Python's `decimal` (4 000
-   random operations); `tests/python/check_default_locale.py`: the
-   default locale under several environments;
-5. `tests/numbers/test_numbers` with `tests/numbers/reference.jsonl`:
+   random operations); `tests/python/check_default_locale.py` with
+   `tests/core/default_locale.json`: the default locale under several
+   environments;
+4. `tests/numbers/test_numbers` with `tests/numbers/reference.jsonl`:
    6 448 calls of the formatting, parsing and currency functions with
    their expected results. `babel.numbers` matched Babel exactly on
    263 000 calls (commit 0535909) and then departed from it on purpose to
@@ -182,10 +179,10 @@ options.
    results are also compared with ICU's on 18 000 cases
    (tests/js/README.md); the only differences allowed are those from the
    CLDR 47/48 data;
-6. `tests/tz/test_tz` with vectors from `tests/python/gen_tz_vectors.py`:
+5. `tests/tz/test_tz` with vectors from `tests/python/gen_tz_vectors.py`:
    offsets and DST of every zone of the system's tz database against
    Python's zoneinfo (581 000 lookups);
-7. `tests/dates/test_dates` with `tests/dates/reference.jsonl`: 8 462
+6. `tests/dates/test_dates` with `tests/dates/reference.jsonl`: 8 462
    calls of the dates functions (every pattern field and length,
    predefined formats, skeletons, intervals, durations, day periods, zone
    names in 19 zones, parsing) with their expected results.
@@ -195,11 +192,11 @@ options.
    installed, the results are also compared with ICU4C's on 90 720 cases
    (tests/icu/README.md); the only differences allowed are those from the
    CLDR 47/48 data;
-8. `tests/lists/test_lists` and `tests/units/test_units` with their
+7. `tests/lists/test_lists` and `tests/units/test_units` with their
    reference files (tests/lists/README.md, tests/units/README.md),
    sampled from the cases on which the modules matched Babel, and, when
    gcc and the ICU headers are installed, compared with ICU4C;
-9. `tests/languages/test_languages` and `tests/format/test_format` with
+8. `tests/languages/test_languages` and `tests/format/test_format` with
    their reference files (tests/languages/README.md,
    tests/format/README.md).
 

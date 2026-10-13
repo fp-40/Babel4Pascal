@@ -1,7 +1,6 @@
 { test_units - checks babel.units against vector files: its reference
   cases (tests/units/reference.jsonl), ICU4C's results
-  (tests/icu/icu_lists_units.c) or Python Babel's
-  (tests/python/gen_units_vectors.py).
+  (tests/icu/icu_lists_units.c).
 
   Usage: test_units VECTORS.jsonl   (exit status 1 when a case fails)
          test_units VECTORS.jsonl --update OUT.jsonl }

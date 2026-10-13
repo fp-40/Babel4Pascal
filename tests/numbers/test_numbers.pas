@@ -1,6 +1,6 @@
-{ test_numbers - checks babel.numbers against the vectors of
-  tests/python/gen_numbers_vectors.py (the results of Python Babel 2.18.0
-  for the same inputs).
+{ test_numbers - checks babel.numbers against vector files: its reference
+  cases (tests/numbers/reference.jsonl) or ICU's results
+  (tests/js/icu_numbers.mjs).
 
   Usage: test_numbers VECTORS.jsonl   (exit status 1 when a case fails)
          test_numbers VECTORS.jsonl --update OUT.jsonl

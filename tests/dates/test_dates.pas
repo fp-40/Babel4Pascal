@@ -1,7 +1,6 @@
 { test_dates - checks babel.dates against vector files: its reference
   cases (tests/dates/reference.jsonl), ICU4C's results
-  (tests/icu/icu_dates.c, the icu_* operations) or Python Babel's
-  (tests/python/gen_dates_vectors.py).
+  (tests/icu/icu_dates.c, the icu_* operations).
 
   Usage: test_dates VECTORS.jsonl   (exit status 1 when a case fails)
          test_dates VECTORS.jsonl --update OUT.jsonl

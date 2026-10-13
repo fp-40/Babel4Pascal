@@ -1,6 +1,5 @@
 { test_format - checks babel.support's TFormat against vector files: its
-  reference cases (tests/format/reference.jsonl) or Python Babel's
-  (tests/python/gen_format_vectors.py).
+  reference cases (tests/format/reference.jsonl).
 
   Usage: test_format VECTORS.jsonl   (exit status 1 when a case fails)
          test_format VECTORS.jsonl --update OUT.jsonl }

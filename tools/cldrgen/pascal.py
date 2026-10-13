@@ -65,7 +65,7 @@ def write_global_unit(outdir, cldr_version, blob):
     unit = 'babel.cldr_global'
     text = HEADER.format(unit=unit, cldr=cldr_version, what=' that is not per locale',
                          extra='\n  Likely subtags, aliases, parent locales, currencies of territories,\n'
-                               '  time zone mappings (the global.dat of Python Babel).\n')
+                               '  time zone mappings.\n')
     text += f"""unit {unit};
 
 {{$mode objfpc}}{{$H+}}

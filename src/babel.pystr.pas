@@ -3,8 +3,7 @@
   the Unicode decimal digits that int() and Decimal() accept
   ('١٢٣' is 123), and str.format with positional fields.
 
-  The tables are those of Unicode 16.0, the version of the Python (3.14)
-  the oracle runs on: 76 runs of ten decimal digits (category Nd, each run
+  The tables are those of Unicode 16.0 (Python 3.14's): 76 runs of ten decimal digits (category Nd, each run
   0..9 in order), the 29 characters for which str.isspace() is true, and
   the 243 ranges of the categories S and Z.
 
