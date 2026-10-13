@@ -578,27 +578,54 @@ begin
     AppendChars;
 end;
 
+(* A literal text in pattern syntax: apostrophes doubled, and the span
+  from its first to its last ASCII letter quoted (CLDR reserves all
+  letters for fields): ' o''clock ' is written " 'o''clock' ". *)
+function QuoteLiteral(const Text: string): string;
+var
+  I, First, Last: Integer;
+
+  function Escaped(const S: string): string;
+  begin
+    Result := StringReplace(S, '''', '''''', [rfReplaceAll]);
+  end;
+
+begin
+  First := 0;
+  Last := 0;
+  for I := 1 to Length(Text) do
+    if Text[I] in ['A'..'Z', 'a'..'z'] then
+    begin
+      if First = 0 then
+        First := I;
+      Last := I;
+    end;
+  if First = 0 then
+    Exit(Escaped(Text));
+  Result := Escaped(Copy(Text, 1, First - 1)) + '''' + Escaped(Copy(Text, First, Last - First + 1)) +
+    '''' + Escaped(Copy(Text, Last + 1, MaxInt));
+end;
+
+{ The pattern of the tokens; tokenizing it gives the same tokens, with
+  consecutive texts joined. }
 function UntokenizeDatePattern(const Tokens: TPatternTokens): string;
 var
   T: TPatternToken;
-  C: Char;
-  NeedsQuote: Boolean;
+  Text: string;
 begin
   Result := '';
+  Text := '';
   for T in Tokens do
     if T.Kind = ptField then
-      Result := Result + StringOfChar(T.Field, T.Count)
-    else
     begin
-      NeedsQuote := False;
-      for C in T.Text do
-        if IsPatternChar(C) then
-          NeedsQuote := True;
-      if NeedsQuote then
-        Result := Result + '''' + StringReplace(T.Text, '''', '''''', [rfReplaceAll]) + ''''
-      else
-        Result := Result + T.Text;
-    end;
+      Result := Result + QuoteLiteral(Text) + StringOfChar(T.Field, T.Count);
+      Text := '';
+    end
+    else
+      { consecutive texts as one: quoting each apart would write two
+        quotes between them, which read as an apostrophe }
+      Text := Text + T.Text;
+  Result := Result + QuoteLiteral(Text);
 end;
 
 { The lengths each field allows; '' = any. }
@@ -2022,8 +2049,6 @@ begin
     Tokens[I].Field := C;
     Tokens[I].Count := AdjLen;
   end;
-  { the tokens, not a pattern written back: UntokenizeDatePattern loses
-    quotes between adjacent quoted texts }
   Result.Tokens := Tokens;
 end;
 

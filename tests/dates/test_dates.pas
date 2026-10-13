@@ -82,6 +82,34 @@ begin
   Result := O;
 end;
 
+{ The tokens with consecutive texts joined. }
+function Joined(const T: TPatternTokens): TPatternTokens;
+var
+  X: TPatternToken;
+begin
+  Result := nil;
+  for X in T do
+    if (X.Kind = ptChars) and (Length(Result) > 0) and (Result[High(Result)].Kind = ptChars) then
+      Result[High(Result)].Text := Result[High(Result)].Text + X.Text
+    else
+    begin
+      SetLength(Result, Length(Result) + 1);
+      Result[High(Result)] := X;
+    end;
+end;
+
+function SameTokens(const A, B: TPatternTokens): Boolean;
+var
+  I: Integer;
+begin
+  Result := Length(A) = Length(B);
+  if Result then
+    for I := 0 to High(A) do
+      if (A[I].Kind <> B[I].Kind) or (A[I].Text <> B[I].Text) or (A[I].Field <> B[I].Field) or
+         (A[I].Count <> B[I].Count) then
+        Exit(False);
+end;
+
 function Kind(const S: string): TIntervalKind;
 begin
   if S = 'date' then Result := ikDate
@@ -152,6 +180,11 @@ begin
     Parts := SplitIntervalPattern(Args.Strings[0]);
     Result := StrArray(Parts);
   end
+  else if Op = 'untokenize' then
+    { the pattern written back, and whether it tokenizes as the original }
+    Result := TJSONArray.Create([UntokenizeDatePattern(TokenizeDatePattern(Args.Strings[0])),
+      SameTokens(Joined(TokenizeDatePattern(UntokenizeDatePattern(TokenizeDatePattern(Args.Strings[0])))),
+        Joined(TokenizeDatePattern(Args.Strings[0])))])
   else if Op = 'tokenize' then
   begin
     Toks := TokenizeDatePattern(Args.Strings[0]);

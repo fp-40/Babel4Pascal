@@ -8035,7 +8035,7 @@
 { "op" : "match_skeleton", "args" : ["z", ["Bh", "Bhm", "Bhms", "E", "EBhm", "EBhms", "EHm", "EHms", "Ed", "Ehm", "Ehms", "Gy", "GyMMM", "GyMMMEd", "GyMMMd", "GyMd", "H", "Hm", "Hms", "Hmsv", "Hmv", "M", "MEd", "MMM", "MMMEd", "MMMMW", "MMMMd", "MMMd", "Md", "d", "h", "hm", "hms", "hmsv", "hmv", "ms", "y", "yM", "yMEd", "yMMM", "yMMMEd", "yMMMM", "yMMMd", "yMd", "yQQQ", "yQQQQ", "yw"], false], "expect" : "" }
 { "op" : "match_skeleton", "args" : ["z", ["Bh", "Bhm", "Bhms", "E", "EBhm", "EBhms", "EHm", "EHms", "Ed", "Ehm", "Ehms", "Gy", "GyMMM", "GyMMMEd", "GyMMMd", "GyMd", "H", "Hm", "Hms", "Hmsv", "Hmv", "M", "MEd", "MMM", "MMMEd", "MMMMW", "MMMMd", "MMMd", "Md", "d", "h", "hm", "hms", "hmsv", "hmv", "ms", "y", "yM", "yMEd", "yMMM", "yMMMEd", "yMMMM", "yMMMd", "yMd", "yQQQ", "yQQQQ", "yw"], true], "expect" : "E" }
 { "op" : "split_interval", "args" : ["E d.M. – E d.M."], "expect" : ["E d.M. – ", "E d.M."] }
-{ "op" : "split_interval", "args" : ["Y 'text' Y 'more text'"], "expect" : ["Y 'text '", "Y 'more text'"] }
+{ "op" : "split_interval", "args" : ["Y 'text' Y 'more text'"], "expect" : ["Y 'text' ", "Y 'more text'"] }
 { "op" : "split_interval", "args" : ["MMM d – d"], "expect" : ["MMM d – ", "d"] }
 { "op" : "split_interval", "args" : ["y G"], "expect" : ["y G"] }
 { "op" : "split_interval", "args" : ["h:mm – h:mm a"], "expect" : ["h:mm – ", "h:mm a"] }
@@ -8460,3 +8460,214 @@
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "O", "America/St_Johns", "es_PE"], "expect" : "GMT-3:30" }
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "OOOO", "America/St_Johns", "es_PE"], "expect" : "GMT-03:30" }
 { "op" : "format_datetime", "args" : [[2025, 12, 31, 23, 59, 59, 999], "SS", "Asia/Kolkata", "es_PE"], "expect" : "99" }
+{"op": "untokenize", "args": ["''"], "expect": ["''", true]}
+{"op": "untokenize", "args": ["'''"], "expect": ["''", true]}
+{"op": "untokenize", "args": ["'a''b'"], "expect": ["'a''b'", true]}
+{"op": "untokenize", "args": ["'l''heure' H"], "expect": ["'l''heure' H", true]}
+{"op": "untokenize", "args": ["'xyz'"], "expect": ["'xyz'", true]}
+{"op": "untokenize", "args": ["H''mm"], "expect": ["H''mm", true]}
+{"op": "untokenize", "args": ["HH 'h' mm 'min'"], "expect": ["HH 'h' mm 'min'", true]}
+{"op": "untokenize", "args": ["d '' M"], "expect": ["d '' M", true]}
+{"op": "untokenize", "args": ["h 'o''clock' a"], "expect": ["h 'o''clock' a", true]}
+{"op": "untokenize", "args": ["w'ª' 'semana' 'de' Y"], "expect": ["wª 'semana de' Y", true]}
+{"op": "untokenize", "args": ["y ''"], "expect": ["y ''", true]}
+{"op": "untokenize", "args": ["'Izu' w 'n' 'ime' Y"], "expect": ["'Izu' w 'n ime' Y", true]}
+{"op": "untokenize", "args": ["'Klock' H.mm:ss"], "expect": ["'Klock' H.mm:ss", true]}
+{"op": "untokenize", "args": ["'Woche' W 'im' MMMM"], "expect": ["'Woche' W 'im' MMMM", true]}
+{"op": "untokenize", "args": ["'aɖabaƒoƒo' mm:ss"], "expect": ["'aɖabaƒoƒo' mm:ss", true]}
+{"op": "untokenize", "args": ["'beke' 'ya' 'bo' W 'ya' MMM"], "expect": ["'beke ya bo' W 'ya' MMM", true]}
+{"op": "untokenize", "args": ["'edema' W MMMM"], "expect": ["'edema' W MMMM", true]}
+{"op": "untokenize", "args": ["'ga' h:mm 'le' E B 'me'"], "expect": ["'ga' h:mm 'le' E B 'me'", true]}
+{"op": "untokenize", "args": ["'ga' h:mm:ss 'le' E B 'me'"], "expect": ["'ga' h:mm:ss 'le' E B 'me'", true]}
+{"op": "untokenize", "args": ["'hefteya' w'em' 'ya' Y'an'"], "expect": ["'hefteya' w'em ya' Y'an'", true]}
+{"op": "untokenize", "args": ["'kɔsiɖa' w 'lia' 'le' 'ƒe' Y 'me'"], "expect": ["'kɔsiɖa' w 'lia le ƒe' Y 'me'", true]}
+{"op": "untokenize", "args": ["'linggo' w 'ng' Y"], "expect": ["'linggo' w 'ng' Y", true]}
+{"op": "untokenize", "args": ["'minggu' 'ke'-W MMMM"], "expect": ["'minggu ke'-W MMMM", true]}
+{"op": "untokenize", "args": ["'pekan' w 'ing' Y"], "expect": ["'pekan' w 'ing' Y", true]}
+{"op": "untokenize", "args": ["'sati' w 'cikin' Y"], "expect": ["'sati' w 'cikin' Y", true]}
+{"op": "untokenize", "args": ["'semana' w 'sa' Y"], "expect": ["'semana' w 'sa' Y", true]}
+{"op": "untokenize", "args": ["'setmana' w 'del' Y"], "expect": ["'setmana' w 'del' Y", true]}
+{"op": "untokenize", "args": ["'sizhun' W 'miz' MMMM"], "expect": ["'sizhun' W 'miz' MMMM", true]}
+{"op": "untokenize", "args": ["'săptămâna' W 'din' MMMM"], "expect": ["'săptămâna' W 'din' MMMM", true]}
+{"op": "untokenize", "args": ["'săptămâna' w 'din' Y"], "expect": ["'săptămâna' w 'din' Y", true]}
+{"op": "untokenize", "args": ["'toddobaadka' w 'ee' Y"], "expect": ["'toddobaadka' w 'ee' Y", true]}
+{"op": "untokenize", "args": ["'tuần' w 'của' 'năm' Y"], "expect": ["'tuần' w 'của năm' Y", true]}
+{"op": "untokenize", "args": ["'uke' w 'i' Y"], "expect": ["'uke' w 'i' Y", true]}
+{"op": "untokenize", "args": ["'vecka' W 'i' MMMM"], "expect": ["'vecka' W 'i' MMMM", true]}
+{"op": "untokenize", "args": ["'week' W 'of' MMMM"], "expect": ["'week' W 'of' MMMM", true]}
+{"op": "untokenize", "args": ["'wiki' w 'o' Y"], "expect": ["'wiki' w 'o' Y", true]}
+{"op": "untokenize", "args": ["'седмица' W 'мјесец' MMMM"], "expect": ["седмица W мјесец MMMM", true]}
+{"op": "untokenize", "args": ["'ҳафтаи' w, Y"], "expect": ["ҳафтаи w, Y", true]}
+{"op": "untokenize", "args": ["E d 'de 'MMM – "], "expect": ["E d 'de' MMM – ", true]}
+{"op": "untokenize", "args": ["E d 'de' MMM y"], "expect": ["E d 'de' MMM y", true]}
+{"op": "untokenize", "args": ["E, d 'de 'MMM 'de 'y G – "], "expect": ["E, d 'de' MMM 'de' y G – ", true]}
+{"op": "untokenize", "args": ["E, d 'de 'MMMM"], "expect": ["E, d 'de' MMMM", true]}
+{"op": "untokenize", "args": ["E, d 'de' MMM 'de' y G"], "expect": ["E, d 'de' MMM 'de' y G", true]}
+{"op": "untokenize", "args": ["E, d 'de' MMMM"], "expect": ["E, d 'de' MMMM", true]}
+{"op": "untokenize", "args": ["E, d 'de' MMMM 'de' y"], "expect": ["E, d 'de' MMMM 'de' y", true]}
+{"op": "untokenize", "args": ["E, d 'de' MMMM 'de' y G"], "expect": ["E, d 'de' MMMM 'de' y G", true]}
+{"op": "untokenize", "args": ["E, d 'ne 'MMM"], "expect": ["E, d 'ne' MMM", true]}
+{"op": "untokenize", "args": ["E, d 'ne 'MMM, y"], "expect": ["E, d 'ne' MMM, y", true]}
+{"op": "untokenize", "args": ["E, d 'ne' MMM"], "expect": ["E, d 'ne' MMM", true]}
+{"op": "untokenize", "args": ["E, d 'ta'’ MMM"], "expect": ["E, d 'ta'’ MMM", true]}
+{"op": "untokenize", "args": ["E, d MMM y 'г'. G"], "expect": ["E, d MMM y г. G", true]}
+{"op": "untokenize", "args": ["E, d MMM y 'ҫ'. G"], "expect": ["E, d MMM y ҫ. G", true]}
+{"op": "untokenize", "args": ["E, d MMMM y 'г'. G"], "expect": ["E, d MMMM y г. G", true]}
+{"op": "untokenize", "args": ["E, d'ê' MMM'ê'"], "expect": ["E, dê MMMê", true]}
+{"op": "untokenize", "args": ["E, d.MM.y 'г'. G"], "expect": ["E, d.MM.y г. G", true]}
+{"op": "untokenize", "args": ["E, h:mm'ê' B"], "expect": ["E, h:mmê B", true]}
+{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM"], "expect": ["E, y. 'gada' d. MMM", true]}
+{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM – "], "expect": ["E, y. 'gada' d. MMM – ", true]}
+{"op": "untokenize", "args": ["E, y. 'gada 'd. MMM – "], "expect": ["E, y. 'gada' d. MMM – ", true]}
+{"op": "untokenize", "args": ["EEEE dd 'de' MMMM 'de' y"], "expect": ["EEEE dd 'de' MMMM 'de' y", true]}
+{"op": "untokenize", "args": ["EEEE, 'ils' d MMMM y"], "expect": ["EEEE, 'ils' d MMMM y", true]}
+{"op": "untokenize", "args": ["EEEE, d 'de' MMMM 'de' y"], "expect": ["EEEE, d 'de' MMMM 'de' y", true]}
+{"op": "untokenize", "args": ["EEEE, d MMMM 'dl' y"], "expect": ["EEEE, d MMMM 'dl' y", true]}
+{"op": "untokenize", "args": ["EEEE, y. 'gada' d. MMMM"], "expect": ["EEEE, y. 'gada' d. MMMM", true]}
+{"op": "untokenize", "args": ["G E, d 'ne 'MMM, y – "], "expect": ["G E, d 'ne' MMM, y – ", true]}
+{"op": "untokenize", "args": ["G MMM'a 'y'an – '"], "expect": ["G MMM'a' y'an' – ", true]}
+{"op": "untokenize", "args": ["G d 'ne 'MMM, y – "], "expect": ["G d 'ne' MMM, y – ", true]}
+{"op": "untokenize", "args": ["G dê MMM'a 'y'an – '"], "expect": ["G dê MMM'a' y'an' – ", true]}
+{"op": "untokenize", "args": ["G y-'ж'. d-MMM, E"], "expect": ["G y-ж. d-MMM, E", true]}
+{"op": "untokenize", "args": ["G y. 'g'."], "expect": ["G y. 'g'.", true]}
+{"op": "untokenize", "args": ["G y. 'gada 'd. MMM, E"], "expect": ["G y. 'gada' d. MMM, E", true]}
+{"op": "untokenize", "args": ["G y. 'gada 'd. MMM, E – "], "expect": ["G y. 'gada' d. MMM, E – ", true]}
+{"op": "untokenize", "args": ["G y. 'gada 'd.–"], "expect": ["G y. 'gada' d.–", true]}
+{"op": "untokenize", "args": ["G y. 'urteko' MMM"], "expect": ["G y. 'urteko' MMM", true]}
+{"op": "untokenize", "args": ["G y. 'urteko' MMM d('a')"], "expect": ["G y. 'urteko' MMM d('a')", true]}
+{"op": "untokenize", "args": ["G y. 'urteko' MMM d('a'), E"], "expect": ["G y. 'urteko' MMM d('a'), E", true]}
+{"op": "untokenize", "args": ["G y 'ел'"], "expect": ["G y ел", true]}
+{"op": "untokenize", "args": ["G y 'ж'."], "expect": ["G y ж.", true]}
+{"op": "untokenize", "args": ["G y 'ж'. MMM"], "expect": ["G y ж. MMM", true]}
+{"op": "untokenize", "args": ["G y 'оны' MMM'ын' d. E"], "expect": ["G y оны MMMын d. E", true]}
+{"op": "untokenize", "args": ["H 'h'"], "expect": ["H 'h'", true]}
+{"op": "untokenize", "args": ["H 'h.'"], "expect": ["H 'h'.", true]}
+{"op": "untokenize", "args": ["H:mm 'hodź'."], "expect": ["H:mm 'hod'ź.", true]}
+{"op": "untokenize", "args": ["H:mm 'hodź.'"], "expect": ["H:mm 'hod'ź.", true]}
+{"op": "untokenize", "args": ["H:mm:ss 'ч'. z"], "expect": ["H:mm:ss ч. z", true]}
+{"op": "untokenize", "args": ["HH 'Uhr 'v"], "expect": ["HH 'Uhr' v", true]}
+{"op": "untokenize", "args": ["HH 'a '"], "expect": ["HH 'a' ", true]}
+{"op": "untokenize", "args": ["HH 'h 'v"], "expect": ["HH 'h' v", true]}
+{"op": "untokenize", "args": ["HH 'h' mm 'min' ss 's'"], "expect": ["HH 'h' mm 'min' ss 's'", true]}
+{"op": "untokenize", "args": ["HH 'ц'"], "expect": ["HH ц", true]}
+{"op": "untokenize", "args": ["HH'h'"], "expect": ["HH'h'", true]}
+{"op": "untokenize", "args": ["HH'h'mm ss 'seg'."], "expect": ["HH'h'mm ss 'seg'.", true]}
+{"op": "untokenize", "args": ["HH:mm 'ч'."], "expect": ["HH:mm ч.", true]}
+{"op": "untokenize", "args": ["HH:mm:ss 'ч'."], "expect": ["HH:mm:ss ч.", true]}
+{"op": "untokenize", "args": ["LLL y 'р'."], "expect": ["LLL y р.", true]}
+{"op": "untokenize", "args": ["LLLL, 'tydz'. W"], "expect": ["LLLL, 'tydz'. W", true]}
+{"op": "untokenize", "args": ["M 'a '"], "expect": ["M 'a' ", true]}
+{"op": "untokenize", "args": ["MM.y 'г'."], "expect": ["MM.y г.", true]}
+{"op": "untokenize", "args": ["MM.y 'г'. G"], "expect": ["MM.y г. G", true]}
+{"op": "untokenize", "args": ["MM/y 'al '"], "expect": ["MM/y 'al' ", true]}
+{"op": "untokenize", "args": ["MMM 'de 'y"], "expect": ["MMM 'de' y", true]}
+{"op": "untokenize", "args": ["MMM 'de 'y – "], "expect": ["MMM 'de' y – ", true]}
+{"op": "untokenize", "args": ["MMM d('a), 'E – "], "expect": ["MMM d('a'), E – ", true]}
+{"op": "untokenize", "args": ["MMM y 'г'. G"], "expect": ["MMM y г. G", true]}
+{"op": "untokenize", "args": ["MMM'ын' d"], "expect": ["MMMын d", true]}
+{"op": "untokenize", "args": ["MMM'ын' d. E"], "expect": ["MMMын d. E", true]}
+{"op": "untokenize", "args": ["MMMM 'abɔkɔɩ' W'ja'"], "expect": ["MMMM 'abɔk'ɔɩ W'ja'", true]}
+{"op": "untokenize", "args": ["MMMM 'al '"], "expect": ["MMMM 'al' ", true]}
+{"op": "untokenize", "args": ["MMMM 'ayının' W. 'haftası'"], "expect": ["MMMM 'ayının' W. 'haftas'ı", true]}
+{"op": "untokenize", "args": ["MMMM 'de 'y – "], "expect": ["MMMM 'de' y – ", true]}
+{"op": "untokenize", "args": ["MMMM 'năm 'y"], "expect": ["MMMM 'năm' y", true]}
+{"op": "untokenize", "args": ["MMMM 'аеның' W 'атнасы'"], "expect": ["MMMM аеның W атнасы", true]}
+{"op": "untokenize", "args": ["MMMM -'acho' 'suman' W"], "expect": ["MMMM -'acho suman' W", true]}
+{"op": "untokenize", "args": ["MMMM W 'sav'."], "expect": ["MMMM W 'sav'.", true]}
+{"op": "untokenize", "args": ["MMMM W. 'hete'"], "expect": ["MMMM W. 'hete'", true]}
+{"op": "untokenize", "args": ["MMMM y 'г'. G"], "expect": ["MMMM y г. G", true]}
+{"op": "untokenize", "args": ["MMMM'a 'y'an – '"], "expect": ["MMMM'a' y'an' – ", true]}
+{"op": "untokenize", "args": ["MMMM, W 'həftə'"], "expect": ["MMMM, W 'həft'ə", true]}
+{"op": "untokenize", "args": ["MMMM, W 'һәфтә'"], "expect": ["MMMM, W һәфтә", true]}
+{"op": "untokenize", "args": ["MMMM, W-'ҳафта'"], "expect": ["MMMM, W-ҳафта", true]}
+{"op": "untokenize", "args": ["MMMM: W. 'nedelja'"], "expect": ["MMMM: W. 'nedelja'", true]}
+{"op": "untokenize", "args": ["MMMM:'a' 'vahkku' W"], "expect": ["MMMM:'a vahkku' W", true]}
+{"op": "untokenize", "args": ["QQQ'em' 'ya' y'an'"], "expect": ["QQQ'em ya' y'an'", true]}
+{"op": "untokenize", "args": ["W'ª' 'setemana' 'de' MMMM"], "expect": ["Wª 'setemana de' MMMM", true]}
+{"op": "untokenize", "args": ["W-'й' 'тиж'. MMMM"], "expect": ["W-й тиж. MMMM", true]}
+{"op": "untokenize", "args": ["W. 'tjedan' MMMM"], "expect": ["W. 'tjedan' MMMM", true]}
+{"op": "untokenize", "args": ["Y 'kaa' 'week' w"], "expect": ["Y 'kaa week' w", true]}
+{"op": "untokenize", "args": ["Y -'acho' 'suman' w"], "expect": ["Y -'acho suman' w", true]}
+{"op": "untokenize", "args": ["Y, 'tydz'. w"], "expect": ["Y, 'tydz'. w", true]}
+{"op": "untokenize", "args": ["Y, w 'һәфтә'"], "expect": ["Y, w һәфтә", true]}
+{"op": "untokenize", "args": ["a 'ga' h:mm 'le' v"], "expect": ["a 'ga' h:mm 'le' v", true]}
+{"op": "untokenize", "args": ["a 'ga' h:mm:ss"], "expect": ["a 'ga' h:mm:ss", true]}
+{"op": "untokenize", "args": ["ccc, d 'de 'MMMM – "], "expect": ["ccc, d 'de' MMMM – ", true]}
+{"op": "untokenize", "args": ["ccc, d 'de' MMMM 'de' y"], "expect": ["ccc, d 'de' MMMM 'de' y", true]}
+{"op": "untokenize", "args": ["d 'de 'MMM 'de 'y G"], "expect": ["d 'de' MMM 'de' y G", true]}
+{"op": "untokenize", "args": ["d 'de' MMMM 'de' 'su' y"], "expect": ["d 'de' MMMM 'de su' y", true]}
+{"op": "untokenize", "args": ["d 'de' MMMM 'de' y"], "expect": ["d 'de' MMMM 'de' y", true]}
+{"op": "untokenize", "args": ["d 'de' MMMM 'de' y G"], "expect": ["d 'de' MMMM 'de' y G", true]}
+{"op": "untokenize", "args": ["d 'lia , 'y"], "expect": ["d 'lia' , y", true]}
+{"op": "untokenize", "args": ["d 'ne' MMM"], "expect": ["d 'ne' MMM", true]}
+{"op": "untokenize", "args": ["d 'ne' MMMM"], "expect": ["d 'ne' MMMM", true]}
+{"op": "untokenize", "args": ["d MMM 'del' y"], "expect": ["d MMM 'del' y", true]}
+{"op": "untokenize", "args": ["d MMM y 'ҫ'."], "expect": ["d MMM y ҫ.", true]}
+{"op": "untokenize", "args": ["d MMM y 'ҫ'. G"], "expect": ["d MMM y ҫ. G", true]}
+{"op": "untokenize", "args": ["d'mh' MMM y"], "expect": ["d'mh' MMM y", true]}
+{"op": "untokenize", "args": ["d.MM.y 'г'."], "expect": ["d.MM.y г.", true]}
+{"op": "untokenize", "args": ["d/MM/y 'a '"], "expect": ["d/MM/y 'a' ", true]}
+{"op": "untokenize", "args": ["dd 'de 'MM"], "expect": ["dd 'de' MM", true]}
+{"op": "untokenize", "args": ["dd 'de 'MMM 'de 'y G"], "expect": ["dd 'de' MMM 'de' y G", true]}
+{"op": "untokenize", "args": ["dê MMM'a 'y'an – '"], "expect": ["dê MMM'a' y'an' – ", true]}
+{"op": "untokenize", "args": ["h 'Uhr' a"], "expect": ["h 'Uhr' a", true]}
+{"op": "untokenize", "args": ["h 'giờ 'B – "], "expect": ["h 'gi'ờ B – ", true]}
+{"op": "untokenize", "args": ["h 'h 'mm a – "], "expect": ["h 'h' mm a – ", true]}
+{"op": "untokenize", "args": ["h 'h – '"], "expect": ["h 'h' – ", true]}
+{"op": "untokenize", "args": ["h 'hodź. 'B – "], "expect": ["h 'hod'ź. B – ", true]}
+{"op": "untokenize", "args": ["h'h'mm:ss a"], "expect": ["h'h'mm:ss a", true]}
+{"op": "untokenize", "args": ["h'ê' B"], "expect": ["hê B", true]}
+{"op": "untokenize", "args": ["h:mm 'Uhr 'B"], "expect": ["h:mm 'Uhr' B", true]}
+{"op": "untokenize", "args": ["h:mm'ê' B"], "expect": ["h:mmê B", true]}
+{"op": "untokenize", "args": ["mm 'min' ss 's'"], "expect": ["mm 'min' ss 's'", true]}
+{"op": "untokenize", "args": ["w 'semana' Y 'watapa'"], "expect": ["w 'semana' Y 'watapa'", true]}
+{"op": "untokenize", "args": ["w 'тыдзень' Y"], "expect": ["w тыдзень Y", true]}
+{"op": "untokenize", "args": ["w-'мӗш' 'эрни' Y 'ҫ'."], "expect": ["w-мӗш эрни Y ҫ.", true]}
+{"op": "untokenize", "args": ["w. 'nedelja' 'u' Y."], "expect": ["w. 'nedelja u' Y.", true]}
+{"op": "untokenize", "args": ["w. 'sedmica' 'u' Y."], "expect": ["w. 'sedmica u' Y.", true]}
+{"op": "untokenize", "args": ["w. 'tyźeń' 'lěta' Y"], "expect": ["w. 'tyźeń lěta' Y", true]}
+{"op": "untokenize", "args": ["w. 'týždeň' 'roka' Y"], "expect": ["w. 'týždeň roka' Y", true]}
+{"op": "untokenize", "args": ["y 'a '"], "expect": ["y 'a' ", true]}
+{"op": "untokenize", "args": ["y 'al '"], "expect": ["y 'al' ", true]}
+{"op": "untokenize", "args": ["y 'm'. G, LLLL"], "expect": ["y 'm'. G, LLLL", true]}
+{"op": "untokenize", "args": ["y MMM d('a'), E"], "expect": ["y MMM d('a'), E", true]}
+{"op": "untokenize", "args": ["y('e')'ko' MMMM"], "expect": ["y('e)ko' MMMM", true]}
+{"op": "untokenize", "args": ["y('e')'ko' QQQQ"], "expect": ["y('e)ko' QQQQ", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMM"], "expect": ["y('e)''ko' MMM", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMM d('a)'"], "expect": ["y('e)''ko' MMM d('a')", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMM d('a) – '"], "expect": ["y('e)''ko' MMM d('a') – ", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMM d–"], "expect": ["y('e)''ko' MMM d–", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMMM – "], "expect": ["y('e)''ko' MMMM – ", true]}
+{"op": "untokenize", "args": ["y('e)''ko 'MMMM–"], "expect": ["y('e)''ko' MMMM–", true]}
+{"op": "untokenize", "args": ["y-'ж'. MMM"], "expect": ["y-ж. MMM", true]}
+{"op": "untokenize", "args": ["y-'ж'. d-MMM, E"], "expect": ["y-ж. d-MMM, E", true]}
+{"op": "untokenize", "args": ["y-'ж'., QQQ"], "expect": ["y-ж., QQQ", true]}
+{"op": "untokenize", "args": ["y. 'g'. MMM"], "expect": ["y. 'g'. MMM", true]}
+{"op": "untokenize", "args": ["y. 'g'. MMMM"], "expect": ["y. 'g'. MMMM", true]}
+{"op": "untokenize", "args": ["y. 'g'. d. MMM"], "expect": ["y. 'g'. d. MMM", true]}
+{"op": "untokenize", "args": ["y. 'gada 'MMMM – "], "expect": ["y. 'gada' MMMM – ", true]}
+{"op": "untokenize", "args": ["y. 'gada 'MMMM – "], "expect": ["y. 'gada' MMMM – ", true]}
+{"op": "untokenize", "args": ["y. 'gada 'MMM – "], "expect": ["y. 'gada' MMM – ", true]}
+{"op": "untokenize", "args": ["y. 'gada 'd. MMM – "], "expect": ["y. 'gada' d. MMM – ", true]}
+{"op": "untokenize", "args": ["y. 'gada 'd.–"], "expect": ["y. 'gada' d.–", true]}
+{"op": "untokenize", "args": ["y. 'gada' d. MMMM"], "expect": ["y. 'gada' d. MMMM", true]}
+{"op": "untokenize", "args": ["y 'г'."], "expect": ["y г.", true]}
+{"op": "untokenize", "args": ["y 'г'. G"], "expect": ["y г. G", true]}
+{"op": "untokenize", "args": ["y 'ел', QQQQ"], "expect": ["y ел, QQQQ", true]}
+{"op": "untokenize", "args": ["y 'ж'. MMMM"], "expect": ["y ж. MMMM", true]}
+{"op": "untokenize", "args": ["y 'оны' MMMM"], "expect": ["y оны MMMM", true]}
+{"op": "untokenize", "args": ["y 'оны' MMMM'ын' d, EEEE 'гараг'"], "expect": ["y оны MMMMын d, EEEE гараг", true]}
+{"op": "untokenize", "args": ["y 'оны' QQQQ"], "expect": ["y оны QQQQ", true]}
+{"op": "untokenize", "args": ["y 'с'. G"], "expect": ["y с. G", true]}
+{"op": "untokenize", "args": ["y 'сыл' MMMM d 'күнэ', EEEE"], "expect": ["y сыл MMMM d күнэ, EEEE", true]}
+{"op": "untokenize", "args": ["{1} 'fọ' {0}"], "expect": ["{1} 'f'ọ {0}", true]}
+{"op": "untokenize", "args": ["{1} 'jam' {0}"], "expect": ["{1} 'jam' {0}", true]}
+{"op": "untokenize", "args": ["{1} 'klo' {0}"], "expect": ["{1} 'klo' {0}", true]}
+{"op": "untokenize", "args": ["{1} 'na' {0}"], "expect": ["{1} 'na' {0}", true]}
+{"op": "untokenize", "args": ["{1} 'ní' {0}"], "expect": ["{1} 'n'í {0}", true]}
+{"op": "untokenize", "args": ["{1} 'pukul' {0}"], "expect": ["{1} 'pukul' {0}", true]}
+{"op": "untokenize", "args": ["{1} 'ye' {0}"], "expect": ["{1} 'ye' {0}", true]}
+{"op": "untokenize", "args": ["{1} 'à' {0}"], "expect": ["{1} à {0}", true]}
+{"op": "untokenize", "args": ["{1} 'às' {0}"], "expect": ["{1} à's' {0}", true]}
+{"op": "untokenize", "args": ["{1}, 'a' 'les' {0}"], "expect": ["{1}, 'a les' {0}", true]}
+{"op": "untokenize", "args": ["{1}, 'во' {0}"], "expect": ["{1}, во {0}", true]}
