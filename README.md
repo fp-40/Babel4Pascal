@@ -130,9 +130,13 @@ options.
    their expected results. `babel.numbers` matched Babel exactly on
    263 000 calls (commit 0535909) and then departed from it on purpose to
    follow CLDR and ICU (localized signs and digits, plural of the number
-   shown, exact arithmetic); the reference file records the current
-   behavior (tests/numbers/README.md). When node is installed, the run
-   also reports the differences from ICU (`tests/js/icu_numbers.mjs`).
+   shown, exact arithmetic, minimum grouping, currency spacing); the
+   reference file records the current behavior (tests/numbers/README.md).
+   `tests/numbers/test_roundtrip` formats and parses back 67 000 numbers
+   (every locale, Latin and native digits). When node is installed, the
+   results are also compared with ICU's on 18 000 cases
+   (tests/js/README.md); the only differences allowed are those from the
+   CLDR 47/48 data.
 
 Each comparison must report 0 differences (the ICU report is
 informative).

@@ -100,7 +100,8 @@ def main(argv):
     for name in names:
         with open(os.path.join(babel_dir, 'locale-data', name + '.dat'), 'rb') as f:
             want = babel_norm(pickle.load(f))
-        got = ours_norm(imp.import_locale(name))
+        got = ours_norm({k: v for k, v in imp.import_locale(name).items()
+                         if k not in importer.EXTRA_LOCALE_KEYS})
         d = first_difference(got, want)
         if d:
             bad += 1

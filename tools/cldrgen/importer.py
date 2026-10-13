@@ -31,8 +31,9 @@ from xml.etree import ElementTree
 
 from .model import Alias
 
-# Global data that Babel does not import.
+# Data that Babel does not import (babel.numbers uses it to follow CLDR).
 EXTRA_GLOBAL_KEYS = {'numbering_system_digits'}
+EXTRA_LOCALE_KEYS = {'min_grouping_digits', 'currency_spacing', 'numbering_system_formats'}
 
 WEEKDAYS = {'mon': 0, 'tue': 1, 'wed': 2, 'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6}
 
@@ -423,6 +424,7 @@ class LocaleImporter:
         _parse_simple_number_formats(data, tree, 'percentFormats', './/percentFormatLength',
                                      'percent_formats', 'percentFormat/pattern')
         _parse_currency_formats(data, tree)
+        _parse_number_extras(data, tree)
         _parse_currency_unit_patterns(data, tree)
         _parse_currency_names(data, tree)
         _parse_unit_patterns(data, tree)
@@ -692,6 +694,66 @@ def _parse_currency_formats(data, tree):
                                 .setdefault(child.attrib['count'], {})[pattern_type] = pattern
                         else:
                             currency_formats[type] = pattern
+
+
+def _parse_number_extras(data, tree):
+    """Not in Babel: minimumGroupingDigits, and the currencySpacing of the
+    Latin numbering system (only root has one in CLDR 47)."""
+    for elem in tree.findall('.//numbers/minimumGroupingDigits'):
+        if elem.attrib.get('draft') in ('unconfirmed', 'provisional') or 'alt' in elem.attrib:
+            continue
+        data['min_grouping_digits'] = int(elem.text)
+    for formats in tree.findall('.//currencyFormats'):
+        if _should_skip_number_elem(formats):
+            continue
+        spacing = formats.find('currencySpacing')
+        if spacing is None or spacing.find('alias') is not None:
+            continue
+        dest = {}
+        for side in ('beforeCurrency', 'afterCurrency'):
+            elem = spacing.find(side)
+            if elem is not None:
+                dest[side] = {child.tag: child.text or '' for child in elem}
+        if dest:
+            data['currency_spacing'] = dest
+
+    # The patterns of the other numbering systems ({system: {kind:
+    # pattern}}): CLDR gives some their own (fa's arab and arabext currency
+    # pattern has no space; bn's beng percent pattern groups by three). An
+    # alias (to the latn patterns) adds nothing: latn is the fallback.
+    by_system = {}
+    for tag, length_path, pattern_path, kind in (
+            ('decimalFormats', 'decimalFormatLength', 'decimalFormat/pattern', 'decimal'),
+            ('percentFormats', 'percentFormatLength', 'percentFormat/pattern', 'percent'),
+            ('scientificFormats', 'scientificFormatLength', 'scientificFormat/pattern', 'scientific')):
+        for formats in tree.findall('.//numbers/' + tag):
+            ns = formats.get('numberSystem', 'latn')
+            if ns == 'latn' or formats.find('alias') is not None:
+                continue
+            for length in formats.findall(length_path):
+                if 'type' in length.attrib or _is_draft_or_alt(length) or length.find('alias') is not None:
+                    continue
+                for pattern in length.findall(pattern_path):
+                    if 'type' in pattern.attrib or _is_draft_or_alt(pattern):
+                        continue
+                    by_system.setdefault(ns, {}).setdefault(kind, str(pattern.text))
+    for formats in tree.findall('.//numbers/currencyFormats'):
+        ns = formats.get('numberSystem', 'latn')
+        if ns == 'latn' or formats.find('alias') is not None:
+            continue
+        for length in formats.findall('currencyFormatLength'):
+            if 'type' in length.attrib:
+                continue
+            for fmt in length.findall('currencyFormat'):
+                kind = 'currency_' + fmt.attrib.get('type', 'standard')
+                if _is_draft_or_alt(fmt) or fmt.find('alias') is not None:
+                    continue
+                for pattern in fmt.findall('pattern'):
+                    if 'type' in pattern.attrib or _is_draft_or_alt(pattern):
+                        continue
+                    by_system.setdefault(ns, {}).setdefault(kind, str(pattern.text))
+    if by_system:
+        data['numbering_system_formats'] = by_system
 
 
 def _parse_currency_unit_patterns(data, tree):

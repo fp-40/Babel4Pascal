@@ -12,9 +12,11 @@
 #    tests/core/test_core), and DefaultLocale under several environments
 #    (tests/python/check_default_locale.py + tests/core/print_default).
 # 5. babel.numbers against its reference cases (tests/numbers/reference.jsonl,
-#    tests/numbers/README.md), and, when node is installed, a report of
-#    the differences from ICU (tests/js/icu_numbers.mjs; informative: it
-#    does not fail the run).
+#    tests/numbers/README.md), and, when node is installed, against ICU
+#    (tests/js/README.md): differences other than the known data
+#    differences between CLDR 47 and 48 fail the run. Round trips
+#    (tests/numbers/test_roundtrip): ParseDecimal(FormatDecimal(x)) = x in
+#    every locale and numbering system.
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -50,18 +52,20 @@ check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '
 echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
-for prog in core/test_core core/print_default numbers/test_numbers; do
+for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
 done
 check core "$OUT/bin/test_core" "$OUT/vectors/core.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
-echo "== babel.numbers vs its reference cases"
+echo "== babel.numbers vs its reference cases, round trips"
 check numbers "$OUT/bin/test_numbers" "$ROOT/tests/numbers/reference.jsonl"
+check roundtrip "$OUT/bin/test_roundtrip"
 if command -v node > /dev/null; then
-  echo "== babel.numbers vs ICU (informative)"
+  echo "== babel.numbers vs ICU"
   node tests/js/icu_numbers.mjs "$OUT/vectors/icu.jsonl" > /dev/null
-  "$OUT/bin/test_numbers" "$OUT/vectors/icu.jsonl" | tail -n 6 || true
+  "$OUT/bin/test_numbers" "$OUT/vectors/icu.jsonl" --update "$OUT/vectors/icu-ours.jsonl" > /dev/null
+  check icu python3 -I "$ROOT/tests/js/check_icu.py" "$OUT/vectors/icu.jsonl" "$OUT/vectors/icu-ours.jsonl"
 fi
 echo "== all passed"

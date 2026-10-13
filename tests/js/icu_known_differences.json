@@ -1,0 +1,11 @@
+{
+  "comment": "Differences between babel.numbers (CLDR 47) and Node's ICU (78.2, CLDR 48) that come from the data, not the code. Keys: operation and locale. tests/js/check_icu.py fails on any difference not listed here.",
+  "icu_currency de_CH": "CLDR 48 changed de_CH's group separator from ’ to '",
+  "icu_percent de_CH": "CLDR 48 changed de_CH's group separator from ’ to '",
+  "icu_decimal de_CH": "CLDR 48 changed de_CH's group separator from ’ to '",
+  "icu_compact de_CH": "CLDR 48 changed de_CH's group separator from ’ to '",
+  "icu_currency fr_CA": "CLDR 48 puts a no-break space in fr_CA's currency unit pattern ({0} {1} in CLDR 47)",
+  "icu_currency my": "CLDR 47 has my's currency unit pattern {1} {0}; CLDR 48 {0} {1}",
+  "icu_compact en_IN": "CLDR 48 uses lakh and crore in en_IN's long compact forms",
+  "icu_compact it": "CLDR 48 added a short compact form for thousands in it (1K)"
+}

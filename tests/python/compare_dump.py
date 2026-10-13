@@ -19,6 +19,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))), 'tools'))
 import oracle  # noqa: E402
+from cldrgen.importer import EXTRA_LOCALE_KEYS  # noqa: E402
 
 
 def ref_value(v):
@@ -81,6 +82,9 @@ def main(argv):
     for line in sys.stdin:
         name, _, js = line.rstrip('\n').partition('\t')
         got = ours_value(json.loads(js))
+        if not is_global:
+            # keys babel.numbers uses that Babel does not import
+            got = {'m': [kv for kv in got['m'] if kv[0] not in EXTRA_LOCALE_KEYS]}
         if is_global:
             want = ref_value(get_global(name))
         else:
