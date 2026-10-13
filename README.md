@@ -125,7 +125,9 @@ parent locale (tools/cldrgen/importer.py).
    root's aliases resolved), against the importer's data merged and
    resolved independently in Python, for every generated locale and the
    global data;
-3. `tests/core/test_core` with `tests/core/reference.jsonl` (66 245
+3. `tests/core/test_core` with `tests/core/fixed.jsonl` (the plural
+   inputs and 30 000 doubles, never rewritten by `--update`) and
+   `tests/core/reference.jsonl` (66 245
    cases): identifiers, `TLocale.Parse`, negotiation, names and
    properties of every generated locale, plural rules (evaluation,
    `rules`, gettext and JavaScript forms), plural operands, `Decimal`

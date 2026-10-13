@@ -7,7 +7,8 @@
 #    locale merged along its parent chain with root's aliases resolved,
 #    and the global data.
 # 3. babel.core, babel.plural and babel.decimal against their reference
-#    cases (tests/core/reference.jsonl + tests/core/test_core), and
+#    cases (tests/core/fixed.jsonl, tests/core/reference.jsonl +
+#    tests/core/test_core), and
 #    DefaultLocale under several environments
 #    (tests/core/default_locale.json, tests/python/check_default_locale.py
 #    + tests/core/print_default).
@@ -68,7 +69,7 @@ for prog in support/test_testkit core/test_core core/print_default numbers/test_
     || { tail -n 5 "$OUT/build.log"; exit 1; }
 done
 check testkit "$OUT/bin/test_testkit"
-check core "$OUT/bin/test_core" "$ROOT/tests/core/reference.jsonl"
+check core "$OUT/bin/test_core" "$ROOT/tests/core/fixed.jsonl" "$ROOT/tests/core/reference.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
 echo "== babel.numbers vs its reference cases, round trips"
 check numbers "$OUT/bin/test_numbers" "$ROOT/tests/numbers/reference.jsonl"

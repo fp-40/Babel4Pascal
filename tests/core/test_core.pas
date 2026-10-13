@@ -1,13 +1,18 @@
 { test_core - checks babel.core, babel.plural and babel.decimal against
-  tests/core/reference.jsonl: 66 245 cases (identifiers, Locale.parse,
-  negotiation, names and properties of every locale, plural rules and
-  operands, Decimal parsing, float-to-decimal conversion of 30 000
-  doubles, decimal arithmetic with the results of Python's decimal
-  module).
+  two files:
+  - tests/core/fixed.jsonl: the lines that are not single cases, never
+    rewritten by --update: the inputs of the plural cases
+    (plural_inputs) and the float-to-decimal conversion of 30 000
+    doubles (float_repr);
+  - tests/core/reference.jsonl: the single cases (identifiers,
+    TLocale.Parse, negotiation, names and properties of every locale,
+    plural rules and operands, decimal parsing and arithmetic).
 
-  Usage: test_core VECTORS.jsonl
+  Usage: test_core FIXED.jsonl REFERENCE.jsonl [--update OUT.jsonl]
   Prints each failing case (up to 40) and a count per operation; exit
-  status 1 when any case fails. }
+  status 1 when any case fails. --update writes REFERENCE's cases with
+  the results obtained (to update it after a deliberate change; review
+  the diff); FIXED is checked and not written. }
 program test_core;
 
 {$mode objfpc}{$H+}
@@ -324,19 +329,47 @@ begin
     Result := False;
 end;
 
+{ The reference file holds single cases only: a special line there would
+  be dropped by --update. }
+function NoSpecialLine(Line: TJSONObject): Boolean;
+var
+  Op: string;
 begin
-  { --update writes the ordinary cases with the results obtained; the
-    special lines (float_repr, ...) are not written }
-  if (ParamCount = 3) and (ParamStr(2) = '--update') then
+  Op := Line.Strings['op'];
+  if (Op = 'plural_inputs') or (Op = 'float_repr') then
   begin
-    RunVectors(ParamStr(1), @Run, @SpecialLine, ParamStr(3));
-    Exit;
-  end;
-  if ParamCount <> 1 then
-  begin
-    WriteLn('usage: test_core VECTORS.jsonl [--update OUT.jsonl]');
+    WriteLn('test_core: the line ''', Op, ''' belongs in the fixed file, not in the reference file');
     Halt(2);
   end;
-  if RunVectors(ParamStr(1), @Run, @SpecialLine) > 0 then
+  Result := False;
+end;
+
+{ The fixed file holds only the special lines. }
+function OnlySpecialLine(Line: TJSONObject): Boolean;
+begin
+  Result := SpecialLine(Line);
+  if not Result then
+  begin
+    WriteLn('test_core: the line ''', Line.Strings['op'],
+      ''' belongs in the reference file, not in the fixed file');
+    Halt(2);
+  end;
+end;
+
+var
+  Update: string;
+  Failed: Integer;
+begin
+  Update := '';
+  if (ParamCount = 4) and (ParamStr(3) = '--update') then
+    Update := ParamStr(4)
+  else if ParamCount <> 2 then
+  begin
+    WriteLn('usage: test_core FIXED.jsonl REFERENCE.jsonl [--update OUT.jsonl]');
+    Halt(2);
+  end;
+  RunVectors(ParamStr(1), @Run, @OnlySpecialLine);
+  Failed := RunVectors(ParamStr(2), @Run, @NoSpecialLine, Update);
+  if (Update = '') and (Failed > 0) then
     Halt(1);
 end.
