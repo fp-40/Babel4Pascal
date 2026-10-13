@@ -152,7 +152,9 @@ function TerritoryCurrencyOptions: TTerritoryCurrencyOptions;
   of the global data; sorted. }
 function ListCurrencies: TStringArray; overload;
 function ListCurrencies(const Locale: TLocale): TStringArray; overload;
-{ Raises EUnknownCurrencyError when the code is not listed. }
+{ Raises EUnknownCurrencyError when the code (in any letter case) is not
+  listed. The functions that take a currency code accept it in any letter
+  case ('usd' is 'USD'). }
 procedure ValidateCurrency(const Currency: string); overload;
 procedure ValidateCurrency(const Currency: string; const Locale: TLocale); overload;
 function IsCurrency(const Currency: string): Boolean; overload;
@@ -563,24 +565,32 @@ end;
 
 procedure ValidateCurrency(const Currency: string);
 begin
-  if not GetGlobal('all_currencies').Has(Currency) then
+  if not GetGlobal('all_currencies').Has(UpperCase(Currency)) then
     raise EUnknownCurrencyError.CreateFor(Currency);
 end;
 
 procedure ValidateCurrency(const Currency: string; const Locale: TLocale);
 begin
-  if not Locale.Currencies.Has(Currency) then
+  if not Locale.Currencies.Has(UpperCase(Currency)) then
     raise EUnknownCurrencyError.CreateFor(Currency);
+end;
+
+{ The code in upper case ('usd' is 'USD'); raises EUnknownCurrencyError
+  when it is not a currency of CLDR's data. }
+function CurrencyCode(const Currency: string): string;
+begin
+  Result := UpperCase(Currency);
+  ValidateCurrency(Result);
 end;
 
 function IsCurrency(const Currency: string): Boolean;
 begin
-  Result := (Currency <> '') and GetGlobal('all_currencies').Has(Currency);
+  Result := (Currency <> '') and GetGlobal('all_currencies').Has(UpperCase(Currency));
 end;
 
 function IsCurrency(const Currency: string; const Locale: TLocale): Boolean;
 begin
-  Result := (Currency <> '') and Locale.Currencies.Has(Currency);
+  Result := (Currency <> '') and Locale.Currencies.Has(UpperCase(Currency));
 end;
 
 function NormalizeCurrency(const Currency: string): string;
@@ -598,9 +608,11 @@ begin
 end;
 
 function GetCurrencyName(const Currency: string; const Locale: TLocale): string;
+var
+  Code: string;
 begin
-  ValidateCurrency(Currency);
-  Result := Locale.Currencies.Str(Currency, Currency);
+  Code := CurrencyCode(Currency);
+  Result := Locale.Currencies.Str(Code, Code);
 end;
 
 { The plural category of Count in the locale ('other' for NaN and
@@ -614,15 +626,16 @@ end;
 
 function GetCurrencyName(const Currency: string; const Count: TDecimal; const Locale: TLocale): string;
 var
+  Code: string;
   Form: string;
   Names, ForCurrency: TCLDRValue;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   Form := PluralOf(Count, Locale);
   Names := Locale.Data.Get('currency_names_plural');
   if Names = nil then
     raise EBabelKeyError.Create('currency_names_plural');
-  ForCurrency := Names.Get(Currency);
+  ForCurrency := Names.Get(Code);
   if ForCurrency <> nil then
   begin
     if ForCurrency.Has(Form) then
@@ -630,22 +643,25 @@ begin
     if ForCurrency.Has('other') then
       Exit(ForCurrency.Str('other'));
   end;
-  Result := Locale.Currencies.Str(Currency, Currency);
+  Result := Locale.Currencies.Str(Code, Code);
 end;
 
 function GetCurrencySymbol(const Currency: string; const Locale: TLocale): string;
+var
+  Code: string;
 begin
-  ValidateCurrency(Currency);
-  Result := Locale.CurrencySymbols.Str(Currency, Currency);
+  Code := CurrencyCode(Currency);
+  Result := Locale.CurrencySymbols.Str(Code, Code);
 end;
 
 function GetCurrencyPrecision(const Currency: string): Integer;
 var
+  Code: string;
   F, V: TCLDRValue;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   F := GetGlobal('currency_fractions');
-  V := F.Get(Currency);
+  V := F.Get(Code);
   if V = nil then
     V := F.Get('DEFAULT');
   Result := V.Items(0).AsInteger;
@@ -660,9 +676,10 @@ end;
 
 function GetCurrencyUnitPattern(const Currency: string; const Locale: TLocale): string;
 var
+  Code: string;
   P: TCLDRValue;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   P := UnitPatterns(Locale);
   if not P.Has('other') then
     raise EBabelKeyError.Create('other');
@@ -671,15 +688,16 @@ end;
 
 function GetCurrencyUnitPattern(const Currency: string; const Count: TDecimal; const Locale: TLocale): string;
 var
+  Code: string;
   P: TCLDRValue;
   Form: string;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   Form := PluralOf(Count, Locale);
   P := UnitPatterns(Locale);
   if P.Has(Form) then
     Exit(P.Str(Form));
-  Result := GetCurrencyUnitPattern(Currency, Locale);
+  Result := GetCurrencyUnitPattern(Code, Locale);
 end;
 
 function DateOfData(V: TCLDRValue): TDateTime;
@@ -1706,13 +1724,14 @@ end;
 function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCurrencyOptions): string;
 var
+  Code: string;
   Fmt: string;
   V: TCLDRValue;
   AO: TApplyOptions;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   if Options.FormatType = 'name' then
-    Exit(FormatCurrencyLongName(Number, Currency, Locale, Options));
+    Exit(FormatCurrencyLongName(Number, Code, Locale, Options));
   if Options.Format <> '' then
     Fmt := Options.Format
   else
@@ -1724,7 +1743,7 @@ begin
     Fmt := LocalePattern(Locale, 'currency_' + Options.FormatType, Options.NumberingSystem);
   end;
   AO := ApplyOptions;
-  AO.Currency := Currency;
+  AO.Currency := Code;
   AO.CurrencyDigits := Options.CurrencyDigits;
   AO.DecimalQuantization := Options.DecimalQuantization;
   AO.GroupSeparator := Options.GroupSeparator;
@@ -1780,6 +1799,7 @@ end;
 function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCompactOptions): string;
 var
+  Code: string;
   Compact, Others: TCLDRValue;
   Value: TDecimal;
   Fmt, P: string;
@@ -1787,7 +1807,7 @@ var
   AO: TApplyOptions;
   Found: Boolean;
 begin
-  ValidateCurrency(Currency);
+  Code := CurrencyCode(Currency);
   Compact := Locale.CompactCurrencyFormats.Get(Options.FormatType);
   if Compact = nil then
     raise EUnknownCurrencyFormatError.CreateFmt('''%s'' is not a known compact currency format type',
@@ -1813,7 +1833,7 @@ begin
   if not Found then
     raise EBabelValueError.Create('No compact currency format found for the given number and locale.');
   AO := ApplyOptions;
-  AO.Currency := Currency;
+  AO.Currency := Code;
   AO.CurrencyDigits := False;
   AO.DecimalQuantization := False;
   AO.NumberingSystem := Options.NumberingSystem;

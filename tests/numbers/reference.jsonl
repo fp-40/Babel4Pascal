@@ -2346,7 +2346,7 @@
 { "op" : "format_currency", "args" : [["int", "0"], "CLP", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "0 Peso chileno" }
 { "op" : "format_currency", "args" : [["str", "1"], "INR", "en", null, false, "standard", true, true, "latn"], "expect" : "₹1.00" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "JPY", "pl", null, true, "name", true, true, "latn"], "expect" : "-1235 jenów japońskich" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "zh", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "zh", null, true, "standard", true, true, "latn"], "expect" : "US$NaN" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BHD", "de_CH", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1’234.500 BHD" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "zh", null, true, "accounting", true, true, "latn"], "expect" : "€1,234.50" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "EUR", "fr", null, true, "name", true, true, "latn"], "expect" : "∞ euros" }
@@ -2366,7 +2366,7 @@
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "he", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "PEN", "sv", null, false, "standard", true, true, "latn"], "expect" : "−1 234,57 PEN" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "ZZZ", "he", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "sv", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "sv", null, false, "standard", true, true, "latn"], "expect" : "−0,00 US$" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "fr", null, true, "standard", true, true, "latn"], "expect" : "1 234,50 ¤" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "INR", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "NaN Rupias indianas" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "JPY", "de", null, true, "name", true, true, "latn"], "expect" : "1 Japanischer Yen" }
@@ -2385,18 +2385,18 @@
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CLP", "fa", null, true, "accounting", true, true, "latn"], "expect" : "‎CLP 10,000,000,000,000,000,000,000,000" }
 { "op" : "format_currency", "args" : [["int", "0"], "CLP", "fr", null, false, "standard", true, true, "latn"], "expect" : "0,00 $CL" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "en", null, true, "name", true, true, "latn"], "expect" : "1,234.50 Peruvian soles" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "ja", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "ja", null, true, "name", true, true, "latn"], "expect" : "1.00米ドル" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "EUR", "fa", null, true, "name", true, true, "latn"], "expect" : "1.00 یورو" }
 { "op" : "format_currency", "args" : [["dec", "1"], "INR", "en", null, true, "name", true, true, "latn"], "expect" : "1.00 Indian rupees" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "EUR", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "EUR 2.50" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "hi", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "hi", null, true, "accounting", true, true, "latn"], "expect" : "-$0.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BTC", "bn", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "pl", null, true, "accounting", true, true, "latn"], "expect" : "∞ USD" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "EUR", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "(0,00 €)" }
-{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "bn", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "2"], "usd", "ja", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "bn", null, true, "standard", true, true, "latn"], "expect" : "2.50 US$" }
+{ "op" : "format_currency", "args" : [["int", "2"], "usd", "ja", null, true, "accounting", true, true, "latn"], "expect" : "$2.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "S/ 1,234.50" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏1.00 US$" }
 { "op" : "format_currency", "args" : [["int", "0"], "BHD", "fr", null, true, "name", true, true, "latn"], "expect" : "0,000 dinar bahreïni" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "INR", "fr", null, true, "standard", true, true, "latn"], "expect" : "-1 234,57 ₹" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "XXX", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "-¤ 0.00" }
@@ -2407,7 +2407,7 @@
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "PEN", "de", null, true, "standard", true, true, "latn"], "expect" : "1,00 PEN" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BTC", "ja", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BHD", "hi", null, true, "accounting", true, true, "latn"], "expect" : "BHD 1,00,00,00,00,00,00,00,00,00,00,00,000.000" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "he", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "he", null, false, "standard", true, true, "latn"], "expect" : "‏1.00 ‏$" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "CLP", "es", null, true, "standard", true, true, "latn"], "expect" : "-0 CLP" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "ZZZ", "my", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "EUR", "ja", null, true, "accounting", true, true, "latn"], "expect" : "€NaN" }
@@ -2416,13 +2416,13 @@
 { "op" : "format_currency", "args" : [["str", "1"], "BHD", "zh", null, false, "standard", true, true, "latn"], "expect" : "BHD 1.00" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "INR", "my", null, true, "name", true, true, "latn"], "expect" : "အိန္ဒိယ ရူပီး 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "de", null, true, "name", true, true, "latn"], "expect" : "1.234,50 (unbekannte Währung)" }
-{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "sv", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "sv", null, true, "accounting", true, true, "latn"], "expect" : "2,50 US$" }
 { "op" : "format_currency", "args" : [["dec", "1"], "INR", "zh", null, true, "name", true, true, "latn"], "expect" : "1.00印度卢比" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "GBP", "ja", null, true, "accounting", true, true, "latn"], "expect" : "£0.50" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "ZZZ", "fr", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "PEN", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "S/ 1.00" }
 { "op" : "format_currency", "args" : [["int", "2"], "INR", "de", null, false, "standard", true, true, "latn"], "expect" : "2,00 ₹" }
-{ "op" : "format_currency", "args" : [["int", "0"], "usd", "hi", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "0"], "usd", "hi", null, true, "standard", true, true, "latn"], "expect" : "$0.00" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "ja", null, true, "name", true, true, "latn"], "expect" : "2.500バーレーン ディナール" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "bn", null, true, "standard", true, true, "latn"], "expect" : "1,234.50¤" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "GBP", "en", null, false, "standard", true, true, "latn"], "expect" : "£1.00" }
@@ -2433,7 +2433,7 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏2.500 د.ب.‏" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "ja", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "US$ ∞" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "my", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "my", null, true, "accounting", true, true, "latn"], "expect" : "US$ 1.00" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "EUR", "ar", null, true, "name", true, true, "latn"], "expect" : "∞ يورو" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CHF", "he", null, true, "standard", false, false, "latn"], "expect" : "‏1234.50 ‏CHF" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "USD", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜1.00 US$" }
@@ -2465,7 +2465,7 @@
 { "op" : "format_currency", "args" : [["int", "-1"], "EUR", "zh", null, false, "standard", true, true, "latn"], "expect" : "-€1.00" }
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "EUR", "ar_EG", null, false, "standard", true, true, "latn"], "expect" : "‏1.00 €" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "sv", null, true, "name", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 amerikanska dollar" }
 { "op" : "format_currency", "args" : [["int", "0"], "INR", "he", null, true, "standard", true, true, "latn"], "expect" : "‏0.00 ‏₹" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "GBP", "sv", null, true, "standard", true, true, "latn"], "expect" : "1,00 GBP" }
 { "op" : "format_currency", "args" : [["int", "2"], "JPY", "de_CH", null, false, "standard", true, true, "latn"], "expect" : "¥ 2.00" }
@@ -2484,7 +2484,7 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜1,234 JP¥" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BTC", "pt_BR", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "PEN", "zh", null, true, "name", true, true, "latn"], "expect" : "-1.00秘鲁索尔" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "es", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "es", null, true, "standard", true, true, "latn"], "expect" : "1234,50 US$" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "sv", null, true, "standard", true, true, "latn"], "expect" : "1,000 BHD" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "ZZZ", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "he", "#,##0", true, "standard", true, true, "latn"], "expect" : "1,234.50" }
@@ -2495,15 +2495,15 @@
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CLP", "hi", null, true, "name", true, true, "latn"], "expect" : "-1,235 चिली पेसो" }
 { "op" : "format_currency", "args" : [["str", "1"], "GBP", "ar", null, true, "name", true, true, "latn"], "expect" : "1.00 جنيه إسترليني" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CHF", "ja", null, true, "standard", true, true, "latn"], "expect" : "CHF 1,234.50" }
-{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "ru", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "ru", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "XXX", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜2.50¤" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "bn", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "bn", null, true, "standard", true, true, "latn"], "expect" : "1.00 US$" }
 { "op" : "format_currency", "args" : [["int", "0"], "INR", "pl", null, false, "standard", true, true, "latn"], "expect" : "0,00 INR" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "PEN", "de", null, true, "name", true, true, "latn"], "expect" : "∞ Peruanische Sol" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BHD", "en", null, true, "accounting", true, true, "latn"], "expect" : "BHD 1,234.500" }
 { "op" : "format_currency", "args" : [["int", "-1"], "CHF", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "-CHF 1.00" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "XXX", "ru", null, true, "accounting", true, true, "latn"], "expect" : "1,00 ¤" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "bn", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "bn", null, true, "accounting", true, true, "latn"], "expect" : "0.50 US$" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "ZZZ", "hi", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "ja", "#,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BHD", "es", null, true, "accounting", true, true, "latn"], "expect" : "-0,000 BHD" }
@@ -2524,7 +2524,7 @@
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "CHF 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["str", "1"], "USD", "es", null, true, "name", true, true, "latn"], "expect" : "1,00 dólar estadounidense" }
 { "op" : "format_currency", "args" : [["int", "0"], "BTC", "my", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "ja", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "ja", null, true, "standard", true, true, "latn"], "expect" : "$0.50" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "INR", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "1,00 INR" }
 { "op" : "format_currency", "args" : [["int", "2"], "BTC", "es", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "0"], "INR", "zh", null, false, "standard", true, true, "latn"], "expect" : "₹0.00" }
@@ -2533,15 +2533,15 @@
 { "op" : "format_currency", "args" : [["int", "2"], "CHF", "hi", null, true, "name", true, true, "latn"], "expect" : "2.00 स्विस फ़्रैंक" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "de_CH", null, false, "standard", true, true, "latn"], "expect" : "CLP 1’234.50" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "he", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["str", "1"], "usd", "pt_BR", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "1"], "usd", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "US$ 1,00" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "PEN", "he", null, true, "accounting", true, true, "latn"], "expect" : "‏∞ ‏PEN" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "sv", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "sv", null, true, "standard", true, true, "latn"], "expect" : "∞ US$" }
 { "op" : "format_currency", "args" : [["str", "1"], "XXX", "zh", null, false, "standard", true, true, "latn"], "expect" : "XXX 1.00" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "ZZZ", "fr_CA", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "2"], "usd", "en", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "2"], "usd", "en", null, true, "name", true, true, "latn"], "expect" : "2.00 US dollars" }
 { "op" : "format_currency", "args" : [["int", "-1"], "EUR", "es", null, true, "name", true, true, "latn"], "expect" : "-1,00 euro" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BHD", "de", null, true, "name", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,000 Bahrain-Dinar" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏∞ US$" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CLP", "de", null, true, "standard", true, true, "latn"], "expect" : "NaN CLP" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BTC", "de_CH", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "EUR", "zh", null, true, "standard", true, true, "latn"], "expect" : "-€0.00" }
@@ -2562,21 +2562,21 @@
 { "op" : "format_currency", "args" : [["int", "2"], "JPY", "es_PE", null, true, "name", true, true, "latn"], "expect" : "2 yenes japoneses" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "ZZZ", "fr", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "1"], "BHD", "ru", null, false, "standard", true, true, "latn"], "expect" : "1,00 BHD" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "fr_CA", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "he", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "1,00 $ US" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "he", null, true, "standard", true, true, "latn"], "expect" : "‏1.00 ‏$" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "GBP", "fa", null, false, "standard", true, true, "latn"], "expect" : "‎£ ناعدد" }
 { "op" : "format_currency", "args" : [["dec", "1"], "CLP", "fa", null, false, "standard", true, true, "latn"], "expect" : "‎CLP 1.00" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", "#,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "pl", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", "#,##0", true, "standard", true, true, "latn"], "expect" : "1,234.50" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "pl", null, true, "name", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 dolara amerykańskiego" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BTC", "es", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ru", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ru", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "$ 1 234,50" }
 { "op" : "format_currency", "args" : [["int", "2"], "BTC", "fr", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "CLP", "hi", null, true, "accounting", true, true, "latn"], "expect" : "CLP 2" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "ru", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1 234 CLP" }
 { "op" : "format_currency", "args" : [["int", "1"], "EUR", "my", null, true, "accounting", true, true, "latn"], "expect" : "€ 1.00" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "EUR", "fa", null, true, "name", true, true, "latn"], "expect" : "‎−1,234.57 یورو" }
 { "op" : "format_currency", "args" : [["int", "1"], "EUR", "he", null, true, "standard", true, true, "latn"], "expect" : "‏1.00 ‏€" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar", null, true, "name", true, true, "latn"], "expect" : "10,000,000,000,000,000,000,000,000.00 دولار أمريكي" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "BHD", "zh", null, true, "accounting", true, true, "latn"], "expect" : "BHD∞" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "CLP", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "-0 Peso chileno" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "BTC", "de_CH", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -2591,14 +2591,14 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "es", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "CLP 1234" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "XXX", "ja", null, true, "name", true, true, "latn"], "expect" : "1.00不明または無効な通貨" }
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "hi", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "fr", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "fr", null, true, "standard", true, true, "latn"], "expect" : "0,50 $US" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "USD", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "US$ 1,00" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "ar_EG", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "de_CH", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "$ 1.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "ru", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "CLP 1 234" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "pl", null, true, "standard", true, true, "latn"], "expect" : "1234,50 ¤" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "PEN", "hi", null, true, "name", true, true, "latn"], "expect" : "1,00,00,00,00,00,00,00,00,00,00,00,000.00 पेरूवियन सोल" }
-{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "hi", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "hi", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "BTC", "ja", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "es_PE", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1,234.50 EUR" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "USD", "zh", null, false, "standard", true, true, "latn"], "expect" : "US$0.50" }
@@ -2618,7 +2618,7 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BTC", "pt_BR", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "CHF", "ja", null, true, "accounting", true, true, "latn"], "expect" : "CHF 2.50" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "INR", "ja", null, true, "standard", true, true, "latn"], "expect" : "-₹1,234.57" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "es", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "es", null, true, "accounting", true, true, "latn"], "expect" : "NaN US$" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "XXX", "de", null, true, "standard", true, true, "latn"], "expect" : "∞ ¤" }
 { "op" : "format_currency", "args" : [["int", "-1"], "JPY", "de_CH", null, true, "name", true, true, "latn"], "expect" : "-1 Japanischer Yen" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "ar", null, true, "name", true, true, "latn"], "expect" : "∞ دولار أمريكي" }
@@ -2631,7 +2631,7 @@
 { "op" : "format_currency", "args" : [["dec", "1"], "BTC", "my", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "JPY", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "-JP¥ 1,00" }
 { "op" : "format_currency", "args" : [["int", "-1"], "BHD", "ar_EG", null, false, "standard", true, true, "latn"], "expect" : "‏‎-1.00 د.ب.‏" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "my", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "my", null, true, "standard", true, true, "latn"], "expect" : "1.00 US$" }
 { "op" : "format_currency", "args" : [["int", "-1"], "GBP", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "-GBP 1.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "GBP", "ru", null, true, "name", true, true, "latn"], "expect" : "0,50 британского фунта стерлингов" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "CHF", "en", null, true, "name", true, true, "latn"], "expect" : "1.00 Swiss francs" }
@@ -2640,7 +2640,7 @@
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "fa", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "PEN", "ja", null, true, "name", true, true, "latn"], "expect" : "-1.00ペルー ソル" }
 { "op" : "format_currency", "args" : [["int", "-1"], "XXX", "ja", null, false, "standard", true, true, "latn"], "expect" : "-¤1.00" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "expect" : "-0,00 $ US" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "PEN", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜10,000,000,000,000,000,000,000,000.00 PEN" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "bn", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1,234.50 PEN" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "INR", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜1.00₹" }
@@ -2648,7 +2648,7 @@
 { "op" : "format_currency", "args" : [["int", "0"], "BTC", "pt_BR", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "JPY", "en", null, false, "standard", true, true, "latn"], "expect" : "¥2.50" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "GBP", "de_CH", null, true, "accounting", true, true, "latn"], "expect" : "£ 1.00" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr", null, true, "accounting", true, true, "latn"], "expect" : "1 234,50 $US" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "USD", "en", null, false, "standard", true, true, "latn"], "expect" : "$1,234.50" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "INR", "es", null, true, "accounting", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 INR" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "my", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -2657,10 +2657,10 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "EUR", "ja", null, true, "standard", true, true, "latn"], "expect" : "€NaN" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "EUR", "my", null, true, "accounting", true, true, "latn"], "expect" : "€ 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["str", "1"], "PEN", "ar", null, false, "standard", true, true, "latn"], "expect" : "‏1.00 PEN" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es", null, true, "standard", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 US$" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "CHF", "de_CH", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "INR", "fa", null, true, "name", true, true, "latn"], "expect" : "ناعدد روپیهٔ هند" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ru", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ru", null, true, "accounting", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 $" }
 { "op" : "format_currency", "args" : [["dec", "1"], "INR", "en", null, true, "accounting", true, true, "latn"], "expect" : "₹1.00" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "JPY", "ja", null, true, "standard", true, true, "latn"], "expect" : "-￥1,235" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BTC", "ru", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -2672,7 +2672,7 @@
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "GBP", "de", null, false, "standard", true, true, "latn"], "expect" : "0,50 £" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BHD", "de", null, true, "name", true, true, "latn"], "expect" : "-0,000 Bahrain-Dinar" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "zh", null, true, "name", true, true, "latn"], "expect" : "2.50美元" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "ru", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "ru", null, true, "name", true, true, "latn"], "expect" : "-0,00 доллара США" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "USD", "de_CH", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "US-Dollar 1’234.50" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CLP", "fr", null, true, "accounting", true, true, "latn"], "expect" : "NaN $CL" }
 { "op" : "format_currency", "args" : [["int", "0"], "USD", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "$ 0.00" }
@@ -2725,10 +2725,10 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "es", null, true, "name", true, true, "latn"], "expect" : "2,50 dólares estadounidenses" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BHD", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "-BHD 0,00" }
 { "op" : "format_currency", "args" : [["str", "1"], "ZZZ", "de", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "pl", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "pl", null, true, "standard", true, true, "latn"], "expect" : "1,00 USD" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "GBP", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎£ 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "ja", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar_EG", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜10,000,000,000,000,000,000,000,000.00 US$" }
 { "op" : "format_currency", "args" : [["dec", "1"], "XXX", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏1.00 ¤" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "my", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "BTC", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -2757,11 +2757,11 @@
 { "op" : "format_currency", "args" : [["int", "-1"], "ZZZ", "es", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CHF", "my", null, true, "standard", true, true, "latn"], "expect" : "-1,234.57 CHF" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "ar_EG", null, true, "name", true, true, "latn"], "expect" : "2.50 دولار أمريكي" }
-{ "op" : "format_currency", "args" : [["str", "1"], "usd", "hi", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "1"], "usd", "hi", null, false, "standard", true, true, "latn"], "expect" : "$1.00" }
 { "op" : "format_currency", "args" : [["int", "-1"], "GBP", "my", null, true, "standard", true, true, "latn"], "expect" : "-1.00 £" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "zh", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "2"], "EUR", "fr", null, false, "standard", true, true, "latn"], "expect" : "2,00 €" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "en", null, false, "standard", true, true, "latn"], "expect" : "$1.00" }
 { "op" : "format_currency", "args" : [["int", "2"], "GBP", "en", null, true, "standard", true, true, "latn"], "expect" : "£2.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "XXX", "ja", null, true, "standard", true, true, "latn"], "expect" : "¤0.50" }
 { "op" : "format_currency", "args" : [["dec", "1"], "CHF", "es_PE", null, true, "name", true, true, "latn"], "expect" : "1.00 franco suizo" }
@@ -2769,7 +2769,7 @@
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "CHF", "ar", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["str", "1"], "JPY", "pl", null, true, "name", true, true, "latn"], "expect" : "1 jen japoński" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "fr", null, true, "accounting", true, true, "latn"], "expect" : "1,000 BHD" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏‎-1.00 US$" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "zh", "#,##0", true, "standard", true, true, "latn"], "expect" : "1,234.50" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "EUR", "es", null, true, "standard", true, true, "latn"], "expect" : "-1234,57 €" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "GBP", "ru", null, false, "standard", true, true, "latn"], "expect" : "1 234,50 £" }
@@ -2812,7 +2812,7 @@
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "PEN", "fr_CA", null, true, "standard", true, true, "latn"], "expect" : "0,50 PEN" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "es", null, false, "standard", true, true, "latn"], "expect" : "2,50 BHD" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "CHF", "my", null, true, "accounting", true, true, "latn"], "expect" : "CHF 2.50" }
-{ "op" : "format_currency", "args" : [["int", "2"], "usd", "fa", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "2"], "usd", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎$ 2.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CHF", "pl", null, false, "standard", true, true, "latn"], "expect" : "NaN CHF" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CLP", "my", null, true, "name", true, true, "latn"], "expect" : "ချီလီ ပီဆို -1,235" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏ليس رقمًا PEN" }
@@ -2832,15 +2832,15 @@
 { "op" : "format_currency", "args" : [["str", "1"], "GBP", "ar", null, false, "standard", true, true, "latn"], "expect" : "‏1.00 UK£" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "GBP", "fr", null, true, "accounting", true, true, "latn"], "expect" : "(0,00 £GB)" }
 { "op" : "format_currency", "args" : [["int", "0"], "BTC", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "zh", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr", null, true, "standard", true, true, "latn"], "expect" : "NaN $US" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "zh", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "美元 1,234.50" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "PEN", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎PEN 2.50" }
 { "op" : "format_currency", "args" : [["int", "0"], "XXX", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "¤ 0,00" }
 { "op" : "format_currency", "args" : [["int", "0"], "GBP", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "GBP 0.00" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "XXX", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜1.00¤" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BTC", "pl", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "BHD", "es_PE", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "hi", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "hi", null, true, "accounting", true, true, "latn"], "expect" : "$1,00,00,00,00,00,00,00,00,00,00,00,000.00" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "ZZZ", "es_PE", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "CLP", "en", null, false, "standard", true, true, "latn"], "expect" : "CLP 1.00" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "sv", null, false, "standard", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 CHF" }
@@ -2848,7 +2848,7 @@
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "BTC", "my", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "XXX", "en", null, true, "standard", true, true, "latn"], "expect" : "¤10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "USD", "de", null, true, "standard", true, true, "latn"], "expect" : "1,00 $" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "sv", null, true, "name", true, true, "latn"], "expect" : "1 234,50 amerikanska dollar" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BTC", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BHD", "en", null, true, "name", true, true, "latn"], "expect" : "NaN Bahraini dinars" }
 { "op" : "format_currency", "args" : [["dec", "1"], "USD", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "USD 1.00" }
@@ -2858,7 +2858,7 @@
 { "op" : "format_currency", "args" : [["int", "-1"], "XXX", "pl", null, true, "name", true, true, "latn"], "expect" : "-1,00 (nieznana waluta)" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "CHF 10.000.000.000.000.000.000.000.000,00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "de", null, true, "name", true, true, "latn"], "expect" : "NaN Peruanische Sol" }
-{ "op" : "format_currency", "args" : [["int", "2"], "usd", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "2"], "usd", "es", null, true, "name", true, true, "latn"], "expect" : "2,00 dólares estadounidenses" }
 { "op" : "format_currency", "args" : [["dec", "1"], "CHF", "ru", null, false, "standard", true, true, "latn"], "expect" : "1,00 CHF" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "PEN", "sv", null, true, "accounting", true, true, "latn"], "expect" : "−1 234,57 PEN" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "bn", null, false, "standard", true, true, "latn"], "expect" : "NaNPEN" }
@@ -2874,7 +2874,7 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "CHF", "bn", null, true, "accounting", true, true, "latn"], "expect" : "2.50 CHF" }
 { "op" : "format_currency", "args" : [["int", "1"], "USD", "fr", null, true, "standard", true, true, "latn"], "expect" : "1,00 $US" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "EUR", "pl", null, false, "standard", true, true, "latn"], "expect" : "-1234,57 €" }
-{ "op" : "format_currency", "args" : [["str", "1"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "1"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏1.00 US$" }
 { "op" : "format_currency", "args" : [["int", "2"], "GBP", "bn", null, true, "accounting", true, true, "latn"], "expect" : "2.00£" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "sv", null, true, "standard", true, true, "latn"], "expect" : "1 234,50 PEN" }
 { "op" : "format_currency", "args" : [["int", "0"], "CLP", "ar", null, true, "name", true, true, "latn"], "expect" : "0 بيزو تشيلي" }
@@ -2895,13 +2895,13 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "ZZZ", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "XXX", "ja", null, true, "name", true, true, "latn"], "expect" : "∞不明または無効な通貨" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CLP", "de_CH", null, true, "accounting", true, true, "latn"], "expect" : "CLP-1’235" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏10,000,000,000,000,000,000,000,000.00 US$" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "EUR", "fa", null, true, "name", true, true, "latn"], "expect" : "0.50 یورو" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "PEN", "es", null, true, "standard", true, true, "latn"], "expect" : "-0,00 PEN" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "ZZZ", "fa", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "he", null, false, "standard", true, true, "latn"], "expect" : "‏NaN ‏PEN" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "EUR", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "€ 0,50" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "hi", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "hi", null, true, "name", true, true, "latn"], "expect" : "1.00 यूएस डॉलर" }
 { "op" : "format_currency", "args" : [["int", "0"], "XXX", "ja", null, true, "accounting", true, true, "latn"], "expect" : "¤0.00" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "CLP", "en", null, true, "name", true, true, "latn"], "expect" : "-0 Chilean pesos" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "EUR", "zh", null, true, "accounting", true, true, "latn"], "expect" : "€0.50" }
@@ -2920,33 +2920,33 @@
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "XXX", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "0,50 ¤" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "BHD 1.000" }
 { "op" : "format_currency", "args" : [["str", "1"], "BHD", "ru", null, true, "name", true, true, "latn"], "expect" : "1,000 бахрейнского динара" }
-{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "ja", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fa", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "ja", null, true, "name", true, true, "latn"], "expect" : "2.50米ドル" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "es", null, true, "name", true, true, "latn"], "expect" : "∞ dólares estadounidenses" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fa", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "$ 1,234.50" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "zh", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "expect" : "1 234,50 $" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "PEN", "fr", null, true, "accounting", true, true, "latn"], "expect" : "∞ PEN" }
 { "op" : "format_currency", "args" : [["int", "1"], "EUR", "fr_CA", null, true, "name", true, true, "latn"], "expect" : "1,00 euro" }
-{ "op" : "format_currency", "args" : [["int", "0"], "usd", "he", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "0"], "usd", "he", null, true, "accounting", true, true, "latn"], "expect" : "‏0.00 ‏$" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "PEN", "hi", null, true, "standard", true, true, "latn"], "expect" : "PEN 2.50" }
 { "op" : "format_currency", "args" : [["str", "1"], "CHF", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "CHF 1.00" }
 { "op" : "format_currency", "args" : [["int", "1"], "XXX", "fr", null, true, "name", true, true, "latn"], "expect" : "1,00 devise inconnue" }
 { "op" : "format_currency", "args" : [["int", "2"], "ZZZ", "ja", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "he", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BTC", "es", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "sv", null, true, "name", true, true, "latn"], "expect" : "1,00 amerikanska dollar" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "INR", "de", null, true, "standard", true, true, "latn"], "expect" : "1,00 ₹" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "fa", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎$ 1.00" }
 { "op" : "format_currency", "args" : [["int", "-1"], "USD", "en", null, true, "accounting", true, true, "latn"], "expect" : "($1.00)" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "XXX", "hi", null, false, "standard", true, true, "latn"], "expect" : "¤NaN" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "bn", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "bn", null, true, "accounting", true, true, "latn"], "expect" : "1.00 US$" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BTC", "ru", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "1"], "BTC", "hi", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "CLP", "ar", null, false, "standard", true, true, "latn"], "expect" : "‏1.00 CLP" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "en", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "BTC", "ja", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "INR", "zh", null, true, "name", true, true, "latn"], "expect" : "1,234.50印度卢比" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏ليس رقمًا US$" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CHF", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "NaN CHF" }
 { "op" : "format_currency", "args" : [["int", "-1"], "INR", "my", null, true, "name", true, true, "latn"], "expect" : "အိန္ဒိယ ရူပီး -1.00" }
 { "op" : "format_currency", "args" : [["str", "1"], "ZZZ", "es_PE", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -2966,7 +2966,7 @@
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "USD", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "$ 0.50" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "GBP", "sv", "#,##0", true, "standard", true, true, "latn"], "expect" : "1 234,50" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "EUR", "fr", null, true, "standard", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 €" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "de", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "de", null, true, "name", true, true, "latn"], "expect" : "1,00 US-Dollar" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "INR", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "1,00 INR" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "USD", "zh", null, true, "standard", true, true, "latn"], "expect" : "US$NaN" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "1.234 Pesos chilenos" }
@@ -2988,7 +2988,7 @@
 { "op" : "format_currency", "args" : [["int", "0"], "INR", "ja", null, false, "standard", true, true, "latn"], "expect" : "₹0.00" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "JPY", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "(1 235 ¥)" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "fa", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "es", null, true, "name", true, true, "latn"], "expect" : "1,00 dólar estadounidense" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "XXX", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎¤ 2.50" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "PEN", "my", null, false, "standard", true, true, "latn"], "expect" : "1.00 PEN" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "USD", "de", null, true, "name", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 US-Dollar" }
@@ -3030,15 +3030,15 @@
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "JPY", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "1,00 ¥" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "PEN", "en", null, true, "name", true, true, "latn"], "expect" : "1.00 Peruvian soles" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "BHD 2.500" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "sv", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr", null, true, "name", true, true, "latn"], "expect" : "NaN dollars des États-Unis" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "sv", null, true, "accounting", true, true, "latn"], "expect" : "∞ US$" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BHD", "he", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1,234.500 BHD" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "INR", "ar", null, true, "standard", true, true, "latn"], "expect" : "‏2.50 ₹" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CHF", "en", null, true, "name", true, true, "latn"], "expect" : "1,234.50 Swiss francs" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "EUR", "hi", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "EUR", "zh", null, true, "accounting", true, true, "latn"], "expect" : "€∞" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "USD", "he", null, false, "standard", true, true, "latn"], "expect" : "‏10,000,000,000,000,000,000,000,000.00 ‏$" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", null, false, "standard", true, true, "latn"], "expect" : "1,234.50 US$" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "EUR", "hi", null, false, "standard", true, true, "latn"], "expect" : "€∞" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "PEN", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "-S/ 0.00" }
 { "op" : "format_currency", "args" : [["int", "1"], "GBP", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "1,00 £" }
@@ -3047,9 +3047,9 @@
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "GBP", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "GBP 0.50" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "ja", null, false, "standard", true, true, "latn"], "expect" : "BHD 2.50" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CHF", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜0.50 CHF" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "es", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "es", null, false, "standard", true, true, "latn"], "expect" : "1,00 US$" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "XXX", "ru", null, true, "accounting", true, true, "latn"], "expect" : "∞ ¤" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "en", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "en", null, true, "accounting", true, true, "latn"], "expect" : "($0.00)" }
 { "op" : "format_currency", "args" : [["str", "1"], "GBP", "de", null, true, "standard", true, true, "latn"], "expect" : "1,00 £" }
 { "op" : "format_currency", "args" : [["dec", "1"], "GBP", "bn", null, false, "standard", true, true, "latn"], "expect" : "1.00£" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "de", null, true, "name", true, true, "latn"], "expect" : "1,000 Bahrain-Dinar" }
@@ -3063,15 +3063,15 @@
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "XXX", "pl", null, false, "standard", true, true, "latn"], "expect" : "∞ ¤" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "USD", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "1,00 Dólar americano" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "CHF", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "CHF ∞" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "pt_BR", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "1,00 Dólar americano" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "zh", null, true, "standard", true, true, "latn"], "expect" : "US$∞" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "en", null, true, "standard", true, true, "latn"], "expect" : "BHD 2.500" }
-{ "op" : "format_currency", "args" : [["int", "0"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "0"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "expect" : "0,00 $ US" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "GBP", "en", null, true, "standard", true, true, "latn"], "expect" : "£1.00" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "CHF", "ar_EG", null, true, "name", true, true, "latn"], "expect" : "∞ فرنك سويسري" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "XXX", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "¤ 1.00" }
 { "op" : "format_currency", "args" : [["int", "0"], "CLP", "zh", null, true, "name", true, true, "latn"], "expect" : "0智利比索" }
-{ "op" : "format_currency", "args" : [["str", "1"], "usd", "es_PE", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "1"], "usd", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "USD 1.00" }
 { "op" : "format_currency", "args" : [["int", "-1"], "JPY", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎−‎¥ 1" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "en", null, true, "standard", false, false, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BTC", "de_CH", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3089,7 +3089,7 @@
 { "op" : "format_currency", "args" : [["int", "2"], "ZZZ", "hi", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "EUR", "sv", null, true, "standard", true, true, "latn"], "expect" : "1,00 €" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "es", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1234,50 EUR" }
-{ "op" : "format_currency", "args" : [["int", "2"], "usd", "pl", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "2"], "usd", "pl", null, true, "name", true, true, "latn"], "expect" : "2,00 dolara amerykańskiego" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "en", null, true, "name", true, true, "latn"], "expect" : "1,234 Japanese yen" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "CHF", "bn", null, true, "standard", true, true, "latn"], "expect" : "1.00 CHF" }
 { "op" : "format_currency", "args" : [["int", "-1"], "EUR", "zh", null, true, "standard", true, true, "latn"], "expect" : "-€1.00" }
@@ -3112,7 +3112,7 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "en", "#,##0", true, "standard", true, true, "latn"], "expect" : "1,234.50" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BHD", "fr", null, true, "standard", true, true, "latn"], "expect" : "1 234,500 BHD" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "ja", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "CLP 1,234" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es", null, true, "name", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 dólares estadounidenses" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "PEN", "bn", null, true, "name", true, true, "latn"], "expect" : "∞ পেরুভিয়ান সোল" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BTC", "fr_CA", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "es", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3139,7 +3139,7 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CLP", "de_CH", null, false, "standard", true, true, "latn"], "expect" : "CLP NaN" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "GBP", "sv", null, true, "standard", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 GBP" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "EUR", "de_CH", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "Euro 1’234.50" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "expect" : "∞ $ US" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "ZZZ", "de_CH", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜2.500 د.ب.‏" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "XXX", "fr", null, true, "name", true, true, "latn"], "expect" : "-0,00 devise inconnue" }
@@ -3149,7 +3149,7 @@
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "PEN", "ja", null, false, "standard", true, true, "latn"], "expect" : "PEN 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CHF", "de", null, true, "accounting", true, true, "latn"], "expect" : "0,50 CHF" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "ru", null, true, "name", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 швейцарского франка" }
-{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "de_CH", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "usd", "de_CH", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "CLP", "ja", null, true, "name", true, true, "latn"], "expect" : "∞チリ ペソ" }
 { "op" : "format_currency", "args" : [["dec", "1"], "BHD", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "1,000 Dinar bareinita" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "JPY", "ar", null, true, "standard", true, true, "latn"], "expect" : "‏2 JP¥" }
@@ -3173,8 +3173,8 @@
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "sv", null, true, "name", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 schweiziska franc" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "de_CH", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "PEN", "fr", null, true, "name", true, true, "latn"], "expect" : "-1,00 sol péruvien" }
-{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "zh", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "es", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "zh", null, true, "name", true, true, "latn"], "expect" : "-1,234.57美元" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "es", null, true, "accounting", true, true, "latn"], "expect" : "1,00 US$" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "BHD", "bn", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["str", "1"], "CHF", "bn", null, true, "name", true, true, "latn"], "expect" : "1.00 সুইস ফ্রাঁ" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "ZZZ", "es_PE", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3246,16 +3246,16 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "fr", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "pesos chiliens 1 234" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "GBP", "my", null, true, "accounting", true, true, "latn"], "expect" : "£ 2.50" }
 { "op" : "format_currency", "args" : [["int", "2"], "ZZZ", "fr_CA", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "ru", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "ru", null, true, "standard", true, true, "latn"], "expect" : "1,00 $" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "GBP", "pl", null, true, "accounting", true, true, "latn"], "expect" : "1234,50 GBP" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "ZZZ", "pt_BR", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "sv", null, true, "name", true, true, "latn"], "expect" : "1,00 amerikanska dollar" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "INR", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎−‎₹ 1,234.57" }
 { "op" : "format_currency", "args" : [["dec", "1"], "CLP", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "1 Peso chileno" }
 { "op" : "format_currency", "args" : [["dec", "1"], "XXX", "en", null, false, "standard", true, true, "latn"], "expect" : "¤1.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "fa", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1,234 CLP" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "INR", "my", null, false, "standard", true, true, "latn"], "expect" : "1.00 ₹" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "hi", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "hi", null, true, "name", true, true, "latn"], "expect" : "∞ यूएस डॉलर" }
 { "op" : "format_currency", "args" : [["int", "2"], "USD", "en", null, false, "standard", true, true, "latn"], "expect" : "$2.00" }
 { "op" : "format_currency", "args" : [["str", "1"], "CHF", "ru", null, false, "standard", true, true, "latn"], "expect" : "1,00 CHF" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "CLP", "hi", null, true, "accounting", true, true, "latn"], "expect" : "-CLP 0" }
@@ -3294,17 +3294,17 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "GBP", "sv", null, false, "standard", true, true, "latn"], "expect" : "2,50 GBP" }
 { "op" : "format_currency", "args" : [["int", "1"], "JPY", "es", null, true, "standard", true, true, "latn"], "expect" : "1 JPY" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CHF", "ja", null, true, "name", true, true, "latn"], "expect" : "0.50スイス フラン" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "en", null, false, "standard", true, true, "latn"], "expect" : "$0.50" }
 { "op" : "format_currency", "args" : [["int", "-1"], "XXX", "de", null, false, "standard", true, true, "latn"], "expect" : "-1,00 ¤" }
 { "op" : "format_currency", "args" : [["int", "2"], "CHF", "ru", null, true, "name", true, true, "latn"], "expect" : "2,00 швейцарского франка" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "GBP", "hi", null, true, "name", true, true, "latn"], "expect" : "NaN ब्रिटिश पाउंड स्टर्लिंग" }
 { "op" : "format_currency", "args" : [["str", "1"], "XXX", "es", null, true, "name", true, true, "latn"], "expect" : "1,00 (moneda desconocida)" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr_CA", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr_CA", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "$ US 1 234,50" }
 { "op" : "format_currency", "args" : [["int", "2"], "JPY", "en", null, true, "accounting", true, true, "latn"], "expect" : "¥2" }
 { "op" : "format_currency", "args" : [["int", "1"], "XXX", "my", null, true, "name", true, true, "latn"], "expect" : "(မသိသို့မဟုတ်မရှိသောငွေကြေး) 1.00" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "de_CH", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "$ 0.50" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "ZZZ", "my", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", null, true, "standard", false, false, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "my", null, true, "standard", false, false, "latn"], "expect" : "1234.50 US$" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "CLP", "hi", null, true, "name", true, true, "latn"], "expect" : "2 चिली पेसो" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "fr", null, true, "standard", false, false, "latn"], "expect" : "1234,5 JPY" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "GBP", "bn", null, false, "standard", true, true, "latn"], "expect" : "1,00,00,00,00,00,00,00,00,00,00,00,000.00£" }
@@ -3313,7 +3313,7 @@
 { "op" : "format_currency", "args" : [["int", "0"], "XXX", "fr", null, false, "standard", true, true, "latn"], "expect" : "0,00 ¤" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "XXX", "fr_CA", null, true, "name", true, true, "latn"], "expect" : "-0,00 (devise inconnue)" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "GBP", "fa", null, true, "accounting", true, true, "latn"], "expect" : "‎(£ 1,234.57)" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "US-Dollar 1.234,50" }
 { "op" : "format_currency", "args" : [["dec", "1"], "GBP", "de", null, true, "standard", true, true, "latn"], "expect" : "1,00 £" }
 { "op" : "format_currency", "args" : [["str", "1"], "INR", "bn", null, true, "standard", true, true, "latn"], "expect" : "1.00₹" }
 { "op" : "format_currency", "args" : [["dec", "1"], "JPY", "he", null, true, "name", true, true, "latn"], "expect" : "1 ין יפני" }
@@ -3321,7 +3321,7 @@
 { "op" : "format_currency", "args" : [["int", "2"], "INR", "ar_EG", null, true, "name", true, true, "latn"], "expect" : "2.00 روبية هندي" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "JPY", "ru", null, true, "standard", true, true, "latn"], "expect" : "-0 ¥" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CLP", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 CLP" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "sv", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "sv", null, true, "accounting", true, true, "latn"], "expect" : "−1,00 US$" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "XXX", "ja", null, true, "name", true, true, "latn"], "expect" : "1.00不明または無効な通貨" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "GBP", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 £" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "en", null, true, "accounting", true, true, "latn"], "expect" : "¥1,234" }
@@ -3346,7 +3346,7 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "CLP", "pl", null, true, "accounting", true, true, "latn"], "expect" : "2 CLP" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "BTC", "bn", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "CLP", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜1 CLP" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "pt_BR", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "pt_BR", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "Dólares americanos 1.234,50" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "ZZZ", "pl", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "2"], "INR", "my", null, true, "standard", true, true, "latn"], "expect" : "2.00 ₹" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "USD", "fr", null, true, "name", true, true, "latn"], "expect" : "-0,00 dollar des États-Unis" }
@@ -3363,14 +3363,14 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "bn", null, true, "standard", false, false, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "CHF", "he", null, false, "standard", true, true, "latn"], "expect" : "‏‎-1.00 ‏CHF" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "XXX", "bn", null, false, "standard", true, true, "latn"], "expect" : "1.00¤" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "en", null, false, "standard", true, true, "latn"], "expect" : "-$1.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BHD", "es", null, true, "name", true, true, "latn"], "expect" : "NaN dinares bareiníes" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "sv", null, true, "accounting", true, true, "latn"], "expect" : "∞ US$" }
 { "op" : "format_currency", "args" : [["str", "1"], "EUR", "fr", null, true, "standard", true, true, "latn"], "expect" : "1,00 €" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "JPY", "ja", null, true, "accounting", true, true, "latn"], "expect" : "￥∞" }
 { "op" : "format_currency", "args" : [["dec", "1"], "USD", "de", null, false, "standard", true, true, "latn"], "expect" : "1,00 $" }
 { "op" : "format_currency", "args" : [["int", "2"], "ZZZ", "he", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "en", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "en", null, true, "accounting", true, true, "latn"], "expect" : "$2.50" }
 { "op" : "format_currency", "args" : [["int", "2"], "JPY", "zh", null, true, "accounting", true, true, "latn"], "expect" : "JP¥2" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CLP", "bn", null, true, "accounting", true, true, "latn"], "expect" : "0 CLP" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "JPY", "he", null, true, "standard", true, true, "latn"], "expect" : "‏NaN ‏¥" }
@@ -3402,30 +3402,30 @@
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "USD", "pl", null, false, "standard", true, true, "latn"], "expect" : "-1234,57 USD" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "GBP", "es", null, false, "standard", true, true, "latn"], "expect" : "∞ GBP" }
 { "op" : "format_currency", "args" : [["int", "1"], "USD", "en", null, false, "standard", true, true, "latn"], "expect" : "$1.00" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "pt_BR", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "pt_BR", null, true, "accounting", true, true, "latn"], "expect" : "US$ 1,00" }
 { "op" : "format_currency", "args" : [["int", "0"], "PEN", "fr", null, false, "standard", true, true, "latn"], "expect" : "0,00 PEN" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "fa", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎$ 1.00" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "PEN", "my", null, false, "standard", true, true, "latn"], "expect" : "1.00 PEN" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "INR", "sv", null, false, "standard", true, true, "latn"], "expect" : "0,50 INR" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "pl", null, true, "name", true, true, "latn"], "expect" : "1234,50 (nieznana waluta)" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "es", null, true, "standard", true, true, "latn"], "expect" : "2,50 US$" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "$ 1.234,50" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "EUR", "hi", null, true, "name", true, true, "latn"], "expect" : "-1,234.57 यूरो" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "CHF", "de_CH", null, true, "name", true, true, "latn"], "expect" : "1.00 Schweizer Franken" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BTC", "ar", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "es_PE", null, true, "name", true, true, "latn"], "expect" : "10,000,000,000,000,000,000,000,000.00 francos suizos" }
 { "op" : "format_currency", "args" : [["int", "1"], "EUR", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "€ 1,00" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "pt_BR", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "-US$ 1,00" }
 { "op" : "format_currency", "args" : [["str", "1"], "PEN", "fr_CA", null, true, "accounting", true, true, "latn"], "expect" : "1,00 PEN" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "EUR", "he", null, false, "standard", true, true, "latn"], "expect" : "‏∞ ‏€" }
 { "op" : "format_currency", "args" : [["int", "2"], "USD", "he", null, false, "standard", true, true, "latn"], "expect" : "‏2.00 ‏$" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CHF", "ru", null, true, "name", true, true, "latn"], "expect" : "не число швейцарского франка" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "CHF", "pt_BR", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
-{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "pt_BR", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "-US$ 1.234,57" }
 { "op" : "format_currency", "args" : [["int", "-1"], "EUR", "fr_CA", null, true, "name", true, true, "latn"], "expect" : "-1,00 euro" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "fr", null, true, "accounting", true, true, "latn"], "expect" : "NaN PEN" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "JPY", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏1 JP¥" }
-{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es_PE", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "usd", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "USD 10,000,000,000,000,000,000,000,000.00" }
 { "op" : "format_currency", "args" : [["dec", "1"], "INR", "he", null, true, "accounting", true, true, "latn"], "expect" : "‏1.00 ‏₹" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "ZZZ", "ar_EG", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3433,7 +3433,7 @@
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "he", null, true, "name", true, true, "latn"], "expect" : "1,234 פסו צ׳ילאני" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CLP", "ru", null, true, "accounting", true, true, "latn"], "expect" : "-1 235 CLP" }
 { "op" : "format_currency", "args" : [["dec", "1"], "ZZZ", "ar_EG", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "sv", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "sv", null, true, "standard", true, true, "latn"], "expect" : "NaN US$" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "ZZZ", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "GBP", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜2.50 UK£" }
 { "op" : "format_currency", "args" : [["str", "1"], "ZZZ", "pt_BR", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3445,7 +3445,7 @@
 { "op" : "format_currency", "args" : [["int", "-1"], "CLP", "ja", null, true, "standard", true, true, "latn"], "expect" : "-CLP 1" }
 { "op" : "format_currency", "args" : [["int", "-1"], "PEN", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "PEN-1.00" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "fr", null, false, "standard", true, true, "latn"], "expect" : "2,50 $US" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "ar", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜1.00 US$" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "PEN", "ar_EG", null, false, "standard", true, true, "latn"], "expect" : "‏10,000,000,000,000,000,000,000,000.00 PEN" }
 { "op" : "format_currency", "args" : [["int", "2"], "USD", "ar", null, true, "standard", true, true, "latn"], "expect" : "‏2.00 US$" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "XXX", "bn", null, false, "standard", true, true, "latn"], "expect" : "-1,234.57¤" }
@@ -3461,18 +3461,18 @@
 { "op" : "format_currency", "args" : [["int", "2"], "XXX", "zh", null, false, "standard", true, true, "latn"], "expect" : "XXX 2.00" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "CLP", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜2 CLP" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CHF", "de", null, false, "standard", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 CHF" }
-{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "zh", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "usd", "zh", null, false, "standard", true, true, "latn"], "expect" : "US$1.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "XXX", "sv", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1 234,50 XXX" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "ZZZ", "ar", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "0"], "CLP", "my", null, false, "standard", true, true, "latn"], "expect" : "0.00 CLP" }
 { "op" : "format_currency", "args" : [["int", "1"], "BTC", "pl", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "ZZZ", "ar", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "CLP", "my", null, false, "standard", true, true, "latn"], "expect" : "10,000,000,000,000,000,000,000,000.00 CLP" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ru", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ru", null, false, "standard", true, true, "latn"], "expect" : "∞ $" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "hi", null, true, "name", true, true, "latn"], "expect" : "1.000 बहरीनी दिनार" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CHF", "ar", null, true, "standard", true, true, "latn"], "expect" : "‏0.50 CHF" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ar_EG", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "en", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "ar_EG", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "دولار أمريكي 1,234.50" }
+{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "en", null, false, "standard", true, true, "latn"], "expect" : "-$1,234.57" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CLP", "es", null, true, "name", true, true, "latn"], "expect" : "0 pesos chilenos" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "INR", "bn", null, true, "standard", true, true, "latn"], "expect" : "2.50₹" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "BTC", "de_CH", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3497,8 +3497,8 @@
 { "op" : "format_currency", "args" : [["int", "1"], "XXX", "sv", null, true, "accounting", true, true, "latn"], "expect" : "1,00 ¤" }
 { "op" : "format_currency", "args" : [["int", "0"], "XXX", "pl", null, true, "accounting", true, true, "latn"], "expect" : "0,00 ¤" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "de_CH", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1’234.50 PEN" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "fr_CA", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "en", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "fr_CA", null, true, "name", true, true, "latn"], "expect" : "1,00 dollar des États-Unis" }
+{ "op" : "format_currency", "args" : [["dec", "-0"], "usd", "en", null, true, "name", true, true, "latn"], "expect" : "-0.00 US dollars" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "CLP", "ar", null, false, "standard", true, true, "latn"], "expect" : "‏∞ CLP" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "XXX", "my", null, true, "standard", true, true, "latn"], "expect" : "1.00 ¤" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "hi", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3508,7 +3508,7 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "INR", "en", null, true, "accounting", true, true, "latn"], "expect" : "₹2.50" }
 { "op" : "format_currency", "args" : [["int", "0"], "GBP", "my", null, true, "standard", true, true, "latn"], "expect" : "0.00 £" }
 { "op" : "format_currency", "args" : [["int", "1"], "USD", "sv", null, true, "standard", true, true, "latn"], "expect" : "1,00 US$" }
-{ "op" : "format_currency", "args" : [["int", "0"], "usd", "en", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "0"], "usd", "en", null, true, "name", true, true, "latn"], "expect" : "0.00 US dollars" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BTC", "zh", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "0"], "EUR", "hi", null, true, "name", true, true, "latn"], "expect" : "0.00 यूरो" }
 { "op" : "format_currency", "args" : [["str", "1"], "USD", "pt_BR", null, false, "standard", true, true, "latn"], "expect" : "US$ 1,00" }
@@ -3523,7 +3523,7 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "PEN", "fa", null, true, "name", true, true, "latn"], "expect" : "ناعدد سول پرو" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BHD", "pt_BR", "¤ #,##0.00;¤ -#,##0.00", true, "standard", true, true, "latn"], "expect" : "BHD 1.234,500" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "GBP", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "£ 1.234,50" }
-{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "fr", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["str", "2.5"], "usd", "fr", null, true, "accounting", true, true, "latn"], "expect" : "2,50 $US" }
 { "op" : "format_currency", "args" : [["int", "2"], "USD", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "USD 2.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "USD", "de", null, false, "standard", true, true, "latn"], "expect" : "NaN $" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "ZZZ", "hi", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
@@ -3534,7 +3534,7 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CHF", "sv", null, true, "name", true, true, "latn"], "expect" : "NaN schweiziska franc" }
 { "op" : "format_currency", "args" : [["dec", "1"], "ZZZ", "fa", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "2"], "PEN", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜2.00 PEN" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "my", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "my", null, false, "standard", true, true, "latn"], "expect" : "1.00 US$" }
 { "op" : "format_currency", "args" : [["int", "-1"], "EUR", "de", null, true, "accounting", true, true, "latn"], "expect" : "-1,00 €" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "BTC", "pt_BR", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "GBP", "ja", null, true, "name", true, true, "latn"], "expect" : "2.50英国ポンド" }
@@ -3556,16 +3556,16 @@
 { "op" : "format_currency", "args" : [["str", "1"], "ZZZ", "fr", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "ZZZ", "pl", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "0"], "USD", "zh", null, false, "standard", true, true, "latn"], "expect" : "US$0.00" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "standard", true, true, "latn"], "expect" : "$1.00" }
 { "op" : "format_currency", "args" : [["int", "2"], "XXX", "es", null, true, "accounting", true, true, "latn"], "expect" : "2,00 ¤" }
-{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "fa", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "usd", "fa", null, false, "standard", true, true, "latn"], "expect" : "‎$ 0.50" }
 { "op" : "format_currency", "args" : [["int", "1"], "ZZZ", "sv", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "JPY", "en", null, true, "name", true, true, "latn"], "expect" : "0 Japanese yen" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "JPY", "he", null, true, "standard", true, true, "latn"], "expect" : "‏1 ‏¥" }
 { "op" : "format_currency", "args" : [["int", "2"], "JPY", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "JP¥ 2" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "EUR", "ja", null, true, "accounting", true, true, "latn"], "expect" : "€2.50" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "pt_BR", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "Ienes japoneses 1.234" }
-{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "ru", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "ru", null, true, "standard", true, true, "latn"], "expect" : "-1 234,57 $" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "EUR", "ja", null, false, "standard", true, true, "latn"], "expect" : "€NaN" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "BHD", "ru", null, false, "standard", true, true, "latn"], "expect" : "2,50 BHD" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "GBP", "hi", null, true, "standard", false, false, "latn"], "expect" : "£1234.50" }
@@ -3581,9 +3581,9 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BHD", "pl", null, false, "standard", true, true, "latn"], "expect" : "NaN BHD" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "USD", "bn", "#,##0.00 ¤¤", true, "standard", true, true, "latn"], "expect" : "1,234.50 USD" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "CLP", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "-CLP 1,235" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "es_PE", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "USD 1,234.50" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "INR", "fr", null, true, "standard", true, true, "latn"], "expect" : "-0,00 ₹" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr_CA", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "NaN $ US" }
 { "op" : "format_currency", "args" : [["str", "1"], "ZZZ", "my", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "JPY", "ja", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "EUR", "bn", null, false, "standard", true, true, "latn"], "expect" : "NaN€" }
@@ -3597,7 +3597,7 @@
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CLP", "bn", null, true, "name", true, true, "latn"], "expect" : "NaN চিলি পেসো" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "CLP", "de", null, false, "standard", true, true, "latn"], "expect" : "NaN CLP" }
 { "op" : "format_currency", "args" : [["int", "0"], "ZZZ", "sv", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "fr_CA", null, true, "standard", true, true, "latn"], "expect" : "1,00 $ US" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "USD", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "-USD 0.00" }
 { "op" : "format_currency", "args" : [["int", "-1"], "BTC", "de", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "USD", "ar", "¤¤¤ #,##0", true, "standard", true, true, "latn"], "expect" : "دولار أمريكي 1,234.50" }
@@ -3613,13 +3613,13 @@
 { "op" : "format_currency", "args" : [["int", "-1"], "USD", "de", null, false, "standard", true, true, "latn"], "expect" : "-1,00 $" }
 { "op" : "format_currency", "args" : [["str", "1"], "CLP", "fr_CA", null, false, "standard", true, true, "latn"], "expect" : "1,00 CLP" }
 { "op" : "format_currency", "args" : [["dec", "1"], "CHF", "de_CH", null, true, "standard", true, true, "latn"], "expect" : "CHF 1.00" }
-{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "es", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1"], "usd", "es", null, true, "standard", true, true, "latn"], "expect" : "1,00 US$" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "BHD", "ar_EG", null, true, "standard", true, true, "latn"], "expect" : "‏‎-0.000 د.ب.‏" }
 { "op" : "format_currency", "args" : [["int", "2"], "XXX", "hi", null, true, "name", true, true, "latn"], "expect" : "2.00 (अज्ञात मुद्रा)" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "INR", "es", null, true, "standard", true, true, "latn"], "expect" : "10.000.000.000.000.000.000.000.000,00 INR" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "BHD", "es", null, true, "accounting", true, true, "latn"], "expect" : "-1234,567 BHD" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "INR", "my", null, false, "standard", true, true, "latn"], "expect" : "∞ ₹" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "de", null, true, "standard", true, true, "latn"], "expect" : "1.234,50 $" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "INR", "my", null, false, "standard", true, true, "latn"], "expect" : "2.50 ₹" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BTC", "es", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "2"], "CHF", "en", null, true, "standard", true, true, "latn"], "expect" : "CHF 2.00" }
@@ -3655,7 +3655,7 @@
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "USD", "es", null, true, "accounting", true, true, "latn"], "expect" : "∞ US$" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "PEN", "es_PE", null, true, "standard", false, false, "latn"], "expect" : "S/ 1234.50" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "JPY", "ar", null, true, "standard", true, true, "latn"], "expect" : "‏∞ JP¥" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "es_PE", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "USD ∞" }
 { "op" : "format_currency", "args" : [["int", "0"], "BHD", "es", null, true, "accounting", true, true, "latn"], "expect" : "0,000 BHD" }
 { "op" : "format_currency", "args" : [["str", "2.5"], "USD", "fr", null, true, "standard", true, true, "latn"], "expect" : "2,50 $US" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "USD", "bn", null, true, "name", true, true, "latn"], "expect" : "-1,234.57 মার্কিন ডলার" }
@@ -3671,14 +3671,14 @@
 { "op" : "format_currency", "args" : [["int", "1"], "JPY", "de_CH", null, false, "standard", true, true, "latn"], "expect" : "¥ 1.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "BHD", "de", null, true, "standard", true, true, "latn"], "expect" : "NaN BHD" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "INR", "bn", null, true, "accounting", true, true, "latn"], "expect" : "1,234.50₹" }
-{ "op" : "format_currency", "args" : [["int", "0"], "usd", "ar", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "0"], "usd", "ar", null, false, "standard", true, true, "latn"], "expect" : "‏0.00 US$" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "expect" : "∞ $" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "CLP", "pt_BR", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎¥ 1,234" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "pt_BR", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "US$ 1,00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "INR", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎₹ 1,234.50" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "USD", "de", null, true, "accounting", true, true, "latn"], "expect" : "1,00 $" }
-{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "ja", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "usd", "ja", null, false, "standard", true, true, "latn"], "expect" : "-$1,234.57" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "bn", null, false, "standard", true, true, "latn"], "expect" : "1.00 BHD" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "USD", "ja", null, true, "accounting", true, true, "latn"], "expect" : "$0.50" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "XXX", "zh", null, true, "name", true, true, "latn"], "expect" : "1.00（未知货币）" }
@@ -3716,13 +3716,13 @@
 { "op" : "format_currency", "args" : [["dec", "-0"], "PEN", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "-PEN 0,00" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "GBP", "bn", null, true, "accounting", true, true, "latn"], "expect" : "1.00£" }
 { "op" : "format_currency", "args" : [["int", "0"], "ZZZ", "es", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "es", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "es", null, true, "name", true, true, "latn"], "expect" : "-1,00 dólar estadounidense" }
 { "op" : "format_currency", "args" : [["int", "2"], "ZZZ", "sv", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "PEN", "fr", null, true, "name", true, true, "latn"], "expect" : "10 000 000 000 000 000 000 000 000,00 sols péruviens" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "EUR", "pt_BR", null, true, "name", true, true, "latn"], "expect" : "NaN Euros" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "INR", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "-INR 1,234.57" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "CLP", "zh", null, true, "accounting", true, true, "latn"], "expect" : "CLP 0" }
-{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr", "#,##0", true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "40934a0000000000"], "usd", "fr", "#,##0", true, "standard", true, true, "latn"], "expect" : "1 234,50" }
 { "op" : "format_currency", "args" : [["float", "45208b2a2c280291"], "BHD", "ar", null, true, "accounting", true, true, "latn"], "expect" : "؜10,000,000,000,000,000,000,000,000.000 د.ب.‏" }
 { "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "ZZZ", "sv", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "EUR", "ru", null, true, "standard", true, true, "latn"], "expect" : "-1 234,57 €" }
@@ -3740,11 +3740,11 @@
 { "op" : "format_currency", "args" : [["dec", "1.0"], "USD", "my", null, true, "name", true, true, "latn"], "expect" : "အမေရိကန် ဒေါ်လာ 1.00" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "ZZZ", "zh", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "GBP", "my", null, true, "accounting", true, true, "latn"], "expect" : "-£ 1.00" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "ar", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "ar", null, true, "name", true, true, "latn"], "expect" : "1.00 دولار أمريكي" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "bn", null, true, "accounting", true, true, "latn"], "expect" : "1,234 JP¥" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "ZZZ", "de_CH", null, true, "standard", false, false, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "JPY", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎¥ 1" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "he", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "he", null, true, "accounting", true, true, "latn"], "expect" : "‏1.00 ‏$" }
 { "op" : "format_currency", "args" : [["float", "3ff8000000000000"], "EUR", "bn", null, true, "nonexistent", true, true, "latn"], "error" : "UnknownCurrencyFormatError" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "ZZZ", "es_PE", null, false, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "XXX", "pl", null, true, "name", true, true, "latn"], "expect" : "-1234,57 (nieznana waluta)" }
@@ -3760,7 +3760,7 @@
 { "op" : "format_currency", "args" : [["str", "1"], "CHF", "ar_EG", null, true, "accounting", true, true, "latn"], "expect" : "؜1.00 CHF" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "ZZZ", "hi", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "-1"], "BHD", "es", null, true, "name", true, true, "latn"], "expect" : "-1,000 dinar bareiní" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "accounting", true, true, "latn"], "expect" : "$1.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "de", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "USD", "ru", null, false, "standard", true, true, "latn"], "expect" : "1,00 $" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "USD", "he", null, true, "accounting", true, true, "latn"], "expect" : "‏NaN ‏$" }
@@ -3791,14 +3791,14 @@
 { "op" : "format_currency", "args" : [["str", "1"], "GBP", "sv", null, true, "standard", true, true, "latn"], "expect" : "1,00 GBP" }
 { "op" : "format_currency", "args" : [["str", "1"], "JPY", "fa", null, true, "standard", true, true, "latn"], "expect" : "‎¥ 1" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "GBP", "en", null, false, "standard", true, true, "latn"], "expect" : "£NaN" }
-{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "zh", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["dec", "1.0"], "usd", "zh", null, true, "name", true, true, "latn"], "expect" : "1.00美元" }
 { "op" : "format_currency", "args" : [["int", "1"], "BHD", "my", null, true, "standard", true, true, "latn"], "expect" : "1.000 BHD" }
 { "op" : "format_currency", "args" : [["int", "2"], "INR", "es_PE", null, true, "standard", true, true, "latn"], "expect" : "INR 2.00" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "JPY", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "JPY NaN" }
 { "op" : "format_currency", "args" : [["int", "2"], "INR", "en", null, true, "accounting", true, true, "latn"], "expect" : "₹2.00" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "PEN", "es_PE", null, false, "standard", true, true, "latn"], "expect" : "-S/ 0.00" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "GBP", "bn", null, true, "name", true, true, "latn"], "expect" : "0.50 ব্রিটিশ পাউন্ড" }
-{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "bn", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff0000000000000"], "usd", "bn", null, true, "standard", true, true, "latn"], "expect" : "∞US$" }
 { "op" : "format_currency", "args" : [["dec", "1"], "JPY", "sv", null, true, "accounting", true, true, "latn"], "expect" : "1 JPY" }
 { "op" : "format_currency", "args" : [["int", "0"], "CHF", "fr", null, true, "name", true, true, "latn"], "expect" : "0,00 franc suisse" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "JPY", "sv", null, true, "accounting", true, true, "latn"], "expect" : "1 234 JPY" }
@@ -3813,7 +3813,7 @@
 { "op" : "format_currency", "args" : [["str", "2.5"], "JPY", "hi", null, false, "standard", true, true, "latn"], "expect" : "JP¥2.50" }
 { "op" : "format_currency", "args" : [["int", "2"], "CLP", "hi", null, true, "standard", true, true, "latn"], "expect" : "CLP 2" }
 { "op" : "format_currency", "args" : [["str", "1"], "XXX", "es", null, true, "accounting", true, true, "latn"], "expect" : "1,00 ¤" }
-{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "hi", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["int", "-1"], "usd", "hi", null, true, "standard", true, true, "latn"], "expect" : "-$1.00" }
 { "op" : "format_currency", "args" : [["float", "40934a0000000000"], "CLP", "ar_EG", null, true, "standard", false, false, "latn"], "expect" : "‏1234.5 CLP" }
 { "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "INR", "pl", null, true, "standard", true, true, "latn"], "expect" : "NaN INR" }
 { "op" : "format_currency", "args" : [["dec", "-0"], "GBP", "hi", null, true, "name", true, true, "latn"], "expect" : "-0.00 ब्रिटिश पाउंड स्टर्लिंग" }
@@ -3828,7 +3828,7 @@
 { "op" : "format_currency", "args" : [["str", "1"], "USD", "hi", null, true, "name", true, true, "latn"], "expect" : "1.00 यूएस डॉलर" }
 { "op" : "format_currency", "args" : [["float", "3fe0000000000000"], "BTC", "pt_BR", null, true, "name", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["str", "1"], "EUR", "fa", null, true, "name", true, true, "latn"], "expect" : "1.00 یورو" }
-{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "error" : "UnknownCurrencyError" }
+{ "op" : "format_currency", "args" : [["float", "7ff8000000000000"], "usd", "ru", null, true, "accounting", true, true, "latn"], "expect" : "не число $" }
 { "op" : "format_currency", "args" : [["float", "c0934a449ba5e354"], "USD", "es_PE", null, true, "accounting", true, true, "latn"], "expect" : "-USD 1,234.57" }
 { "op" : "format_currency", "args" : [["float", "3ff0000000000000"], "BHD", "pt_BR", null, true, "standard", true, true, "latn"], "expect" : "BHD 1,000" }
 { "op" : "format_currency", "args" : [["dec", "1.0"], "BHD", "ja", null, true, "accounting", true, true, "latn"], "expect" : "BHD 1.000" }
@@ -3848,7 +3848,7 @@
 { "op" : "currency_info", "args" : ["INR", "en"], "expect" : ["Indian Rupee", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "en"], "expect" : ["Unknown Currency", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "en"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "en"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "en"], "expect" : ["US Dollar", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "en"], "expect" : ["Chilean Peso", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "en"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "de"], "expect" : ["US-Dollar", "$", 2, "{0} {1}", true, "USD"] }
@@ -3861,7 +3861,7 @@
 { "op" : "currency_info", "args" : ["INR", "de"], "expect" : ["Indische Rupie", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "de"], "expect" : ["Unbekannte Währung", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "de"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "de"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "de"], "expect" : ["US-Dollar", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "de"], "expect" : ["Chilenischer Peso", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "de"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "de_CH"], "expect" : ["US-Dollar", "$", 2, "{0} {1}", true, "USD"] }
@@ -3874,7 +3874,7 @@
 { "op" : "currency_info", "args" : ["INR", "de_CH"], "expect" : ["Indische Rupie", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "de_CH"], "expect" : ["Unbekannte Währung", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "de_CH"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "de_CH"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "de_CH"], "expect" : ["US-Dollar", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "de_CH"], "expect" : ["Chilenischer Peso", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "de_CH"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "fr"], "expect" : ["dollar des États-Unis", "$US", 2, "{0} {1}", true, "USD"] }
@@ -3887,7 +3887,7 @@
 { "op" : "currency_info", "args" : ["INR", "fr"], "expect" : ["roupie indienne", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "fr"], "expect" : ["devise inconnue ou non valide", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "fr"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "fr"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "fr"], "expect" : ["dollar des États-Unis", "$US", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "fr"], "expect" : ["peso chilien", "$CL", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "fr"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "fr_CA"], "expect" : ["dollar des États-Unis", "$ US", 2, "{0} {1}", true, "USD"] }
@@ -3900,7 +3900,7 @@
 { "op" : "currency_info", "args" : ["INR", "fr_CA"], "expect" : ["roupie indienne", "INR", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "fr_CA"], "expect" : ["Devise inconnue", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "fr_CA"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "fr_CA"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "fr_CA"], "expect" : ["dollar des États-Unis", "$ US", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "fr_CA"], "expect" : ["peso chilien", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "fr_CA"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "es"], "expect" : ["dólar estadounidense", "US$", 2, "{0} {1}", true, "USD"] }
@@ -3913,7 +3913,7 @@
 { "op" : "currency_info", "args" : ["INR", "es"], "expect" : ["rupia india", "INR", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "es"], "expect" : ["moneda desconocida", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "es"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "es"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "es"], "expect" : ["dólar estadounidense", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "es"], "expect" : ["peso chileno", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "es"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "es_PE"], "expect" : ["dólar estadounidense", "USD", 2, "{0} {1}", true, "USD"] }
@@ -3926,7 +3926,7 @@
 { "op" : "currency_info", "args" : ["INR", "es_PE"], "expect" : ["rupia india", "INR", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "es_PE"], "expect" : ["moneda desconocida", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "es_PE"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "es_PE"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "es_PE"], "expect" : ["dólar estadounidense", "USD", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "es_PE"], "expect" : ["peso chileno", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "es_PE"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "pt_BR"], "expect" : ["Dólar americano", "US$", 2, "{0} {1}", true, "USD"] }
@@ -3939,7 +3939,7 @@
 { "op" : "currency_info", "args" : ["INR", "pt_BR"], "expect" : ["Rupia indiana", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "pt_BR"], "expect" : ["Moeda desconhecida", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "pt_BR"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "pt_BR"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "pt_BR"], "expect" : ["Dólar americano", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "pt_BR"], "expect" : ["Peso chileno", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "pt_BR"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "sv"], "expect" : ["amerikansk dollar", "US$", 2, "{0} {1}", true, "USD"] }
@@ -3952,7 +3952,7 @@
 { "op" : "currency_info", "args" : ["INR", "sv"], "expect" : ["indisk rupie", "INR", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "sv"], "expect" : ["okänd valuta", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "sv"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "sv"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "sv"], "expect" : ["amerikansk dollar", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "sv"], "expect" : ["chilensk peso", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "sv"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "pl"], "expect" : ["dolar amerykański", "USD", 2, "{0} {1}", true, "USD"] }
@@ -3965,7 +3965,7 @@
 { "op" : "currency_info", "args" : ["INR", "pl"], "expect" : ["rupia indyjska", "INR", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "pl"], "expect" : ["nieznana waluta", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "pl"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "pl"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "pl"], "expect" : ["dolar amerykański", "USD", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "pl"], "expect" : ["peso chilijskie", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "pl"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "ru"], "expect" : ["доллар США", "$", 2, "{0} {1}", true, "USD"] }
@@ -3978,7 +3978,7 @@
 { "op" : "currency_info", "args" : ["INR", "ru"], "expect" : ["индийская рупия", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "ru"], "expect" : ["неизвестная валюта", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "ru"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "ru"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "ru"], "expect" : ["доллар США", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "ru"], "expect" : ["чилийский песо", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "ru"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "ar"], "expect" : ["دولار أمريكي", "US$", 2, "{0} {1}", true, "USD"] }
@@ -3991,7 +3991,7 @@
 { "op" : "currency_info", "args" : ["INR", "ar"], "expect" : ["روبية هندي", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "ar"], "expect" : ["عملة غير معروفة", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "ar"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "ar"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "ar"], "expect" : ["دولار أمريكي", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "ar"], "expect" : ["بيزو تشيلي", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "ar"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "ar_EG"], "expect" : ["دولار أمريكي", "US$", 2, "{0} {1}", true, "USD"] }
@@ -4004,7 +4004,7 @@
 { "op" : "currency_info", "args" : ["INR", "ar_EG"], "expect" : ["روبية هندي", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "ar_EG"], "expect" : ["عملة غير معروفة", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "ar_EG"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "ar_EG"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "ar_EG"], "expect" : ["دولار أمريكي", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "ar_EG"], "expect" : ["بيزو تشيلي", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "ar_EG"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "fa"], "expect" : ["دلار آمریکا", "$", 2, "{0} {1}", true, "USD"] }
@@ -4017,7 +4017,7 @@
 { "op" : "currency_info", "args" : ["INR", "fa"], "expect" : ["روپیهٔ هند", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "fa"], "expect" : ["ارز نامشخص", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "fa"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "fa"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "fa"], "expect" : ["دلار آمریکا", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "fa"], "expect" : ["پزوی شیلی", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "fa"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "he"], "expect" : ["דולר אמריקאי", "$", 2, "{0} {1}", true, "USD"] }
@@ -4030,7 +4030,7 @@
 { "op" : "currency_info", "args" : ["INR", "he"], "expect" : ["רופי הודי", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "he"], "expect" : ["מטבע שאינו ידוע", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "he"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "he"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "he"], "expect" : ["דולר אמריקאי", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "he"], "expect" : ["פסו צ׳ילאני", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "he"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "hi"], "expect" : ["यूएस डॉलर", "$", 2, "{0} {1}", true, "USD"] }
@@ -4043,7 +4043,7 @@
 { "op" : "currency_info", "args" : ["INR", "hi"], "expect" : ["भारतीय रुपया", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "hi"], "expect" : ["अज्ञात मुद्रा", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "hi"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "hi"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "hi"], "expect" : ["यूएस डॉलर", "$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "hi"], "expect" : ["चिली पेसो", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "hi"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "bn"], "expect" : ["মার্কিন ডলার", "US$", 2, "{0} {1}", true, "USD"] }
@@ -4056,7 +4056,7 @@
 { "op" : "currency_info", "args" : ["INR", "bn"], "expect" : ["ভারতীয় রুপি", "₹", 2, "{0} {1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "bn"], "expect" : ["অজানা মুদ্রা", "¤", 2, "{0} {1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "bn"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "bn"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "bn"], "expect" : ["মার্কিন ডলার", "US$", 2, "{0} {1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "bn"], "expect" : ["চিলি পেসো", "CLP", 0, "{0} {1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "bn"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "ja"], "expect" : ["米ドル", "$", 2, "{0}{1}", true, "USD"] }
@@ -4069,7 +4069,7 @@
 { "op" : "currency_info", "args" : ["INR", "ja"], "expect" : ["インド ルピー", "₹", 2, "{0}{1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "ja"], "expect" : ["不明または無効な通貨", "¤", 2, "{0}{1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "ja"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "ja"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "ja"], "expect" : ["米ドル", "$", 2, "{0}{1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "ja"], "expect" : ["チリ ペソ", "CLP", 0, "{0}{1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "ja"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "zh"], "expect" : ["美元", "US$", 2, "{0}{1}", true, "USD"] }
@@ -4082,7 +4082,7 @@
 { "op" : "currency_info", "args" : ["INR", "zh"], "expect" : ["印度卢比", "₹", 2, "{0}{1}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "zh"], "expect" : ["未知货币", "XXX", 2, "{0}{1}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "zh"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "zh"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "zh"], "expect" : ["美元", "US$", 2, "{0}{1}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "zh"], "expect" : ["智利比索", "CLP", 0, "{0}{1}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "zh"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_info", "args" : ["USD", "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "US$", 2, "{1} {0}", true, "USD"] }
@@ -4095,7 +4095,7 @@
 { "op" : "currency_info", "args" : ["INR", "my"], "expect" : ["အိန္ဒိယ ရူပီး", "₹", 2, "{1} {0}", true, "INR"] }
 { "op" : "currency_info", "args" : ["XXX", "my"], "expect" : ["မသိသို့မဟုတ်မရှိသောငွေကြေး", "¤", 2, "{1} {0}", true, "XXX"] }
 { "op" : "currency_info", "args" : ["ZZZ", "my"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "my"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "US$", 2, "{1} {0}", true, "USD"] }
 { "op" : "currency_info", "args" : ["CLP", "my"], "expect" : ["ချီလီ ပီဆို", "CLP", 0, "{1} {0}", true, "CLP"] }
 { "op" : "currency_info", "args" : ["BTC", "my"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["PEN", ["float", "3ff0000000000000"], "es_PE"], "expect" : ["sol peruano", "{0} {1}"] }
@@ -4124,9 +4124,9 @@
 { "op" : "currency_name", "args" : ["JPY", ["float", "3ff8000000000000"], "ar"], "expect" : ["ين ياباني", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "0"], "my"], "expect" : ["ယူရို", "{1} {0}"] }
 { "op" : "currency_name", "args" : ["INR", ["int", "21"], "ar"], "expect" : ["روبية هندي", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "my"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "{1} {0}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["dec", "1.0"], "zh"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "sv"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "sv"], "expect" : ["amerikanska dollar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["int", "5"], "my"], "expect" : ["(မသိသို့မဟုတ်မရှိသောငွေကြေး)", "{1} {0}"] }
 { "op" : "currency_name", "args" : ["BHD", ["float", "7ff8000000000000"], "fr_CA"], "expect" : ["dinars bahreïnis", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["float", "7ff8000000000000"], "fa"], "expect" : ["یورو", "{0} {1}"] }
@@ -4153,17 +4153,17 @@
 { "op" : "currency_name", "args" : ["INR", ["int", "1"], "zh"], "expect" : ["印度卢比", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["float", "7ff8000000000000"], "en"], "expect" : ["Japanese yen", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "3ff8000000000000"], "bn"], "expect" : ["ব্রিটিশ পাউন্ড", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "es"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "es"], "expect" : ["dólares estadounidenses", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["float", "3ff8000000000000"], "sv"], "expect" : ["schweiziska franc", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["float", "3ff8000000000000"], "pl"], "expect" : ["euro", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["float", "3ff0000000000000"], "es"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["PEN", ["float", "7ff8000000000000"], "fr_CA"], "expect" : ["nouveaux sols péruviens", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "ar"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "ar"], "expect" : ["دولار أمريكي", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["int", "0"], "he"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["BHD", ["float", "3ff0000000000000"], "pt_BR"], "expect" : ["Dinar bareinita", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "ru"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "bn"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "sv"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "ru"], "expect" : ["доллар США", "{0} {1}"] }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "bn"], "expect" : ["মার্কিন ডলার", "{0} {1}"] }
+{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "sv"], "expect" : ["amerikanska dollar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "3ff8000000000000"], "fr_CA"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["EUR", ["int", "1"], "fr"], "expect" : ["euro", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "5"], "ja"], "expect" : ["ユーロ", "{0}{1}"] }
@@ -4185,7 +4185,7 @@
 { "op" : "currency_name", "args" : ["BHD", ["int", "1"], "es"], "expect" : ["dinar bareiní", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["dec", "1.0"], "ru"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["BTC", ["int", "21"], "my"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "es_PE"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "es_PE"], "expect" : ["dólar estadounidense", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["dec", "1.0"], "fr"], "expect" : ["yen japonais", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["int", "1"], "hi"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["CHF", ["dec", "1.0"], "de"], "expect" : ["Schweizer Franken", "{0} {1}"] }
@@ -4208,17 +4208,17 @@
 { "op" : "currency_name", "args" : ["BTC", ["int", "21"], "sv"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["JPY", ["int", "0"], "fr"], "expect" : ["yen japonais", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["int", "1"], "ja"], "expect" : ["円", "{0}{1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "ar_EG"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "ar_EG"], "expect" : ["دولار أمريكي", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["int", "2"], "fr_CA"], "expect" : ["nouveaux sols péruviens", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["INR", ["int", "2"], "pt_BR"], "expect" : ["Rupias indianas", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["int", "21"], "sv"], "expect" : ["peruanska sol", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["INR", ["float", "3ff0000000000000"], "ru"], "expect" : ["индийская рупия", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["float", "3ff0000000000000"], "es_PE"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "3ff0000000000000"], "es_PE"], "expect" : ["dólar estadounidense", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["float", "3ff0000000000000"], "fa"], "expect" : ["ین ژاپن", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["USD", ["int", "21"], "zh"], "expect" : ["美元", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["float", "3ff8000000000000"], "de_CH"], "expect" : ["Schweizer Franken", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "0"], "zh"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "pl"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "0"], "zh"], "expect" : ["美元", "{0}{1}"] }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "pl"], "expect" : ["dolarów amerykańskich", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "2"], "fr_CA"], "expect" : ["euros", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["float", "7ff8000000000000"], "pt_BR"], "expect" : ["Ienes japoneses", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["int", "21"], "de_CH"], "error" : "UnknownCurrencyError" }
@@ -4235,7 +4235,7 @@
 { "op" : "currency_name", "args" : ["CHF", ["int", "0"], "ru"], "expect" : ["швейцарских франков", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["dec", "1.0"], "de_CH"], "expect" : ["Schweizer Franken", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["dec", "1.0"], "ja"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "de_CH"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "de_CH"], "expect" : ["US-Dollar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["float", "3ff8000000000000"], "hi"], "expect" : ["बहरीनी दिनार", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "2"], "ar"], "expect" : ["فرنك سويسري", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["float", "3ff0000000000000"], "de_CH"], "expect" : ["Bahrain-Dinar", "{0} {1}"] }
@@ -4244,7 +4244,7 @@
 { "op" : "currency_name", "args" : ["JPY", ["float", "3ff8000000000000"], "my"], "expect" : ["ဂျပန် ယန်း", "{1} {0}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "3ff0000000000000"], "es_PE"], "expect" : ["libra esterlina", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["int", "1"], "ru"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "5"], "he"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "5"], "he"], "expect" : ["דולר אמריקאי", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "5"], "hi"], "expect" : ["स्विस फ़्रैंक", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["float", "3ff8000000000000"], "ar_EG"], "expect" : ["بيزو تشيلي", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["int", "0"], "sv"], "expect" : ["japanska yen", "{0} {1}"] }
@@ -4254,7 +4254,7 @@
 { "op" : "currency_name", "args" : ["XXX", ["int", "1"], "fa"], "expect" : ["(ارز نامشخص)", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "3ff0000000000000"], "he"], "expect" : ["לירה שטרלינג", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["INR", ["int", "1"], "de"], "expect" : ["Indische Rupie", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "bn"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "bn"], "expect" : ["মার্কিন ডলার", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["INR", ["float", "3ff0000000000000"], "fr_CA"], "expect" : ["roupie indienne", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["int", "5"], "he"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["CHF", ["float", "3ff0000000000000"], "fr"], "expect" : ["franc suisse", "{0} {1}"] }
@@ -4293,7 +4293,7 @@
 { "op" : "currency_name", "args" : ["USD", ["int", "2"], "es_PE"], "expect" : ["dólares estadounidenses", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["dec", "1.0"], "he"], "expect" : ["פסו צ׳ילאני", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "21"], "ar_EG"], "expect" : ["يورو", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "es"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "es"], "expect" : ["dólar estadounidense", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "7ff8000000000000"], "pl"], "expect" : ["funta szterlinga", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["int", "2"], "es"], "expect" : ["(moneda desconocida)", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["float", "7ff8000000000000"], "sv"], "expect" : ["peruanska sol", "{0} {1}"] }
@@ -4314,7 +4314,7 @@
 { "op" : "currency_name", "args" : ["BTC", ["float", "7ff8000000000000"], "fr"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["PEN", ["int", "1"], "ja"], "expect" : ["ペルー ソル", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["float", "3ff8000000000000"], "hi"], "expect" : ["जापानी येन", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "fr_CA"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "fr_CA"], "expect" : ["dollars des États-Unis", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "5"], "zh"], "expect" : ["瑞士法郎", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["float", "3ff8000000000000"], "en"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["CLP", ["float", "7ff8000000000000"], "en"], "expect" : ["Chilean pesos", "{0} {1}"] }
@@ -4329,7 +4329,7 @@
 { "op" : "currency_name", "args" : ["CLP", ["float", "3ff0000000000000"], "zh"], "expect" : ["智利比索", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "0"], "he"], "expect" : ["פרנק שוויצרי", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["int", "21"], "fr_CA"], "expect" : ["(devise inconnue)", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "5"], "pl"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "5"], "pl"], "expect" : ["dolarów amerykańskich", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "21"], "ru"], "expect" : ["швейцарский франк", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "3ff8000000000000"], "bn"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["BTC", ["int", "2"], "en"], "error" : "UnknownCurrencyError" }
@@ -4337,11 +4337,11 @@
 { "op" : "currency_name", "args" : ["CLP", ["dec", "1.0"], "es_PE"], "expect" : ["peso chileno", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["int", "1"], "de_CH"], "expect" : ["Bahrain-Dinar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "1"], "fr_CA"], "expect" : ["franc suisse", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "pl"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "pl"], "expect" : ["dolara amerykańskiego", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["float", "3ff0000000000000"], "ar"], "expect" : ["(عملة غير معروفة)", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["int", "1"], "zh"], "expect" : ["（未知货币）", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["INR", ["int", "5"], "ar"], "expect" : ["روبية هندي", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "hi"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "hi"], "expect" : ["यूएस डॉलर", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["int", "2"], "bn"], "expect" : ["বাহরাইনি দিনার", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["float", "3ff0000000000000"], "en"], "expect" : ["euro", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["int", "21"], "hi"], "expect" : ["बहरीनी दिनार", "{0} {1}"] }
@@ -4358,7 +4358,7 @@
 { "op" : "currency_name", "args" : ["PEN", ["int", "21"], "fr_CA"], "expect" : ["nouveaux sols péruviens", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["int", "0"], "fr"], "expect" : ["franc suisse", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "0"], "es_PE"], "expect" : ["euros", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "en"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "21"], "en"], "expect" : ["US dollars", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["USD", ["float", "7ff8000000000000"], "pl"], "expect" : ["dolara amerykańskiego", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["int", "5"], "en"], "expect" : ["Bahraini dinars", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "7ff8000000000000"], "pt_BR"], "expect" : ["Libras esterlinas", "{0} {1}"] }
@@ -4366,19 +4366,19 @@
 { "op" : "currency_name", "args" : ["XXX", ["float", "3ff0000000000000"], "ja"], "expect" : ["不明または無効な通貨", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["BHD", ["int", "5"], "es"], "expect" : ["dinares bareiníes", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["USD", ["float", "3ff0000000000000"], "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "{1} {0}"] }
-{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "en"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "en"], "expect" : ["US dollars", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["USD", ["int", "21"], "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "{1} {0}"] }
-{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "he"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "he"], "expect" : ["דולר אמריקאי", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["float", "3ff8000000000000"], "bn"], "expect" : ["ইউরো", "{0} {1}"] }
-{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "my"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "my"], "expect" : ["အမေရိကန် ဒေါ်လာ", "{1} {0}"] }
 { "op" : "currency_name", "args" : ["CLP", ["float", "7ff8000000000000"], "he"], "expect" : ["פסו צ׳ילאני", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "3ff0000000000000"], "es_PE"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["CHF", ["int", "2"], "ru"], "expect" : ["швейцарских франка", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["USD", ["int", "21"], "pt_BR"], "expect" : ["Dólares americanos", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["INR", ["int", "2"], "zh"], "expect" : ["印度卢比", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "3ff8000000000000"], "fr"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "0"], "en"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "sv"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "0"], "en"], "expect" : ["US dollars", "{0} {1}"] }
+{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "sv"], "expect" : ["amerikanska dollar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["float", "3ff8000000000000"], "zh"], "expect" : ["秘鲁索尔", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["int", "1"], "fr"], "expect" : ["peso chilien", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CHF", ["float", "3ff0000000000000"], "ar_EG"], "expect" : ["فرنك سويسري", "{0} {1}"] }
@@ -4386,7 +4386,7 @@
 { "op" : "currency_name", "args" : ["USD", ["float", "7ff8000000000000"], "sv"], "expect" : ["amerikanska dollar", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["ZZZ", ["float", "7ff8000000000000"], "sv"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["CHF", ["int", "2"], "my"], "expect" : ["ဆွစ် ဖရန့်", "{1} {0}"] }
-{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "ja"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "7ff8000000000000"], "ja"], "expect" : ["米ドル", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["int", "1"], "fr"], "expect" : ["livre sterling", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["float", "3ff8000000000000"], "fa"], "expect" : ["یورو", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["int", "0"], "de_CH"], "expect" : ["Peruanische Sol", "{0} {1}"] }
@@ -4420,11 +4420,11 @@
 { "op" : "currency_name", "args" : ["INR", ["int", "21"], "de"], "expect" : ["Indische Rupien", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["float", "7ff8000000000000"], "ru"], "expect" : ["чилийского песо", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "3ff0000000000000"], "ja"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "zh"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["dec", "1.0"], "zh"], "expect" : ["美元", "{0}{1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["float", "7ff8000000000000"], "sv"], "expect" : ["chilenska pesos", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["GBP", ["float", "3ff8000000000000"], "es_PE"], "expect" : ["libras esterlinas", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["BTC", ["float", "7ff8000000000000"], "en"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "hi"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["float", "3ff8000000000000"], "hi"], "expect" : ["यूएस डॉलर", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["CLP", ["dec", "1.0"], "en"], "expect" : ["Chilean pesos", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["JPY", ["int", "2"], "bn"], "expect" : ["জাপানি ইয়েন", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["PEN", ["int", "0"], "ja"], "expect" : ["ペルー ソル", "{0}{1}"] }
@@ -4496,7 +4496,7 @@
 { "op" : "currency_name", "args" : ["BTC", ["float", "7ff8000000000000"], "ar"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["USD", ["int", "5"], "en"], "expect" : ["US dollars", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["EUR", ["int", "1"], "my"], "expect" : ["ယူရို", "{1} {0}"] }
-{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "es"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "1"], "es"], "expect" : ["dólar estadounidense", "{0} {1}"] }
 { "op" : "currency_name", "args" : ["XXX", ["int", "2"], "he"], "expect" : ["(מטבע שאינו ידוע)", "{0} {1}"] }
 { "op" : "list_currencies", "args" : ["en"], "expect" : ["ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNH", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MRU", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLE", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "STN", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UYW", "UZS", "VEB", "VED", "VEF", "VES", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XCG", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWG", "ZWL", "ZWR"] }
 { "op" : "list_currencies", "args" : ["de"], "expect" : ["ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNH", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MRU", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLE", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "STN", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VES", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"] }
@@ -4529,11 +4529,11 @@
 { "op" : "is_currency_global", "args" : ["INR"], "expect" : [true, "INR"] }
 { "op" : "is_currency_global", "args" : ["XXX"], "expect" : [true, "XXX"] }
 { "op" : "is_currency_global", "args" : ["ZZZ"], "expect" : [false, ""] }
-{ "op" : "is_currency_global", "args" : ["usd"], "expect" : [false, "USD"] }
+{ "op" : "is_currency_global", "args" : ["usd"], "expect" : [true, "USD"] }
 { "op" : "is_currency_global", "args" : ["CLP"], "expect" : [true, "CLP"] }
 { "op" : "is_currency_global", "args" : ["BTC"], "expect" : [false, ""] }
 { "op" : "is_currency_global", "args" : [""], "expect" : [false, ""] }
-{ "op" : "is_currency_global", "args" : ["eur"], "expect" : [false, "EUR"] }
+{ "op" : "is_currency_global", "args" : ["eur"], "expect" : [true, "EUR"] }
 { "op" : "territory_currencies", "args" : ["US", [2026, 1, 1], [], true, false], "expect" : [["USD", "1792-01-01", "", true]] }
 { "op" : "territory_currencies", "args" : ["US", [1990, 1, 1], [2020, 12, 31], true, false], "expect" : [["USD", "1792-01-01", "", true]] }
 { "op" : "territory_currencies", "args" : ["US", [1950, 6, 1], [], true, true], "expect" : [["USD", "1792-01-01", "", true], ["USN", "", "", false], ["USS", "", "2014-03-01", false]] }
@@ -6412,10 +6412,10 @@
 { "op" : "format_currency", "args" : [["int", "1"], "XYZ", "en", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_compact_currency", "args" : [["int", "1000"], "XYZ", "en", "short", 0, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "currency_name", "args" : ["XYZ", ["int", "2"], "en"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_info", "args" : ["usd", "en"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "format_compact_currency", "args" : [["int", "1000"], "usd", "en", "short", 0, "latn"], "error" : "UnknownCurrencyError" }
-{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "en"], "error" : "UnknownCurrencyError" }
+{ "op" : "currency_info", "args" : ["usd", "en"], "expect" : ["US Dollar", "$", 2, "{0} {1}", true, "USD"] }
+{ "op" : "format_currency", "args" : [["int", "1"], "usd", "en", null, true, "standard", true, true, "latn"], "expect" : "$1.00" }
+{ "op" : "format_compact_currency", "args" : [["int", "1000"], "usd", "en", "short", 0, "latn"], "expect" : "$1K" }
+{ "op" : "currency_name", "args" : ["usd", ["int", "2"], "en"], "expect" : ["US dollars", "{0} {1}"] }
 { "op" : "currency_info", "args" : ["", "en"], "error" : "UnknownCurrencyError" }
 { "op" : "format_currency", "args" : [["int", "1"], "", "en", null, true, "standard", true, true, "latn"], "error" : "UnknownCurrencyError" }
 { "op" : "format_compact_currency", "args" : [["int", "1000"], "", "en", "short", 0, "latn"], "error" : "UnknownCurrencyError" }

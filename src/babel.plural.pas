@@ -146,15 +146,15 @@ begin
   Result := Default(TPluralOperands);
   Result.N := N.Abs;
   Result.I := Result.N.Truncate;
-  { the fraction digits: the last -exp coefficient digits, or all of
-    them when there are fewer (so 0.05, whose coefficient is 5, has
-    v = 1) }
+  { the visible fraction digits: the last -exp digits of the
+    coefficient, with leading zeros when the coefficient is shorter
+    (0.05, coefficient 5, has the fraction digits '05': v = 2, f = 5) }
   Trailing := '';
   if Result.N.Exponent < 0 then
   begin
     Count := -Result.N.Exponent;
     if Count >= Length(Result.N.Digits) then
-      Trailing := Result.N.Digits
+      Trailing := StringOfChar('0', Count - Length(Result.N.Digits)) + Result.N.Digits
     else
       Trailing := Copy(Result.N.Digits, Length(Result.N.Digits) - Count + 1, Count);
   end;

@@ -35,6 +35,12 @@ function StrArray(const A: array of string): TJSONArray;
 function StrList(A: TJSONArray): TStringArray;
 { A double from 16 hex digits of its bits. }
 function DoubleOfHex(const S: string): Double;
+(* A line of JSON with its \u escapes of non-ASCII characters (and
+  surrogate pairs) written as UTF-8; other escapes are kept. FPC 3.2.2's
+  fpjson decodes two consecutive \u escapes into a 4-byte buffer, so a
+  pair of characters from U+0800 up ('\u2009\u2013') loses bytes;
+  RunVectors gives it lines without such escapes. *)
+function DecodeNonAsciiEscapes(const Line: string): string;
 
 implementation
 
@@ -85,6 +91,80 @@ begin
   SetLength(Result, A.Count);
   for I := 0 to A.Count - 1 do
     Result[I] := A.Strings[I];
+end;
+
+function DecodeNonAsciiEscapes(const Line: string): string;
+
+  function HexAt(I: Integer; out Value: Cardinal): Boolean;
+  var
+    K: Integer;
+    D: Cardinal;
+  begin
+    Value := 0;
+    if I + 3 > Length(Line) then
+      Exit(False);
+    for K := I to I + 3 do
+    begin
+      case Line[K] of
+        '0'..'9': D := Ord(Line[K]) - Ord('0');
+        'a'..'f': D := Ord(Line[K]) - Ord('a') + 10;
+        'A'..'F': D := Ord(Line[K]) - Ord('A') + 10;
+      else
+        Exit(False);
+      end;
+      Value := Value * 16 + D;
+    end;
+    Result := True;
+  end;
+
+  function UTF8Of(C: Cardinal): string;
+  begin
+    if C < $800 then
+      Result := Chr($C0 or (C shr 6)) + Chr($80 or (C and $3F))
+    else if C < $10000 then
+      Result := Chr($E0 or (C shr 12)) + Chr($80 or ((C shr 6) and $3F)) + Chr($80 or (C and $3F))
+    else
+      Result := Chr($F0 or (C shr 18)) + Chr($80 or ((C shr 12) and $3F)) +
+        Chr($80 or ((C shr 6) and $3F)) + Chr($80 or (C and $3F));
+  end;
+
+var
+  I: Integer;
+  C, Low: Cardinal;
+begin
+  if Pos('\u', Line) = 0 then
+    Exit(Line);
+  Result := '';
+  I := 1;
+  while I <= Length(Line) do
+  begin
+    if (Line[I] = '\') and (I < Length(Line)) then
+    begin
+      if (Line[I + 1] = 'u') and HexAt(I + 2, C) and (C >= $80) then
+      begin
+        if (C >= $D800) and (C <= $DBFF) and (I + 11 <= Length(Line)) and
+           (Line[I + 6] = '\') and (Line[I + 7] = 'u') and HexAt(I + 8, Low) and
+           (Low >= $DC00) and (Low <= $DFFF) then
+        begin
+          Result := Result + UTF8Of($10000 + ((C - $D800) shl 10) + (Low - $DC00));
+          Inc(I, 12);
+          Continue;
+        end;
+        if (C < $D800) or (C > $DFFF) then
+        begin
+          Result := Result + UTF8Of(C);
+          Inc(I, 6);
+          Continue;
+        end;
+      end;
+      { any other escape (\\, \", \n, \u0022, a lone surrogate) as is }
+      Result := Result + Line[I] + Line[I + 1];
+      Inc(I, 2);
+      Continue;
+    end;
+    Result := Result + Line[I];
+    Inc(I);
+  end;
 end;
 
 function DoubleOfHex(const S: string): Double;
@@ -181,7 +261,7 @@ begin
     ReadLn(F, S);
     if S = '' then
       Continue;
-    J := GetJSON(S);
+    J := GetJSON(DecodeNonAsciiEscapes(S));
     try
       if not (Assigned(LineHandler) and LineHandler(TJSONObject(J))) then
         RunCase(TJSONObject(J), Handler);

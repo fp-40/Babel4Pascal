@@ -61,12 +61,13 @@ check locales sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' < '$OUT/dum
 check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '$OUT/dump-global.txt'"
 echo "== babel.core, babel.plural, babel.decimal vs their reference cases"
 mkdir -p "$OUT/vectors"
-for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \
+for prog in support/test_testkit core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \
     lists/test_lists units/test_units languages/test_languages format/test_format; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
 done
+check testkit "$OUT/bin/test_testkit"
 check core "$OUT/bin/test_core" "$ROOT/tests/core/reference.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
 echo "== babel.numbers vs its reference cases, round trips"

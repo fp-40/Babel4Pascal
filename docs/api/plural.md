@@ -234,7 +234,8 @@ The operands of a number, as plural conditions use them:
 - `V`, `W`: the number of visible fraction digits, with and without
   trailing zeros;
 - `F`, `T`: those fraction digits as an integer, with and without
-  trailing zeros;
+  trailing zeros (`'0.050'`: V = 3, W = 2, F = 50, T = 5; leading zeros
+  of the fraction count as digits);
 - `C`, `E`: the compact decimal exponent; always 0, as compact exponents
   are not supported.
 

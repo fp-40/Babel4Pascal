@@ -277,15 +277,14 @@ GetCurrencyUnitPattern('USD', 'en');   // {0} {1}
 NormalizeCurrency('usd');              // USD
 NormalizeCurrency('xyz');              // '' (not a currency)
 IsCurrency('EUR');                     // True
+FormatCurrency(1, 'usd', 'en');       // $1.00
 ValidateCurrency('XYZ');
 // EUnknownCurrencyError: Unknown currency 'XYZ'.
-FormatCurrency(1, 'usd', 'en');
-// EUnknownCurrencyError: Unknown currency 'usd'.
 ```
 
-Every function that takes a currency code raises `EUnknownCurrencyError`
-for a code that is not a currency; codes are upper case, and
-`NormalizeCurrency` converts one.
+Every function that takes a currency code accepts it in any letter case
+(`'usd'` is `'USD'`) and raises `EUnknownCurrencyError` for a code that
+is not a currency.
 
 `ListCurrencies` gives the ISO 4217 codes of the global data (307), or
 those a locale names (282 for `'es'`).

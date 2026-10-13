@@ -16,8 +16,8 @@ reads shared data and can be called from several threads.
 ### Exceptions
 
 `EUnknownCurrencyError = class(EBabelError)`
-: A currency code that is not in the data (codes are upper case: `'usd'`
-  is not one). Field `Identifier: string` holds the code. Raised by
+: A currency code that is not in the data, in any letter case (`'xyz'`;
+  `'usd'` is `'USD'`). Field `Identifier: string` holds the code. Raised by
   `ValidateCurrency` and by every function that takes a currency code:
   `GetCurrencyName`, `GetCurrencySymbol`, `GetCurrencyPrecision`,
   `GetCurrencyUnitPattern`, `FormatCurrency`, `FormatCompactCurrency`.
@@ -146,13 +146,14 @@ The ISO 4217 codes of the global data, or those the locale names; sorted.
 procedure ValidateCurrency(const Currency: string);
 procedure ValidateCurrency(const Currency: string; const Locale: TLocale);
 ```
-Raises `EUnknownCurrencyError` when the code is not listed.
+Raises `EUnknownCurrencyError` when the code, in any letter case, is not
+listed.
 
 ```pascal
 function IsCurrency(const Currency: string): Boolean;
 function IsCurrency(const Currency: string; const Locale: TLocale): Boolean;
 ```
-Whether the code is listed.
+Whether the code, in any letter case, is listed.
 
 ```pascal
 function NormalizeCurrency(const Currency: string): string;
@@ -253,7 +254,7 @@ function FormatCurrency(const Number: TDecimal; const Currency: string; const Lo
 ```
 The amount in the locale's currency pattern (`1099.98`, `'USD'`, `en`:
 `$1,099.98`). Raises `EUnknownCurrencyError` for a code that is not a
-currency (`'XYZ'`, `'usd'`) and `EUnknownCurrencyFormatError` for an
+currency (`'XYZ'`; `'usd'` is `'USD'`) and `EUnknownCurrencyFormatError` for an
 unknown format type.
 
 ```pascal
