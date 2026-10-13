@@ -83,6 +83,7 @@ begin
     AddDataUnits(P);
     P.Targets.AddUnit('babel.core.pas');
     P.Targets.AddUnit('babel.numbers.pas');
+    P.Targets.AddUnit('babel.tz.pas');
     Run;
   end;
 end.

@@ -17,6 +17,9 @@
 #    differences between CLDR 47 and 48 fail the run. Round trips
 #    (tests/numbers/test_roundtrip): ParseDecimal(FormatDecimal(x)) = x in
 #    every locale and numbering system.
+# 6. babel.tz against Python's zoneinfo on the system's tz database: every
+#    zone, offsets and DST at UTC instants and local times
+#    (tests/python/gen_tz_vectors.py + tests/tz/test_tz).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -52,7 +55,7 @@ check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '
 echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
-for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip; do
+for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
@@ -68,4 +71,7 @@ if command -v node > /dev/null; then
   "$OUT/bin/test_numbers" "$OUT/vectors/icu.jsonl" --update "$OUT/vectors/icu-ours.jsonl" > /dev/null
   check icu python3 -I "$ROOT/tests/js/check_icu.py" "$OUT/vectors/icu.jsonl" "$OUT/vectors/icu-ours.jsonl"
 fi
+echo "== babel.tz vs Python zoneinfo (system tz database)"
+check tz_vectors python3 -I "$ROOT/tests/python/gen_tz_vectors.py" "$OUT/vectors/tz.jsonl"
+check tz "$OUT/bin/test_tz" "$OUT/vectors/tz.jsonl"
 echo "== all passed"
