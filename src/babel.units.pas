@@ -12,6 +12,13 @@
   given as the value) are FormatUnitText and FormatCompoundUnitText here,
   as TDecimal converts from strings.
 
+  The results follow CLDR as ICU applies it where Babel departs from it
+  (tests/icu compares them with ICU4C): the plural form of the number as
+  shown ('1.0' shows '1': '1 meter'), the 'other' pattern for a missing
+  plural form, and the short data for what the long and narrow lengths
+  lack (CLDR's root aliases; Babel wrote the unit's id, '0
+  length-kilometer').
+
   Threading: everything here only reads shared data. }
 unit babel.units;
 
@@ -134,6 +141,32 @@ begin
   end;
 end;
 
+(* The lengths to look a unit's data up in: the one asked for, then
+  short, which CLDR's root aliases long and narrow to (de's long g-force
+  is its short 'G'). Babel looked in the length asked for only. *)
+function LengthChain(const Length: string): TStringArray;
+begin
+  if (Length = 'long') or (Length = 'narrow') then
+    Result := [Length, 'short']
+  else
+    Result := [Length];     { short, or a length CLDR does not have }
+end;
+
+(* The unit's entry Key (a plural form, 'per') in the first length of the
+  chain that has it; '' when none has. *)
+function UnitEntry(const Locale: TLocale; const QUnit, Length, Key: string): string;
+var
+  L: string;
+  V: TCLDRValue;
+begin
+  V := UnitPatterns(Locale).Get(QUnit);
+  if V <> nil then
+    for L in LengthChain(Length) do
+      if (V.Get(L) <> nil) and V.Get(L).Has(Key) then
+        Exit(V.Get(L).Str(Key));
+  Result := '';
+end;
+
 function UnknownUnit(const MeasurementUnit: string; const Locale: TLocale): EUnknownUnitError;
 begin
   Result := EUnknownUnitError.CreateFmt('%s is not a known unit in %s', [MeasurementUnit, Locale.ToString]);
@@ -141,31 +174,36 @@ end;
 
 function GetUnitName(const MeasurementUnit: string; const Locale: TLocale; const Length: string): string;
 var
-  QUnit: string;
+  QUnit, L: string;
   Names: TCLDRValue;
 begin
   QUnit := FindUnitPattern(MeasurementUnit, Locale);
   if QUnit = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
   Names := NeedKey(Locale, 'unit_display_names').Get(QUnit);
-  if Names = nil then
-    Exit('');
-  Result := Names.Str(Length, '');
+  Result := '';
+  if Names <> nil then
+    for L in LengthChain(Length) do
+      if Names.Has(L) then
+        Exit(Names.Str(L));
 end;
 
 { format_unit with the value formatted and its plural form. }
 function ApplyUnit(const FormattedValue, PluralForm, MeasurementUnit: string;
   const Locale: TLocale; const Options: TUnitOptions): string;
 var
-  QUnit, Name: string;
-  Patterns: TCLDRValue;
+  QUnit, Name, Pattern: string;
 begin
   QUnit := FindUnitPattern(MeasurementUnit, Locale);
   if QUnit = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
-  Patterns := UnitPatterns(Locale).Get(QUnit).Get(Options.Length);
-  if (Patterns <> nil) and Patterns.Has(PluralForm) then
-    Exit(PyFormat(Patterns.Str(PluralForm), [FormattedValue]));
+  { the plural form's pattern, else the 'other' one (CLDR's fallback for
+    a missing plural form; Babel wrote the unit's name instead) }
+  Pattern := UnitEntry(Locale, QUnit, Options.Length, PluralForm);
+  if Pattern = '' then
+    Pattern := UnitEntry(Locale, QUnit, Options.Length, 'other');
+  if Pattern <> '' then
+    Exit(PyFormat(Pattern, [FormattedValue]));
   Name := GetUnitName(MeasurementUnit, Locale, Options.Length);
   if Name = '' then
     Name := MeasurementUnit;
@@ -184,11 +222,16 @@ end;
 
 function FormatUnit(const Value: TDecimal; const MeasurementUnit: string; const Locale: TLocale;
   const Options: TUnitOptions): string;
+var
+  Formatted: string;
+  Shown: TDecimal;
 begin
   if FindUnitPattern(MeasurementUnit, Locale) = '' then
     raise UnknownUnit(MeasurementUnit, Locale);
-  Result := ApplyUnit(FormatDecimal(Value, Locale, NumberOptionsOf(Options)),
-    Locale.PluralForm.Evaluate(Value), MeasurementUnit, Locale, Options);
+  { the plural form of the number as shown ('1.0' is shown '1': '1
+    meter'; Babel took the value's: '1 meters') }
+  Formatted := FormatDecimalShown(Value, Locale, NumberOptionsOf(Options), Shown);
+  Result := ApplyUnit(Formatted, Locale.PluralForm.Evaluate(Shown), MeasurementUnit, Locale, Options);
 end;
 
 function FormatUnitText(const FormattedValue, MeasurementUnit: string; const Locale: TLocale;
@@ -228,7 +271,7 @@ end;
 function CompoundUnit(const Num: TQuantity; const NumeratorUnit: string; const Den: TQuantity;
   const DenominatorUnit: string; const Locale: TLocale; const Options: TUnitOptions): string;
 var
-  Compound, FormattedNumerator, FormattedDenominator, DUnit, PerPattern: string;
+  Compound, FormattedNumerator, FormattedDenominator, DUnit, PerPattern, L: string;
   V: TCLDRValue;
 begin
   if (NumeratorUnit <> '') and (DenominatorUnit <> '') and IsOne(Den) then
@@ -259,13 +302,9 @@ begin
         the unit without its number (TR35's per-unit algorithm, 3.2:
         ' second' stripped) *)
       DUnit := FindUnitPattern(DenominatorUnit, Locale);
-      V := UnitPatterns(Locale).Get(DUnit);
-      if V <> nil then
-        V := V.Get(Options.Length);
-      if V <> nil then
-        V := V.Get('per');
-      if (V <> nil) and (V.AsString <> '') then
-        Exit(PyFormat(V.AsString, [FormattedNumerator]));
+      PerPattern := UnitEntry(Locale, DUnit, Options.Length, 'per');
+      if PerPattern <> '' then
+        Exit(PyFormat(PerPattern, [FormattedNumerator]));
       FormattedDenominator := PyStrip(FormatUnitText('', DUnit, Locale, Options));
     end
     else
@@ -277,9 +316,12 @@ begin
   PerPattern := '{0}/{1}';
   V := NeedKey(Locale, 'compound_unit_patterns').Get('per');
   if V <> nil then
-    V := V.Get(Options.Length);
-  if (V <> nil) and V.Has('compound') then
-    PerPattern := V.Str('compound');
+    for L in LengthChain(Options.Length) do
+      if (V.Get(L) <> nil) and V.Get(L).Has('compound') then
+      begin
+        PerPattern := V.Get(L).Str('compound');
+        Break;
+      end;
   Result := PyFormat(PerPattern, [FormattedNumerator, FormattedDenominator]);
 end;
 

@@ -35,6 +35,9 @@ static const char *ITEMS[][6] = {
   {"uno", "otro", "hora", NULL}, {"Paris", "London", NULL},
   {"\xd7\x99\xd7\xa8\xd7\x95\xd7\xa9\xd7\x9c\xd7\x99\xd7\x9d", "Tel Aviv", NULL},
   {"\xd7\x9c\xd7\x95\xd7\x93", "\xd7\x99\xd7\xa8\xd7\x95\xd7\xa9\xd7\x9c\xd7\x99\xd7\x9d", NULL},
+  {"padre", "hijo", NULL}, {"Juan", "Ignacio", NULL}, {"diez", "once", NULL}, {"7", "8", NULL},
+  {"10", "11", NULL}, {"10", "110", NULL}, {"hoja", "hiato", NULL}, {"pan", "hielo", "hierro", NULL},
+  {"", "", NULL},
   {NULL}};
 static const char *STYLES[] = {"standard", "standard-short", "standard-narrow", "or", "or-short",
   "or-narrow", "unit", "unit-short", "unit-narrow", NULL};

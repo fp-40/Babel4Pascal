@@ -230,6 +230,10 @@ function GetDecimalQuantum(Precision: Int64): TDecimal;
 { Formatting }
 function FormatDecimal(const Number: TDecimal; const Locale: TLocale): string; overload;
 function FormatDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string; overload;
+{ FormatDecimal, and in Shown the number as shown (rounded, with its
+  fraction digits), from which plural forms are chosen. }
+function FormatDecimalShown(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions;
+  out Shown: TDecimal): string;
 function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale): string; overload;
 function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TCompactOptions): string; overload;
 function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string; overload;
@@ -1462,6 +1466,22 @@ begin
   AO.GroupSeparator := Options.GroupSeparator;
   AO.NumberingSystem := Options.NumberingSystem;
   Result := ParseNumberPattern(Fmt).Apply(Number, Locale, AO);
+end;
+
+function FormatDecimalShown(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions;
+  out Shown: TDecimal): string;
+var
+  Fmt: string;
+  AO: TApplyOptions;
+begin
+  Fmt := Options.Format;
+  if Fmt = '' then
+    Fmt := LocalePattern(Locale, 'decimal', Options.NumberingSystem);
+  AO := ApplyOptions;
+  AO.DecimalQuantization := Options.DecimalQuantization;
+  AO.GroupSeparator := Options.GroupSeparator;
+  AO.NumberingSystem := Options.NumberingSystem;
+  Result := ParseNumberPattern(Fmt).ApplyShown(Number, Locale, AO, Shown);
 end;
 
 { The compact form of Number: Value, the number to show (divided and

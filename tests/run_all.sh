@@ -25,7 +25,8 @@
 #    are installed, against ICU4C (tests/icu/README.md): differences other
 #    than the known data differences between CLDR 47 and 48 fail the run.
 # 8. babel.lists and babel.units against their reference cases
-#    (tests/lists/reference.jsonl, tests/units/reference.jsonl).
+#    (tests/lists/reference.jsonl, tests/units/reference.jsonl), and
+#    against ICU4C as in 7.
 #
 # The importer corrects errors of Babel's data import and leaves out
 # unconfirmed data. Check 2 runs it reproducing Babel (babel_compat);
@@ -101,4 +102,19 @@ fi
 echo "== babel.lists and babel.units vs their reference cases"
 check lists "$OUT/bin/test_lists" "$ROOT/tests/lists/reference.jsonl"
 check units "$OUT/bin/test_units" "$ROOT/tests/units/reference.jsonl"
+if command -v gcc > /dev/null && gcc -O2 tests/icu/icu_lists_units.c -o "$OUT/bin/icu_lists_units" \
+     -licui18n -licuuc > "$OUT/icu_lists_units.build.log" 2>&1; then
+  echo "== babel.lists and babel.units vs ICU4C"
+  "$OUT/bin/icu_lists_units" > "$OUT/vectors/icu_lists_units.jsonl" 2> /dev/null
+  grep '"icu_list"' "$OUT/vectors/icu_lists_units.jsonl" > "$OUT/vectors/icu_lists.jsonl"
+  grep '"icu_unit' "$OUT/vectors/icu_lists_units.jsonl" > "$OUT/vectors/icu_units.jsonl"
+  "$OUT/bin/test_lists" "$OUT/vectors/icu_lists.jsonl" --update "$OUT/vectors/icu_lists-ours.jsonl" > /dev/null
+  "$OUT/bin/test_units" "$OUT/vectors/icu_units.jsonl" --update "$OUT/vectors/icu_units-ours.jsonl" > /dev/null
+  check icu_lists python3 -I "$ROOT/tests/icu/check_icu.py" "$OUT/vectors/icu_lists.jsonl" \
+    "$OUT/vectors/icu_lists-ours.jsonl"
+  check icu_units python3 -I "$ROOT/tests/icu/check_icu.py" "$OUT/vectors/icu_units.jsonl" \
+    "$OUT/vectors/icu_units-ours.jsonl"
+else
+  echo "(babel.lists and babel.units vs ICU4C skipped: no gcc or ICU headers)"
+fi
 echo "== all passed"

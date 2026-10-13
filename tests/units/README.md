@@ -9,7 +9,11 @@
 purpose (minimum grouping digits, the locale's minus sign, native digits
 for the 'default' numbering system): 4 958 cases, each with a negative
 value, a value of four or more integer digits, or the 'default' numbering
-system. `test_units` runs them:
+system. Then `babel.units` departed from Babel to follow CLDR as ICU
+applies it: the plural form of the number as
+shown, the 'other' pattern for a missing plural form, and the short data
+for what the long and narrow lengths lack. The results are also compared
+with ICU4C (tests/icu/README.md). `test_units` runs them:
 
 ```sh
 build/bin/test_units tests/units/reference.jsonl

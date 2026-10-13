@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""Compare babel.dates' results with ICU4C's for the cases of
-tests/icu/icu_dates.c, allowing the differences listed in
+"""Compare the results of babel.dates, babel.lists or babel.units with
+ICU4C's for the cases of tests/icu/icu_dates.c or
+tests/icu/icu_lists_units.c, allowing the differences listed in
 tests/icu/known_differences.json (by operation, field and locale).
 
 Usage: check_icu.py ICU.jsonl OURS.jsonl
-  ICU.jsonl   written by icu_dates (tests/icu/icu_dates.c)
-  OURS.jsonl  the same cases with babel.dates' results
-              (test_dates ICU.jsonl --update OURS.jsonl)
-Exit status 1 when a difference is not listed, or a listed one no
-longer occurs (the list must stay current).
+  ICU.jsonl   written by icu_dates or icu_lists_units
+  OURS.jsonl  the same cases with the library's results
+              (test_dates ICU.jsonl --update OURS.jsonl, or test_lists,
+              test_units)
+Exit status 1 when a difference is not listed, or a listed one of the
+operations in ICU.jsonl no longer occurs (the list must stay current).
 """
 import collections
 import json
@@ -22,9 +24,16 @@ def result(o):
 
 def key(case):
     """'operation field locale': the pattern, the style or the skeleton,
-    or the unit and width of a relative time."""
+    the unit and width of a relative time, the list style, or the unit
+    and length."""
     op, a = case['op'], case['args']
-    if op == 'icu_pattern':
+    if op == 'icu_list':
+        field, locale = a[1], a[2]
+    elif op == 'icu_unit':
+        field, locale = a[1] + '/' + a[2], a[3]
+    elif op == 'icu_unit_per':
+        field, locale = a[1] + '-per-' + a[2] + '/' + a[3], a[4]
+    elif op == 'icu_pattern':
         field, locale = a[2], a[3]
     elif op == 'icu_style':
         field, locale = a[2] + '/' + a[3], a[4]
@@ -57,7 +66,8 @@ def main(argv):
     for i, o in unexpected[:30]:
         print(f"{i['op']} {json.dumps(i['args'], ensure_ascii=False)}: "
               f"ICU {result(i)!r} ours {result(o)!r}")
-    stale = sorted(set(known) - set(allowed))
+    ops = {case['op'] for case in icu}
+    stale = sorted(k for k in set(known) - set(allowed) if k.split(' ', 1)[0] in ops)
     for k in stale:
         print(f'listed but not found: {k}')
     print(f'{len(icu)} cases: {len(icu) - sum(allowed.values()) - len(unexpected)} equal, '
