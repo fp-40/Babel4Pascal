@@ -7,9 +7,10 @@ resolved), as in a fresh process.
 The reference is the oracle, Babel 2.18.0 with CLDR 47 (tools/oracle.py
 downloads it into .cache/oracle).
 
-The data errors of Babel that the importer corrects (oracle.CORRECTED_KEYS)
-are corrected in Babel's files before Babel merges them, so the
-comparison still checks the merge.
+Babel reads each locale's data from the importer
+(oracle.correct_babel_data), which corrects errors of Babel's import, so
+the comparison checks the encoding, merge and alias resolution of the
+Pascal library against Babel's on the same data.
 
 Usage: dumpdata | tests/python/compare_dump.py
        dumpdata --global | tests/python/compare_dump.py --global

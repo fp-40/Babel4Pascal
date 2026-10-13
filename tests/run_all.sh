@@ -25,9 +25,10 @@
 #    are installed, against ICU4C (tests/icu/README.md): differences other
 #    than the known data differences between CLDR 47 and 48 fail the run.
 #
-# The importer corrects some errors of Babel's data (tools/oracle.py,
-# CORRECTED_KEYS). Check 2 runs it reproducing them (babel_compat); checks
-# 3 and 4 read Babel's data files with the corrections applied.
+# The importer corrects errors of Babel's data import and leaves out
+# unconfirmed data. Check 2 runs it reproducing Babel (babel_compat);
+# checks 3 and 4 run Babel's code on the importer's data
+# (tools/oracle.py, correct_babel_data).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.

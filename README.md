@@ -30,11 +30,14 @@ started as an exact reproduction of Babel's output and then departed
 from it where Babel does not follow CLDR, taking ICU (the reference
 implementation of CLDR) as the reference for those cases: the numbers
 and dates checks compare with ICU's results. The importer corrects a few
-errors of Babel's data import (`tools/oracle.py`, `CORRECTED_KEYS`): the
-week of locales without a region (CLDR uses the likely region: `en` is
-US, weeks from Sunday), week keys of unlisted territories, alternate
-skeletons and interval formats (`alt="ascii"`), the region format's
-variants, and zone names of unconfirmed status. The other checks compare
+errors of Babel's data import: the week of locales without a region
+(CLDR uses the likely region: `en` is US, weeks from Sunday), week keys
+of unlisted territories, alternate skeletons and interval formats
+(`alt="ascii"`), the region format's variants; and, as ICU, it leaves out
+the data of unconfirmed or provisional status (`draft` attribute), which
+Babel imports: those values are inherited from the parent locale. In its
+`babel_compat` mode it reproduces Babel's files exactly. The other checks
+compare
 against Babel 2.18.0, the "oracle" (`tools/oracle.py` downloads its wheel
 from PyPI into `.cache/oracle`; no install is needed).
 
@@ -146,8 +149,9 @@ options.
    errors, `babel_compat`);
 3. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (merged and alias-resolved), against
-   the oracle's `load()` reading its files with the importer's
-   corrections, for every generated locale and the global data;
+   the oracle's `load()` reading the importer's data
+   (`oracle.correct_babel_data`), for every generated locale and the
+   global data;
 4. `tests/core/test_core` with vectors from
    `tests/python/gen_core_vectors.py`: identifiers, `Locale.parse`,
    negotiation, names and properties of every generated locale, plural

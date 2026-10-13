@@ -50,44 +50,65 @@ def ensure():
     return dest
 
 
-# The keys of the locale data that tools/cldrgen/importer.py reads
-# differently from Babel 2.18, correcting its errors: the week of locales
-# without a region, the alternate skeletons and interval formats, the
-# region format's variants taken for the plain one, and the zone names of
-# unconfirmed status.
-CORRECTED_KEYS = ('week_data', 'datetime_skeletons', 'interval_formats', 'zone_formats',
-                  'time_zones', 'meta_zones')
+# Where the values of Babel's locale data are objects rather than strings.
+DATE_PATTERN_KEYS = ('date_formats', 'time_formats', 'datetime_skeletons')
+NUMBER_PATTERN_KEYS = ('decimal_formats', 'currency_formats', 'percent_formats',
+                       'scientific_formats', 'compact_decimal_formats', 'compact_currency_formats')
+
+
+def to_babel(value, key=None):
+    """Locale data from tools/cldrgen/importer.py in Babel's representation:
+    patterns parsed, plural rules and aliases as Babel's objects. key: the
+    top-level key the value belongs to."""
+    from babel import dates, numbers
+    from babel.localedata import Alias as BabelAlias
+    from babel.plural import PluralRule
+    from cldrgen.model import Alias
+    if isinstance(value, Alias):
+        return BabelAlias(value.keys)
+    if key in ('plural_form', 'ordinal_form'):
+        return PluralRule(value)
+    if isinstance(value, dict):
+        return {k: to_babel(v, k if key is None else key) for k, v in value.items()}
+    if isinstance(value, list):
+        return [to_babel(v, key) for v in value]
+    if isinstance(value, str) and key in DATE_PATTERN_KEYS:
+        return dates.parse_pattern(value)
+    if isinstance(value, str) and key in NUMBER_PATTERN_KEYS:
+        return numbers.parse_pattern(value)
+    return value
 
 
 def correct_babel_data():
-    """Make Babel read the corrected values of CORRECTED_KEYS (the
-    importer's, from the same CLDR release) from every locale data file,
-    so that the checks compare Babel's code on the corrected data. Call
-    after ensure(), before Babel loads any locale."""
+    """Make Babel read each locale's data from tools/cldrgen/importer.py
+    (the same CLDR release) instead of its locale-data files, so that the
+    checks run Babel's code on the corrected data: the importer departs
+    from Babel's import where it is wrong (week data of the likely region
+    and of unlisted territories, alternate skeletons and interval formats,
+    region format variants, unconfirmed and provisional data). With
+    babel_compat the importer reproduces Babel's files exactly
+    (tools/check_import.py). Call after ensure(), before Babel loads any
+    locale."""
     import pickle
     import subprocess
     from babel import localedata
     sys.path.insert(0, os.path.join(ROOT, 'tools'))
-    from cldrgen.importer import LocaleImporter
+    from cldrgen.importer import EXTRA_LOCALE_KEYS, LocaleImporter
     common = subprocess.run([sys.executable, '-I', os.path.join(ROOT, 'tools', 'gencldr.py'), 'fetch'],
                             check=True, capture_output=True, text=True).stdout.strip()
     imp = LocaleImporter(common)
-    cache = {}
 
     class Loader:
         @staticmethod
         def load(fileobj):
             data = pickle.load(fileobj)
             name = os.path.splitext(os.path.basename(fileobj.name))[0]
-            if os.path.exists(os.path.join(common, 'main', name + '.xml')):
-                if name not in cache:
-                    ours = imp.import_locale(name)
-                    cache[name] = {k: ours[k] for k in CORRECTED_KEYS if k in ours}
-                for k in CORRECTED_KEYS:      # in place: the key order stays
-                    if k in cache[name]:
-                        data[k] = cache[name][k]
-                    else:
-                        data.pop(k, None)
-            return data
+            if not os.path.exists(os.path.join(common, 'main', name + '.xml')):
+                return data
+            ours = {k: v for k, v in imp.import_locale(name).items() if k not in EXTRA_LOCALE_KEYS}
+            corrected = to_babel(ours)
+            if '_version' in data:
+                corrected['_version'] = data['_version']
+            return corrected
 
     localedata.pickle = Loader

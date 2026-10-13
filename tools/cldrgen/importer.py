@@ -59,6 +59,25 @@ def _parse(path):
     return ElementTree.parse(path)
 
 
+def _drop_unconfirmed(tree):
+    """Remove the elements of unconfirmed or provisional status (and what
+    they contain), as ICU does: their values are inherited from the parent
+    locale instead (fr's short 'TU' for UTC is unconfirmed). Babel imports
+    them. Contributed and approved data stay."""
+    parents = {child: parent for parent in tree.iter() for child in parent}
+    for elem in [e for e in tree.iter() if e.attrib.get('draft') in ('unconfirmed', 'provisional')]:
+        parent = parents.get(elem)
+        if parent is None or elem not in list(parent):
+            continue        # already removed with an ancestor
+        parent.remove(elem)
+        # a container left empty goes too (a dateFormatLength whose only
+        # pattern was unconfirmed), so that the parent's value is used
+        while parent in parents and len(parent) == 0 and not (parent.text or '').strip():
+            grand = parents[parent]
+            grand.remove(parent)
+            parent = grand
+
+
 def _text(elem):
     buf = [elem.text or '']
     for child in elem:
@@ -419,6 +438,8 @@ class LocaleImporter:
 
     def import_locale(self, name):
         tree = _parse(os.path.join(self.srcdir, 'main', name + '.xml'))
+        if not self.babel_compat:
+            _drop_unconfirmed(tree)
         language = None
         elem = tree.find('.//identity/language')
         if elem is not None:
@@ -564,24 +585,17 @@ def _parse_dates(data, tree, sup, regions, territory, babel_compat=False):
                 zone_formats[key] = convert(str(elem.text))
                 break
 
-    # The names of unconfirmed or provisional status are left out, as ICU
-    # does (fr's short 'TU' for UTC); Babel took them.
-    def confirmed(e):
-        return babel_compat or e.attrib.get('draft') not in ('unconfirmed', 'provisional')
-
     for key, tag in (('time_zones', 'zone'), ('meta_zones', 'metazone')):
         dest = data.setdefault(key, {})
         for elem in tree.findall('.//timeZoneNames/' + tag):
             info = {}
-            city = elem.find('exemplarCity')
-            if city is not None and city.text and confirmed(city):
-                info['city'] = str(city.text)
+            city = elem.findtext('exemplarCity')
+            if city:
+                info['city'] = str(city)
             for child in elem.findall('long/*'):
-                if confirmed(child):
-                    info.setdefault('long', {})[child.tag] = str(child.text)
+                info.setdefault('long', {})[child.tag] = str(child.text)
             for child in elem.findall('short/*'):
-                if confirmed(child):
-                    info.setdefault('short', {})[child.tag] = str(child.text)
+                info.setdefault('short', {})[child.tag] = str(child.text)
             dest[elem.attrib['type']] = info
 
 
