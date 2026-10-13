@@ -27,6 +27,8 @@
 # 8. babel.lists and babel.units against their reference cases
 #    (tests/lists/reference.jsonl, tests/units/reference.jsonl), and
 #    against ICU4C as in 7.
+# 9. babel.languages and babel.support (TFormat) against their reference
+#    cases (tests/languages/reference.jsonl, tests/format/reference.jsonl).
 #
 # The importer corrects errors of Babel's data import and leaves out
 # unconfirmed data. Check 2 runs it reproducing Babel (babel_compat);
@@ -68,7 +70,7 @@ echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
 for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \
-    lists/test_lists units/test_units; do
+    lists/test_lists units/test_units languages/test_languages format/test_format; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
@@ -117,4 +119,7 @@ if command -v gcc > /dev/null && gcc -O2 tests/icu/icu_lists_units.c -o "$OUT/bi
 else
   echo "(babel.lists and babel.units vs ICU4C skipped: no gcc or ICU headers)"
 fi
+echo "== babel.languages and babel.support vs their reference cases"
+check languages "$OUT/bin/test_languages" "$ROOT/tests/languages/reference.jsonl"
+check format "$OUT/bin/test_format" "$ROOT/tests/format/reference.jsonl"
 echo "== all passed"

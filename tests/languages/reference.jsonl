@@ -1,0 +1,1320 @@
+{ "op" : "official", "args" : ["AC", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["AC", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["AC", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["AC", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["AC"], "expect" : [["en", 9.9000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["AD", false, false], "expect" : ["ca"] }
+{ "op" : "official", "args" : ["AD", false, true], "expect" : ["ca"] }
+{ "op" : "official", "args" : ["AD", true, false], "expect" : ["ca"] }
+{ "op" : "official", "args" : ["AD", true, true], "expect" : ["ca"] }
+{ "op" : "info", "args" : ["AD"], "expect" : [["ca", 5.1000000000000000E+001, "official"], ["es", 4.3000000000000000E+001, ""], ["fr", 6.7999999999999998E+000, ""]] }
+{ "op" : "official", "args" : ["AE", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["AE", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["AE", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["AE", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["AE"], "expect" : [["ar", 7.8000000000000000E+001, "official"], ["en", 5.0000000000000000E+001, ""], ["ml", 7.0000000000000000E+000, ""], ["ps", 2.8999999999999999E+000, ""], ["bal", 2.2999999999999998E+000, ""], ["fa", 1.8999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["AF", false, false], "expect" : ["fa", "ps"] }
+{ "op" : "official", "args" : ["AF", false, true], "expect" : ["fa", "ps"] }
+{ "op" : "official", "args" : ["AF", true, false], "expect" : ["fa", "ps", "uz_Arab", "tk"] }
+{ "op" : "official", "args" : ["AF", true, true], "expect" : ["fa", "ps", "uz_Arab", "tk"] }
+{ "op" : "info", "args" : ["AF"], "expect" : [["fa", 5.0000000000000000E+001, "official"], ["ps", 4.3000000000000000E+001, "official"], ["haz", 5.9000000000000004E+000, ""], ["uz_Arab", 4.7000000000000002E+000, "official_regional"], ["tk", 1.7000000000000000E+000, "official_regional"], ["prd", 1.2000000000000000E+000, ""], ["bgn", 6.3000000000000000E-001, ""], ["kaa", 8.3999999999999995E-003, ""], ["ug", 7.4999999999999997E-003, ""], ["kk_Arab", 5.0000000000000001E-003, ""]] }
+{ "op" : "official", "args" : ["AG", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AG", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AG", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AG", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["AG"], "expect" : [["en", 8.6000000000000000E+001, "official"], ["pt", 1.6000000000000001E+000, ""]] }
+{ "op" : "official", "args" : ["AI", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AI", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AI", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AI", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["AI"], "expect" : [["en", 9.5000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["AL", false, false], "expect" : ["sq"] }
+{ "op" : "official", "args" : ["AL", false, true], "expect" : ["sq"] }
+{ "op" : "official", "args" : ["AL", true, false], "expect" : ["sq"] }
+{ "op" : "official", "args" : ["AL", true, true], "expect" : ["sq"] }
+{ "op" : "info", "args" : ["AL"], "expect" : [["sq", 1.0000000000000000E+002, "official"], ["el", 1.8999999999999999E+000, ""], ["mk", 4.6999999999999997E-001, ""]] }
+{ "op" : "official", "args" : ["AM", false, false], "expect" : ["hy"] }
+{ "op" : "official", "args" : ["AM", false, true], "expect" : ["hy"] }
+{ "op" : "official", "args" : ["AM", true, false], "expect" : ["hy"] }
+{ "op" : "official", "args" : ["AM", true, true], "expect" : ["hy"] }
+{ "op" : "info", "args" : ["AM"], "expect" : [["hy", 9.8000000000000000E+001, "official"], ["ku", 3.2999999999999998E+000, ""], ["az", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["AO", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["AO", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["AO", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["AO", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["AO"], "expect" : [["pt", 6.7000000000000000E+001, "official"], ["umb", 2.9000000000000000E+001, ""], ["kmb", 2.5000000000000000E+001, ""], ["ln", 6.7000000000000004E-001, ""]] }
+{ "op" : "official", "args" : ["AQ", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["AQ", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["AQ", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["AQ", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["AQ"], "expect" : [["und", 1.0000000000000000E+002, ""]] }
+{ "op" : "official", "args" : ["AR", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["AR", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["AR", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["AR", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["AR"], "expect" : [["es", 1.0000000000000000E+002, "official"], ["en", 7.0000000000000000E+000, ""], ["cy", 6.6000000000000003E-002, ""], ["gn", 4.7000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["AS", false, false], "expect" : ["sm"] }
+{ "op" : "official", "args" : ["AS", false, true], "expect" : ["sm", "en"] }
+{ "op" : "official", "args" : ["AS", true, false], "expect" : ["sm"] }
+{ "op" : "official", "args" : ["AS", true, true], "expect" : ["sm", "en"] }
+{ "op" : "info", "args" : ["AS"], "expect" : [["sm", 9.9000000000000000E+001, "official"], ["en", 9.7000000000000000E+001, "de_facto_official"]] }
+{ "op" : "official", "args" : ["AT", false, false], "expect" : ["de"] }
+{ "op" : "official", "args" : ["AT", false, true], "expect" : ["de"] }
+{ "op" : "official", "args" : ["AT", true, false], "expect" : ["de", "hr", "sl", "hu"] }
+{ "op" : "official", "args" : ["AT", true, true], "expect" : ["de", "hr", "sl", "hu"] }
+{ "op" : "info", "args" : ["AT"], "expect" : [["de", 9.7000000000000000E+001, "official"], ["bar", 9.5000000000000000E+001, ""], ["en", 7.3000000000000000E+001, ""], ["fr", 1.3000000000000000E+001, ""], ["it", 9.0000000000000000E+000, ""], ["hr", 1.2000000000000000E+000, "official_regional"], ["sl", 3.7000000000000000E-001, "official_regional"], ["hu", 2.6000000000000001E-001, "official_regional"]] }
+{ "op" : "official", "args" : ["AU", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["AU", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["AU", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["AU", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["AU"], "expect" : [["en", 9.6000000000000000E+001, "de_facto_official"], ["zh_Hant", 2.1000000000000001E+000, ""], ["it", 1.8999999999999999E+000, ""], ["wbp", 9.2999999999999992E-003, ""], ["hnj", 8.2000000000000007E-003, ""]] }
+{ "op" : "official", "args" : ["AW", false, false], "expect" : ["nl", "pap"] }
+{ "op" : "official", "args" : ["AW", false, true], "expect" : ["nl", "pap"] }
+{ "op" : "official", "args" : ["AW", true, false], "expect" : ["nl", "pap"] }
+{ "op" : "official", "args" : ["AW", true, true], "expect" : ["nl", "pap"] }
+{ "op" : "info", "args" : ["AW"], "expect" : [["nl", 9.7000000000000000E+001, "official"], ["pap", 6.1000000000000000E+001, "official"], ["en", 2.3999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["AX", false, false], "expect" : ["sv"] }
+{ "op" : "official", "args" : ["AX", false, true], "expect" : ["sv"] }
+{ "op" : "official", "args" : ["AX", true, false], "expect" : ["sv"] }
+{ "op" : "official", "args" : ["AX", true, true], "expect" : ["sv"] }
+{ "op" : "info", "args" : ["AX"], "expect" : [["sv", 9.9000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["AZ", false, false], "expect" : ["az", "az_Cyrl"] }
+{ "op" : "official", "args" : ["AZ", false, true], "expect" : ["az", "az_Cyrl"] }
+{ "op" : "official", "args" : ["AZ", true, false], "expect" : ["az", "az_Cyrl"] }
+{ "op" : "official", "args" : ["AZ", true, true], "expect" : ["az", "az_Cyrl"] }
+{ "op" : "info", "args" : ["AZ"], "expect" : [["az", 8.9000000000000000E+001, "official"], ["az_Cyrl", 9.9000000000000004E+000, "official"], ["tly", 9.8000000000000007E+000, ""], ["ku", 2.3999999999999999E-001, ""], ["ttt", 2.2000000000000000E-001, ""], ["tkr", 1.6000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["BA", false, false], "expect" : ["bs_Cyrl", "bs", "hr", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["BA", false, true], "expect" : ["bs_Cyrl", "bs", "hr", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["BA", true, false], "expect" : ["bs_Cyrl", "bs", "hr", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["BA", true, true], "expect" : ["bs_Cyrl", "bs", "hr", "sr_Latn", "sr"] }
+{ "op" : "info", "args" : ["BA"], "expect" : [["bs", 9.9000000000000000E+001, "official"], ["bs_Cyrl", 9.9000000000000000E+001, "official"], ["en", 4.5000000000000000E+001, ""], ["hr", 1.2000000000000000E+001, "official"], ["sr", 1.0000000000000000E+001, "official"], ["sr_Latn", 1.0000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["BB", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BB", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BB", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BB", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["BB"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["BD", false, false], "expect" : ["bn"] }
+{ "op" : "official", "args" : ["BD", false, true], "expect" : ["bn"] }
+{ "op" : "official", "args" : ["BD", true, false], "expect" : ["bn"] }
+{ "op" : "official", "args" : ["BD", true, true], "expect" : ["bn"] }
+{ "op" : "info", "args" : ["BD"], "expect" : [["bn", 9.8000000000000000E+001, "official"], ["en", 1.8000000000000000E+001, ""], ["rkt", 6.5000000000000000E+000, ""], ["syl", 5.0000000000000000E+000, ""], ["rhg", 5.3000000000000003E-001, ""], ["ccp", 2.2000000000000000E-001, ""], ["my", 2.0999999999999999E-001, ""], ["grt", 7.2999999999999995E-002, ""], ["mro", 1.7999999999999999E-002, ""], ["mni", 1.0999999999999999E-002, ""]] }
+{ "op" : "official", "args" : ["BE", false, false], "expect" : ["nl", "fr", "de"] }
+{ "op" : "official", "args" : ["BE", false, true], "expect" : ["nl", "fr", "de"] }
+{ "op" : "official", "args" : ["BE", true, false], "expect" : ["nl", "fr", "de"] }
+{ "op" : "official", "args" : ["BE", true, true], "expect" : ["nl", "fr", "de"] }
+{ "op" : "info", "args" : ["BE"], "expect" : [["en", 5.9000000000000000E+001, ""], ["nl", 5.5000000000000000E+001, "official"], ["fr", 3.8000000000000000E+001, "official"], ["de", 2.2000000000000000E+001, "official"], ["vls", 1.0000000000000000E+001, ""], ["wa", 5.7999999999999998E+000, ""]] }
+{ "op" : "official", "args" : ["BF", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BF", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BF", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BF", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["BF"], "expect" : [["mos", 4.0000000000000000E+001, ""], ["dyu", 3.2000000000000000E+001, ""], ["fr", 2.5000000000000000E+001, "official"], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["BG", false, false], "expect" : ["bg"] }
+{ "op" : "official", "args" : ["BG", false, true], "expect" : ["bg"] }
+{ "op" : "official", "args" : ["BG", true, false], "expect" : ["bg"] }
+{ "op" : "official", "args" : ["BG", true, true], "expect" : ["bg"] }
+{ "op" : "info", "args" : ["BG"], "expect" : [["bg", 1.0000000000000000E+002, "official"], ["en", 2.5000000000000000E+001, ""], ["ru", 2.3000000000000000E+001, ""], ["tr", 1.1000000000000000E+001, ""], ["de", 8.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["BH", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["BH", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["BH", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["BH", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["BH"], "expect" : [["ar", 8.7000000000000000E+001, "official"], ["ml", 3.2999999999999998E+000, ""]] }
+{ "op" : "official", "args" : ["BI", false, false], "expect" : ["rn", "fr", "en"] }
+{ "op" : "official", "args" : ["BI", false, true], "expect" : ["rn", "fr", "en"] }
+{ "op" : "official", "args" : ["BI", true, false], "expect" : ["rn", "fr", "en"] }
+{ "op" : "official", "args" : ["BI", true, true], "expect" : ["rn", "fr", "en"] }
+{ "op" : "info", "args" : ["BI"], "expect" : [["rn", 6.3000000000000000E+001, "official"], ["fr", 5.9000000000000000E+001, "official"], ["sw", 4.7000000000000000E-002, ""], ["en", 4.5999999999999999E-002, "official"]] }
+{ "op" : "official", "args" : ["BJ", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BJ", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BJ", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BJ", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["BJ"], "expect" : [["fr", 3.4000000000000000E+001, "official"], ["fon", 2.5000000000000000E+001, ""], ["yo", 6.7000000000000002E+000, ""], ["blo", 2.9999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["BL", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BL", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BL", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["BL", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["BL"], "expect" : [["fr", 8.5000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["BM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["BM"], "expect" : [["en", 9.2000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["BN", false, false], "expect" : ["ms", "ms_Arab"] }
+{ "op" : "official", "args" : ["BN", false, true], "expect" : ["ms", "ms_Arab"] }
+{ "op" : "official", "args" : ["BN", true, false], "expect" : ["ms", "ms_Arab"] }
+{ "op" : "official", "args" : ["BN", true, true], "expect" : ["ms", "ms_Arab"] }
+{ "op" : "info", "args" : ["BN"], "expect" : [["ms", 9.3000000000000000E+001, "official"], ["zh_Hant", 1.1000000000000000E+001, ""], ["ms_Arab", 5.0000000000000000E+000, "official"], ["en", 1.6000000000000001E+000, ""]] }
+{ "op" : "official", "args" : ["BO", false, false], "expect" : ["es", "qu", "ay"] }
+{ "op" : "official", "args" : ["BO", false, true], "expect" : ["es", "qu", "ay"] }
+{ "op" : "official", "args" : ["BO", true, false], "expect" : ["es", "qu", "ay"] }
+{ "op" : "official", "args" : ["BO", true, true], "expect" : ["es", "qu", "ay"] }
+{ "op" : "info", "args" : ["BO"], "expect" : [["es", 6.1000000000000000E+001, "official"], ["qu", 3.2000000000000000E+001, "official"], ["ay", 2.0000000000000000E+001, "official"], ["gn", 4.5000000000000001E-001, ""], ["aro", 8.9999999999999998E-004, ""]] }
+{ "op" : "official", "args" : ["BQ", false, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["BQ", false, true], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["BQ", true, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["BQ", true, true], "expect" : ["nl"] }
+{ "op" : "info", "args" : ["BQ"], "expect" : [["pap", 8.1000000000000000E+001, ""], ["nl", 8.0000000000000000E+000, "official"]] }
+{ "op" : "official", "args" : ["BR", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["BR", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["BR", true, false], "expect" : ["pt", "vec"] }
+{ "op" : "official", "args" : ["BR", true, true], "expect" : ["pt", "vec"] }
+{ "op" : "info", "args" : ["BR"], "expect" : [["pt", 9.1000000000000000E+001, "official"], ["en", 8.0000000000000000E+000, ""], ["de", 8.3999999999999997E-001, ""], ["it", 2.8000000000000003E-001, ""], ["vec", 2.3999999999999999E-001, "official_regional"], ["ja", 2.0999999999999999E-001, ""], ["es", 3.5999999999999997E-002, ""], ["kgp", 2.4000000000000000E-002, ""], ["ko", 2.1000000000000001E-002, ""], ["yrl", 1.0000000000000000E-002, ""], ["gub", 8.3999999999999995E-003, ""], ["xav", 4.4999999999999997E-003, ""]] }
+{ "op" : "official", "args" : ["BS", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BS", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BS", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BS", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["BS"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["BT", false, false], "expect" : ["dz"] }
+{ "op" : "official", "args" : ["BT", false, true], "expect" : ["dz"] }
+{ "op" : "official", "args" : ["BT", true, false], "expect" : ["dz"] }
+{ "op" : "official", "args" : ["BT", true, true], "expect" : ["dz"] }
+{ "op" : "info", "args" : ["BT"], "expect" : [["dz", 4.7000000000000000E+001, "official"], ["ne", 1.7000000000000000E+001, ""], ["tsj", 1.5000000000000000E+001, ""], ["en", 1.1000000000000000E+001, ""], ["lep", 3.8999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["BV", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["BV", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["BV", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["BV", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["BV"], "expect" : [["no", 1.0000000000000000E+002, ""]] }
+{ "op" : "official", "args" : ["BW", false, false], "expect" : ["en", "tn"] }
+{ "op" : "official", "args" : ["BW", false, true], "expect" : ["en", "tn"] }
+{ "op" : "official", "args" : ["BW", true, false], "expect" : ["en", "tn"] }
+{ "op" : "official", "args" : ["BW", true, true], "expect" : ["en", "tn"] }
+{ "op" : "info", "args" : ["BW"], "expect" : [["en", 8.1000000000000000E+001, "official"], ["tn", 6.2000000000000000E+001, "official"], ["af", 2.3999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["BY", false, false], "expect" : ["be", "ru"] }
+{ "op" : "official", "args" : ["BY", false, true], "expect" : ["be", "ru"] }
+{ "op" : "official", "args" : ["BY", true, false], "expect" : ["be", "ru"] }
+{ "op" : "official", "args" : ["BY", true, true], "expect" : ["be", "ru"] }
+{ "op" : "info", "args" : ["BY"], "expect" : [["be", 1.0000000000000000E+002, "official"], ["ru", 1.2000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["BZ", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BZ", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BZ", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["BZ", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["BZ"], "expect" : [["en", 1.0000000000000000E+002, "official"], ["es", 2.8000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["CA", false, false], "expect" : ["en", "fr"] }
+{ "op" : "official", "args" : ["CA", false, true], "expect" : ["en", "fr"] }
+{ "op" : "official", "args" : ["CA", true, false], "expect" : ["en", "fr", "iu_Latn", "iu", "crk", "chp", "den", "dgr", "gwi"] }
+{ "op" : "official", "args" : ["CA", true, true], "expect" : ["en", "fr", "iu_Latn", "iu", "crk", "chp", "den", "dgr", "gwi"] }
+{ "op" : "info", "args" : ["CA"], "expect" : [["en", 8.7000000000000000E+001, "official"], ["fr", 2.9000000000000000E+001, "official"], ["es", 3.2000000000000002E+000, ""], ["zh", 2.7000000000000002E+000, ""], ["pa", 2.6000000000000001E+000, ""], ["ar", 2.2999999999999998E+000, ""], ["hi", 2.1000000000000001E+000, ""], ["fil", 2.0000000000000000E+000, ""], ["yue", 2.0000000000000000E+000, ""], ["it", 1.5000000000000000E+000, ""], ["de", 1.2000000000000000E+000, ""], ["ur", 1.1000000000000001E+000, ""], ["pt", 9.3000000000000005E-001, ""], ["ru", 8.4999999999999998E-001, ""], ["ta", 6.5000000000000002E-001, ""], ["vi", 6.4000000000000001E-001, ""], ["fa", 6.0999999999999999E-001, ""], ["gu", 5.7999999999999996E-001, ""], ["pl", 5.6000000000000005E-001, ""], ["ko", 5.6000000000000005E-001, ""], ["el", 4.0000000000000002E-001, ""], ["uk", 3.5999999999999999E-001, ""], ["bn", 3.3000000000000002E-001, ""], ["ro", 3.2000000000000001E-001, ""], ["nl", 2.9999999999999999E-001, ""], ["ja", 2.7000000000000002E-001, ""], ["sr", 2.3000000000000001E-001, ""], ["tr", 2.2000000000000000E-001, ""], ["hr", 2.0000000000000001E-001, ""], ["hu", 1.7999999999999999E-001, ""], ["so", 1.6000000000000000E-001, ""], ["iu", 1.1000000000000000E-001, "official_regional"], ["iu_Latn", 1.1000000000000000E-001, "official_regional"], ["pdt", 1.1000000000000000E-001, ""], ["oj", 7.1999999999999995E-002, ""], ["ojs", 4.2000000000000003E-002, ""], ["crk", 3.3000000000000002E-002, "official_regional"], ["chp", 3.2000000000000001E-002, "official_regional"], ["moe", 2.9999999999999999E-002, ""], ["mic", 2.4000000000000000E-002, ""], ["atj", 1.7999999999999999E-002, ""], ["bla", 1.7000000000000001E-002, ""], ["cr", 1.2999999999999999E-002, ""], ["crl", 1.2999999999999999E-002, ""], ["csw", 1.2000000000000000E-002, ""], ["war", 1.2000000000000000E-002, ""], ["ojw", 9.4000000000000004E-003, ""], ["den", 6.0000000000000001E-003, "official_regional"], ["dgr", 5.4999999999999997E-003, "official_regional"], ["crg", 4.8999999999999998E-003, ""], ["moh", 4.1000000000000003E-003, ""], ["dak", 3.8999999999999998E-003, ""], ["hur", 3.5999999999999999E-003, ""], ["nsk", 2.7000000000000001E-003, ""], ["clc", 2.2000000000000001E-003, ""], ["kwk", 2.0999999999999999E-003, ""], ["pqm", 2.0999999999999999E-003, ""], ["oka", 1.8000000000000000E-003, ""], ["lil", 1.5000000000000000E-003, ""], ["gwi", 8.0000000000000004E-004, "official_regional"]] }
+{ "op" : "official", "args" : ["CC", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["CC", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CC", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["CC", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["CC"], "expect" : [["ms_Arab", 8.4000000000000000E+001, ""], ["en", 1.7000000000000000E+001, "de_facto_official"]] }
+{ "op" : "official", "args" : ["CD", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CD", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CD", true, false], "expect" : ["fr", "sw", "lua", "ln", "kg"] }
+{ "op" : "official", "args" : ["CD", true, true], "expect" : ["fr", "sw", "lua", "ln", "kg"] }
+{ "op" : "info", "args" : ["CD"], "expect" : [["fr", 5.1000000000000000E+001, "official"], ["sw", 5.0000000000000000E+001, "official_regional"], ["lua", 9.5999999999999996E+000, "official_regional"], ["ln", 3.1000000000000001E+000, "official_regional"], ["lu", 2.2999999999999998E+000, ""], ["kg", 1.5000000000000000E+000, "official_regional"], ["lol", 6.0999999999999999E-001, ""], ["rw", 3.8000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["CF", false, false], "expect" : ["sg", "fr"] }
+{ "op" : "official", "args" : ["CF", false, true], "expect" : ["sg", "fr"] }
+{ "op" : "official", "args" : ["CF", true, false], "expect" : ["sg", "fr"] }
+{ "op" : "official", "args" : ["CF", true, true], "expect" : ["sg", "fr"] }
+{ "op" : "info", "args" : ["CF"], "expect" : [["sg", 4.9000000000000000E+001, "official"], ["fr", 2.9000000000000000E+001, "official"], ["ln", 2.3999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["CG", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CG", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CG", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CG", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["CG"], "expect" : [["fr", 6.1000000000000000E+001, "official"], ["ln", 2.3999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["CH", false, false], "expect" : ["de", "fr", "it"] }
+{ "op" : "official", "args" : ["CH", false, true], "expect" : ["de", "gsw", "fr", "it"] }
+{ "op" : "official", "args" : ["CH", true, false], "expect" : ["de", "fr", "it", "rm"] }
+{ "op" : "official", "args" : ["CH", true, true], "expect" : ["de", "gsw", "fr", "it", "rm"] }
+{ "op" : "info", "args" : ["CH"], "expect" : [["de", 7.6000000000000000E+001, "official"], ["gsw", 6.6000000000000000E+001, "de_facto_official"], ["en", 4.5000000000000000E+001, ""], ["fr", 3.9000000000000000E+001, "official"], ["it", 1.5000000000000000E+001, "official"], ["lmo", 4.0999999999999996E+000, ""], ["pt", 3.3999999999999999E+000, ""], ["rm", 5.0000000000000000E-001, "official_regional"], ["rmo", 2.8999999999999998E-001, ""], ["wae", 1.1000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["CI", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CI", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CI", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["CI", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["CI"], "expect" : [["fr", 3.4000000000000000E+001, "official"], ["bci", 1.1000000000000000E+001, ""], ["sef", 4.2999999999999998E+000, ""], ["dnj", 4.0000000000000000E+000, ""], ["kfo", 2.3000000000000001E-001, ""], ["bqv", 1.7000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["CK", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CK", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CK", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CK", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["CK"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["CL", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CL", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CL", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CL", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["CL"], "expect" : [["es", 9.8000000000000000E+001, "official"], ["en", 9.5000000000000000E+000, ""], ["arn", 1.5000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["CM", false, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["CM", false, true], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["CM", true, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["CM", true, true], "expect" : ["fr", "en"] }
+{ "op" : "info", "args" : ["CM"], "expect" : [["fr", 6.8000000000000000E+001, "official"], ["en", 3.8000000000000000E+001, "official"], ["bum", 4.5999999999999996E+000, ""], ["ff", 3.6000000000000001E+000, ""], ["ewo", 3.1000000000000001E+000, ""], ["ybb", 1.6000000000000001E+000, ""], ["bbj", 1.3999999999999999E+000, ""], ["nnh", 1.3999999999999999E+000, ""], ["bkm", 1.3000000000000000E+000, ""], ["bas", 1.2000000000000000E+000, ""], ["bax", 1.2000000000000000E+000, ""], ["byv", 1.1000000000000001E+000, ""], ["mua", 1.0000000000000000E+000, ""], ["maf", 7.3999999999999999E-001, ""], ["bfd", 5.6999999999999995E-001, ""], ["bss", 5.4000000000000004E-001, ""], ["kkj", 5.4000000000000004E-001, ""], ["dua", 4.7999999999999998E-001, ""], ["mgo", 4.6999999999999997E-001, ""], ["ar", 3.9000000000000001E-001, ""], ["jgo", 3.4000000000000002E-001, ""], ["ksf", 3.2000000000000001E-001, ""], ["ken", 2.5000000000000000E-001, ""], ["agq", 1.4000000000000001E-001, ""], ["ha_Arab", 1.4000000000000001E-001, ""], ["nmg", 2.9000000000000001E-002, ""], ["yav", 7.4000000000000003E-003, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["CN", false, false], "expect" : ["zh"] }
+{ "op" : "official", "args" : ["CN", false, true], "expect" : ["zh"] }
+{ "op" : "official", "args" : ["CN", true, false], "expect" : ["zh", "ug", "za", "mn_Mong", "bo", "ko"] }
+{ "op" : "official", "args" : ["CN", true, true], "expect" : ["zh", "ug", "za", "mn_Mong", "bo", "ko"] }
+{ "op" : "info", "args" : ["CN"], "expect" : [["zh", 9.0000000000000000E+001, "official"], ["wuu", 6.0000000000000000E+000, ""], ["yue", 5.2000000000000002E+000, ""], ["yue_Hans", 5.2000000000000002E+000, ""], ["hsn", 2.8999999999999999E+000, ""], ["hak", 2.2999999999999998E+000, ""], ["nan", 1.8999999999999999E+000, ""], ["gan", 1.7000000000000000E+000, ""], ["ii", 5.9999999999999998E-001, ""], ["ug", 5.5000000000000004E-001, "official_regional"], ["za", 3.1000000000000000E-001, "official_regional"], ["mn_Mong", 2.6000000000000001E-001, "official_regional"], ["bo", 2.0000000000000001E-001, "official_regional"], ["ko", 1.4999999999999999E-001, "official_regional"], ["kk_Arab", 8.5000000000000006E-002, ""], ["lis", 4.4999999999999998E-002, ""], ["ky_Arab", 3.4000000000000002E-002, ""], ["nxq", 2.4000000000000000E-002, ""], ["khb", 1.9000000000000000E-002, ""], ["tdd", 1.9000000000000000E-002, ""], ["lcp", 5.7999999999999996E-003, ""], ["en", 4.4999999999999997E-003, ""], ["hnj", 4.0000000000000001E-003, ""], ["ru", 1.0000000000000000E-003, ""], ["vi", 5.0000000000000001E-004, ""], ["uz_Cyrl", 4.0000000000000002E-004, ""], ["lzh", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["CO", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CO", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CO", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CO", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["CO"], "expect" : [["es", 9.3000000000000000E+001, "official"], ["guc", 2.7000000000000002E-001, ""], ["yrl", 6.0000000000000001E-003, ""]] }
+{ "op" : "official", "args" : ["CP", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["CP", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["CP", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["CP", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["CP"], "expect" : [["und", 1.0000000000000000E+002, ""]] }
+{ "op" : "official", "args" : ["CQ", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CQ", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CQ", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CQ", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["CQ"], "expect" : [["en", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["CR", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CR", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CR", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CR", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["CR"], "expect" : [["es", 9.5000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["CU", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CU", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CU", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["CU", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["CU"], "expect" : [["es", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["CV", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["CV", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["CV", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["CV", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["CV"], "expect" : [["kea", 9.1000000000000000E+001, ""], ["pt", 7.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["CW", false, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["CW", false, true], "expect" : ["pap", "nl"] }
+{ "op" : "official", "args" : ["CW", true, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["CW", true, true], "expect" : ["pap", "nl"] }
+{ "op" : "info", "args" : ["CW"], "expect" : [["pap", 8.1000000000000000E+001, "de_facto_official"], ["nl", 8.0000000000000000E+000, "official"], ["es", 3.7000000000000002E+000, ""]] }
+{ "op" : "official", "args" : ["CX", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CX", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CX", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["CX", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["CX"], "expect" : [["en", 8.3000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["CY", false, false], "expect" : ["el", "tr"] }
+{ "op" : "official", "args" : ["CY", false, true], "expect" : ["el", "tr"] }
+{ "op" : "official", "args" : ["CY", true, false], "expect" : ["el", "tr"] }
+{ "op" : "official", "args" : ["CY", true, true], "expect" : ["el", "tr"] }
+{ "op" : "info", "args" : ["CY"], "expect" : [["el", 9.5000000000000000E+001, "official"], ["en", 7.3000000000000000E+001, ""], ["tr", 2.3000000000000000E+001, "official"], ["fr", 6.5999999999999996E+000, ""], ["hy", 2.0999999999999999E-001, ""], ["ar", 9.8000000000000004E-002, ""], ["ecy", 1.0000000000000000E-004, ""]] }
+{ "op" : "official", "args" : ["CZ", false, false], "expect" : ["cs"] }
+{ "op" : "official", "args" : ["CZ", false, true], "expect" : ["cs"] }
+{ "op" : "official", "args" : ["CZ", true, false], "expect" : ["cs"] }
+{ "op" : "official", "args" : ["CZ", true, true], "expect" : ["cs"] }
+{ "op" : "info", "args" : ["CZ"], "expect" : [["cs", 9.8000000000000000E+001, "official"], ["en", 2.7000000000000000E+001, ""], ["sk", 1.6000000000000000E+001, ""], ["de", 1.5000000000000000E+001, ""], ["pl", 4.8999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["DE", false, false], "expect" : ["de"] }
+{ "op" : "official", "args" : ["DE", false, true], "expect" : ["de"] }
+{ "op" : "official", "args" : ["DE", true, false], "expect" : ["de", "frr"] }
+{ "op" : "official", "args" : ["DE", true, true], "expect" : ["de", "frr"] }
+{ "op" : "info", "args" : ["DE"], "expect" : [["de", 9.1000000000000000E+001, "official"], ["en", 6.4000000000000000E+001, ""], ["fr", 1.8000000000000000E+001, ""], ["bar", 1.7000000000000000E+001, ""], ["nds", 1.2000000000000000E+001, ""], ["nl", 9.0000000000000000E+000, ""], ["it", 7.0000000000000000E+000, ""], ["es", 6.0000000000000000E+000, ""], ["ru", 6.0000000000000000E+000, ""], ["vmf", 6.0000000000000000E+000, ""], ["tr", 2.5000000000000000E+000, ""], ["gsw", 2.2999999999999998E+000, ""], ["da", 2.0000000000000000E+000, ""], ["swg", 1.0000000000000000E+000, ""], ["hr", 7.9000000000000004E-001, ""], ["ku", 6.6000000000000003E-001, ""], ["el", 3.8000000000000000E-001, ""], ["ksh", 2.9999999999999999E-001, ""], ["pl", 2.8999999999999998E-001, ""], ["hsb", 1.6000000000000000E-002, ""], ["frr", 1.2000000000000000E-002, "official_regional"], ["dsb", 8.3000000000000001E-003, ""], ["frs", 2.3999999999999998E-003, ""], ["stq", 1.1999999999999999E-003, ""], ["pfl", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["DG", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["DG", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["DG", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["DG", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["DG"], "expect" : [["en", 9.9000000000000000E+001, "de_facto_official"]] }
+{ "op" : "official", "args" : ["DJ", false, false], "expect" : ["fr", "ar"] }
+{ "op" : "official", "args" : ["DJ", false, true], "expect" : ["fr", "ar"] }
+{ "op" : "official", "args" : ["DJ", true, false], "expect" : ["fr", "ar"] }
+{ "op" : "official", "args" : ["DJ", true, true], "expect" : ["fr", "ar"] }
+{ "op" : "info", "args" : ["DJ"], "expect" : [["fr", 5.0000000000000000E+001, "official"], ["aa", 4.2000000000000000E+001, ""], ["so", 4.1000000000000000E+001, ""], ["ar", 7.2999999999999998E+000, "official"]] }
+{ "op" : "official", "args" : ["DK", false, false], "expect" : ["da"] }
+{ "op" : "official", "args" : ["DK", false, true], "expect" : ["da"] }
+{ "op" : "official", "args" : ["DK", true, false], "expect" : ["da", "de", "kl"] }
+{ "op" : "official", "args" : ["DK", true, true], "expect" : ["da", "de", "kl"] }
+{ "op" : "info", "args" : ["DK"], "expect" : [["da", 9.3000000000000000E+001, "official"], ["en", 8.6000000000000000E+001, ""], ["de", 4.7000000000000000E+001, "official_regional"], ["sv", 1.3000000000000000E+001, ""], ["fo", 3.8000000000000000E-001, ""], ["kl", 1.2000000000000000E-001, "official_regional"], ["jut", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["DM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["DM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["DM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["DM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["DM"], "expect" : [["en", 9.4000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["DO", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["DO", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["DO", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["DO", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["DO"], "expect" : [["es", 7.8000000000000000E+001, "official"], ["en", 7.3999999999999996E-002, ""]] }
+{ "op" : "official", "args" : ["DZ", false, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["DZ", false, true], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["DZ", true, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["DZ", true, true], "expect" : ["ar", "fr"] }
+{ "op" : "info", "args" : ["DZ"], "expect" : [["arq", 8.3000000000000000E+001, ""], ["ar", 7.4000000000000000E+001, "official"], ["fr", 3.3000000000000000E+001, "official"], ["kab", 7.7999999999999998E+000, ""], ["en", 7.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["EA", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["EA", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["EA", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["EA", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["EA"], "expect" : [["es", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["EC", false, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["EC", false, true], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["EC", true, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["EC", true, true], "expect" : ["es", "qu"] }
+{ "op" : "info", "args" : ["EC"], "expect" : [["es", 9.6000000000000000E+001, "official"], ["qu", 1.7000000000000000E+001, "official"], ["qug", 5.7000000000000002E+000, ""]] }
+{ "op" : "official", "args" : ["EE", false, false], "expect" : ["et"] }
+{ "op" : "official", "args" : ["EE", false, true], "expect" : ["et"] }
+{ "op" : "official", "args" : ["EE", true, false], "expect" : ["et"] }
+{ "op" : "official", "args" : ["EE", true, true], "expect" : ["et"] }
+{ "op" : "info", "args" : ["EE"], "expect" : [["et", 7.1000000000000000E+001, "official"], ["ru", 5.6000000000000000E+001, ""], ["en", 5.0000000000000000E+001, ""], ["fi", 2.1000000000000000E+001, ""], ["vro", 5.7000000000000002E+000, ""], ["ie", 1.0000000000000000E-004, ""]] }
+{ "op" : "official", "args" : ["EG", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EG", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EG", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EG", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["EG"], "expect" : [["ar", 9.4000000000000000E+001, "official"], ["arz", 6.4000000000000000E+001, ""], ["en", 3.5000000000000000E+001, ""], ["cop", 6.0000000000000000E+000, ""], ["el", 6.0999999999999999E-002, ""]] }
+{ "op" : "official", "args" : ["EH", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EH", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EH", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["EH", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["EH"], "expect" : [["ar", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["ER", false, false], "expect" : ["en", "ar"] }
+{ "op" : "official", "args" : ["ER", false, true], "expect" : ["ti", "en", "ar"] }
+{ "op" : "official", "args" : ["ER", true, false], "expect" : ["en", "ar"] }
+{ "op" : "official", "args" : ["ER", true, true], "expect" : ["ti", "en", "ar"] }
+{ "op" : "info", "args" : ["ER"], "expect" : [["ti", 6.0000000000000000E+001, "de_facto_official"], ["en", 5.9000000000000000E+001, "official"], ["tig", 1.8000000000000000E+001, ""], ["ar", 4.9000000000000004E+000, "official"], ["aa", 3.6000000000000001E+000, ""], ["ssy", 3.6000000000000001E+000, ""], ["byn", 1.3000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["ES", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["ES", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["ES", true, false], "expect" : ["es", "ca", "gl", "eu", "ast", "oc"] }
+{ "op" : "official", "args" : ["ES", true, true], "expect" : ["es", "ca", "gl", "eu", "ast", "oc"] }
+{ "op" : "info", "args" : ["ES"], "expect" : [["es", 9.9000000000000000E+001, "official"], ["en", 2.4000000000000000E+001, ""], ["ca", 1.7000000000000000E+001, "official_regional"], ["gl", 7.0000000000000000E+000, "official_regional"], ["eu", 2.0000000000000000E+000, "official_regional"], ["ast", 1.3000000000000000E+000, "official_regional"], ["ext", 4.8999999999999999E-001, ""], ["an", 5.1999999999999998E-002, ""], ["oc", 1.0000000000000000E-002, "official_regional"]] }
+{ "op" : "official", "args" : ["ET", false, false], "expect" : ["am"] }
+{ "op" : "official", "args" : ["ET", false, true], "expect" : ["am"] }
+{ "op" : "official", "args" : ["ET", true, false], "expect" : ["am"] }
+{ "op" : "official", "args" : ["ET", true, true], "expect" : ["am"] }
+{ "op" : "info", "args" : ["ET"], "expect" : [["en", 4.3000000000000000E+001, ""], ["am", 3.3000000000000000E+001, "official"], ["om", 3.2000000000000000E+001, ""], ["so", 6.0000000000000000E+000, ""], ["ti", 6.0000000000000000E+000, ""], ["sid", 3.5000000000000000E+000, ""], ["wal", 1.8000000000000000E+000, ""], ["aa", 1.3999999999999999E+000, ""], ["gez", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["FI", false, false], "expect" : ["fi", "sv"] }
+{ "op" : "official", "args" : ["FI", false, true], "expect" : ["fi", "sv"] }
+{ "op" : "official", "args" : ["FI", true, false], "expect" : ["fi", "sv", "sms"] }
+{ "op" : "official", "args" : ["FI", true, true], "expect" : ["fi", "sv", "sms"] }
+{ "op" : "info", "args" : ["FI"], "expect" : [["fi", 9.4000000000000000E+001, "official"], ["en", 7.0000000000000000E+001, ""], ["sv", 4.4000000000000000E+001, "official"], ["de", 1.8000000000000000E+001, ""], ["ru", 8.1000000000000005E-001, ""], ["et", 1.1000000000000000E-001, ""], ["rmf", 8.8999999999999996E-002, ""], ["se", 3.5999999999999997E-002, ""], ["smn", 1.0999999999999999E-002, ""], ["sms", 1.0999999999999999E-002, "official_regional"]] }
+{ "op" : "official", "args" : ["FJ", false, false], "expect" : ["en", "hif", "fj"] }
+{ "op" : "official", "args" : ["FJ", false, true], "expect" : ["en", "hif", "fj"] }
+{ "op" : "official", "args" : ["FJ", true, false], "expect" : ["en", "hif", "fj"] }
+{ "op" : "official", "args" : ["FJ", true, true], "expect" : ["en", "hif", "fj"] }
+{ "op" : "info", "args" : ["FJ"], "expect" : [["en", 9.4000000000000000E+001, "official"], ["hi", 4.4000000000000000E+001, ""], ["hif", 4.1000000000000000E+001, "official"], ["fj", 3.9000000000000000E+001, "official"], ["rtm", 2.6000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["FK", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FK", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FK", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FK", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["FK"], "expect" : [["en", 7.7000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["FM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["FM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["FM"], "expect" : [["en", 5.7000000000000000E+001, "official"], ["chk", 3.0000000000000000E+001, ""], ["pon", 2.3000000000000000E+001, ""], ["kos", 8.0000000000000000E+000, ""], ["yap", 6.5999999999999996E+000, ""], ["uli", 3.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["FO", false, false], "expect" : ["fo"] }
+{ "op" : "official", "args" : ["FO", false, true], "expect" : ["fo"] }
+{ "op" : "official", "args" : ["FO", true, false], "expect" : ["fo"] }
+{ "op" : "official", "args" : ["FO", true, true], "expect" : ["fo"] }
+{ "op" : "info", "args" : ["FO"], "expect" : [["fo", 9.5000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["FR", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["FR", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["FR", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["FR", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["FR"], "expect" : [["fr", 9.7000000000000000E+001, "official"], ["en", 3.9000000000000000E+001, ""], ["es", 1.3000000000000000E+001, ""], ["de", 5.0000000000000000E+000, ""], ["oc", 3.0000000000000000E+000, ""], ["it", 1.7000000000000000E+000, ""], ["pt", 1.3000000000000000E+000, ""], ["pcd", 1.1000000000000001E+000, ""], ["gsw", 9.1000000000000003E-001, ""], ["br", 8.2999999999999996E-001, ""], ["co", 2.3999999999999999E-001, ""], ["hnj", 1.9000000000000000E-001, ""], ["ca", 1.7000000000000001E-001, ""], ["nl", 1.3000000000000000E-001, ""], ["eu", 1.3000000000000000E-001, ""], ["frp", 9.4000000000000000E-002, ""], ["ia", 2.0000000000000001E-004, ""]] }
+{ "op" : "official", "args" : ["GA", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GA", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GA", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GA", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["GA"], "expect" : [["fr", 6.3000000000000000E+001, "official"], ["puu", 9.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GB", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GB", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GB", true, false], "expect" : ["en", "cy", "ga", "gd"] }
+{ "op" : "official", "args" : ["GB", true, true], "expect" : ["en", "cy", "ga", "gd"] }
+{ "op" : "info", "args" : ["GB"], "expect" : [["en", 9.8000000000000000E+001, "official"], ["fr", 1.7000000000000000E+001, ""], ["de", 9.0000000000000000E+000, ""], ["es", 8.0000000000000000E+000, ""], ["pl", 4.0000000000000000E+000, ""], ["pa", 3.6000000000000001E+000, ""], ["ur", 3.5000000000000000E+000, ""], ["ta", 3.2000000000000002E+000, ""], ["gu", 2.8999999999999999E+000, ""], ["sco", 2.5000000000000000E+000, ""], ["cy", 1.3000000000000000E+000, "official_regional"], ["ro", 8.0000000000000004E-001, ""], ["bn", 4.0000000000000002E-001, ""], ["ar", 2.9999999999999999E-001, ""], ["zh_Hant", 2.9999999999999999E-001, ""], ["it", 2.0000000000000001E-001, ""], ["lt", 2.0000000000000001E-001, ""], ["pt", 2.0000000000000001E-001, ""], ["so", 2.0000000000000001E-001, ""], ["tr", 2.0000000000000001E-001, ""], ["ga", 1.4999999999999999E-001, "official_regional"], ["gd", 1.1000000000000000E-001, "official_regional"], ["kw", 2.8999999999999998E-003, ""], ["en_Shaw", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GD", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GD", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GD", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GD", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GD"], "expect" : [["en", 9.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["GE", false, false], "expect" : ["ka"] }
+{ "op" : "official", "args" : ["GE", false, true], "expect" : ["ka"] }
+{ "op" : "official", "args" : ["GE", true, false], "expect" : ["ka", "os", "ab"] }
+{ "op" : "official", "args" : ["GE", true, true], "expect" : ["ka", "os", "ab"] }
+{ "op" : "info", "args" : ["GE"], "expect" : [["ka", 8.6000000000000000E+001, "official"], ["xmf", 1.1000000000000000E+001, ""], ["ru", 9.0000000000000000E+000, ""], ["hy", 7.0000000000000000E+000, ""], ["ab", 2.2000000000000002E+000, "official_regional"], ["os", 2.2000000000000002E+000, "official_regional"], ["ku", 8.9000000000000001E-001, ""], ["lzz_Geor", 2.0000000000000000E-003, ""]] }
+{ "op" : "official", "args" : ["GF", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GF", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GF", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GF", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["GF"], "expect" : [["fr", 6.2000000000000000E+001, "official"], ["gcr", 2.6000000000000000E+001, ""], ["zh_Hant", 2.5000000000000000E+000, ""], ["hnj", 2.3999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["GG", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GG", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GG", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GG", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GG"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["GH", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GH", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GH", true, false], "expect" : ["ak", "en", "ee", "gaa"] }
+{ "op" : "official", "args" : ["GH", true, true], "expect" : ["ak", "en", "ee", "gaa"] }
+{ "op" : "info", "args" : ["GH"], "expect" : [["ak", 3.9000000000000000E+001, "official_regional"], ["en", 2.1000000000000000E+001, "official"], ["ee", 1.1000000000000000E+001, "official_regional"], ["abr", 5.0000000000000000E+000, ""], ["gur", 3.5000000000000000E+000, ""], ["ada", 3.0000000000000000E+000, ""], ["gaa", 2.7999999999999998E+000, "official_regional"], ["nzi", 1.0000000000000000E+000, ""], ["ha", 8.5999999999999999E-001, ""], ["saf", 1.2000000000000000E-002, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GI", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GI", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GI", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GI", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GI"], "expect" : [["en", 8.0000000000000000E+001, "official"], ["es", 5.0000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["GL", false, false], "expect" : ["kl"] }
+{ "op" : "official", "args" : ["GL", false, true], "expect" : ["kl"] }
+{ "op" : "official", "args" : ["GL", true, false], "expect" : ["kl"] }
+{ "op" : "official", "args" : ["GL", true, true], "expect" : ["kl"] }
+{ "op" : "info", "args" : ["GL"], "expect" : [["kl", 8.4000000000000000E+001, "official"], ["da", 1.4000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["GM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GM"], "expect" : [["en", 4.0000000000000000E+001, "official"], ["man", 2.9000000000000000E+001, ""], ["man_Nkoo", 2.9000000000000000E+001, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GN", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GN", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GN", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GN", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["GN"], "expect" : [["fr", 2.7000000000000000E+001, "official"], ["ff", 2.6000000000000000E+001, ""], ["man", 2.3000000000000000E+001, ""], ["man_Nkoo", 2.3000000000000000E+001, ""], ["sus", 1.1000000000000000E+001, ""], ["nqo", 5.0000000000000000E+000, ""], ["kpe", 3.7999999999999998E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GP", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GP", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GP", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["GP", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["GP"], "expect" : [["fr", 8.4000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["GQ", false, false], "expect" : ["es", "fr", "pt"] }
+{ "op" : "official", "args" : ["GQ", false, true], "expect" : ["es", "fr", "pt"] }
+{ "op" : "official", "args" : ["GQ", true, false], "expect" : ["es", "fr", "pt"] }
+{ "op" : "official", "args" : ["GQ", true, true], "expect" : ["es", "fr", "pt"] }
+{ "op" : "info", "args" : ["GQ"], "expect" : [["es", 8.7000000000000000E+001, "official"], ["fan", 5.1000000000000000E+001, ""], ["fr", 2.9000000000000000E+001, "official"], ["bvb", 7.9000000000000004E+000, ""], ["pt", 1.0000000000000000E-004, "official"]] }
+{ "op" : "official", "args" : ["GR", false, false], "expect" : ["el"] }
+{ "op" : "official", "args" : ["GR", false, true], "expect" : ["el"] }
+{ "op" : "official", "args" : ["GR", true, false], "expect" : ["el"] }
+{ "op" : "official", "args" : ["GR", true, true], "expect" : ["el"] }
+{ "op" : "info", "args" : ["GR"], "expect" : [["el", 9.9000000000000000E+001, "official"], ["en", 5.1000000000000000E+001, ""], ["fr", 7.2999999999999998E+000, ""], ["de", 5.0000000000000000E+000, ""], ["pnt", 3.7000000000000002E+000, ""], ["mk", 1.6000000000000001E+000, ""], ["tr", 1.2000000000000000E+000, ""], ["bg", 2.7000000000000002E-001, ""], ["sq", 9.6000000000000002E-002, ""], ["tsd", 1.9000000000000000E-003, ""], ["gmy", 0.0000000000000000E+000, ""], ["grc", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GS", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GS", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GS", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GS", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GS"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["GT", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["GT", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["GT", true, false], "expect" : ["es", "quc"] }
+{ "op" : "official", "args" : ["GT", true, true], "expect" : ["es", "quc"] }
+{ "op" : "info", "args" : ["GT"], "expect" : [["es", 9.3000000000000000E+001, "official"], ["quc", 7.0000000000000000E+000, "official_regional"]] }
+{ "op" : "official", "args" : ["GU", false, false], "expect" : ["ch"] }
+{ "op" : "official", "args" : ["GU", false, true], "expect" : ["en", "ch"] }
+{ "op" : "official", "args" : ["GU", true, false], "expect" : ["ch"] }
+{ "op" : "official", "args" : ["GU", true, true], "expect" : ["en", "ch"] }
+{ "op" : "info", "args" : ["GU"], "expect" : [["en", 9.1000000000000000E+001, "de_facto_official"], ["ch", 2.2000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["GW", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["GW", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["GW", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["GW", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["GW"], "expect" : [["pt", 1.0000000000000000E+002, "official"], ["fr", 1.5000000000000000E+001, ""], ["knf", 2.6000000000000001E+000, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["GY", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GY", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GY", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["GY", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["GY"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["HK", false, false], "expect" : ["zh_Hant", "en"] }
+{ "op" : "official", "args" : ["HK", false, true], "expect" : ["zh_Hant", "en"] }
+{ "op" : "official", "args" : ["HK", true, false], "expect" : ["zh_Hant", "en"] }
+{ "op" : "official", "args" : ["HK", true, true], "expect" : ["zh_Hant", "en"] }
+{ "op" : "info", "args" : ["HK"], "expect" : [["zh_Hant", 9.5000000000000000E+001, "official"], ["yue", 9.0000000000000000E+001, ""], ["en", 5.1000000000000000E+001, "official"], ["zh", 5.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["HM", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["HM", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["HM", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["HM", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["HM"], "expect" : [["und", 1.0000000000000000E+002, ""]] }
+{ "op" : "official", "args" : ["HN", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["HN", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["HN", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["HN", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["HN"], "expect" : [["es", 7.8000000000000000E+001, "official"], ["en", 4.4000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["HR", false, false], "expect" : ["hr"] }
+{ "op" : "official", "args" : ["HR", false, true], "expect" : ["hr"] }
+{ "op" : "official", "args" : ["HR", true, false], "expect" : ["hr", "it", "vec"] }
+{ "op" : "official", "args" : ["HR", true, true], "expect" : ["hr", "it", "vec"] }
+{ "op" : "info", "args" : ["HR"], "expect" : [["hr", 9.9000000000000000E+001, "official"], ["en", 4.9000000000000000E+001, ""], ["it", 1.6000000000000001E+000, "official_regional"], ["vec", 6.9999999999999996E-001, "official_regional"]] }
+{ "op" : "official", "args" : ["HT", false, false], "expect" : ["ht", "fr"] }
+{ "op" : "official", "args" : ["HT", false, true], "expect" : ["ht", "fr"] }
+{ "op" : "official", "args" : ["HT", true, false], "expect" : ["ht", "fr"] }
+{ "op" : "official", "args" : ["HT", true, true], "expect" : ["ht", "fr"] }
+{ "op" : "info", "args" : ["HT"], "expect" : [["ht", 8.1000000000000000E+001, "official"], ["fr", 4.2000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["HU", false, false], "expect" : ["hu"] }
+{ "op" : "official", "args" : ["HU", false, true], "expect" : ["hu"] }
+{ "op" : "official", "args" : ["HU", true, false], "expect" : ["hu"] }
+{ "op" : "official", "args" : ["HU", true, true], "expect" : ["hu"] }
+{ "op" : "info", "args" : ["HU"], "expect" : [["hu", 1.0000000000000000E+002, "official"], ["en", 2.0000000000000000E+001, ""], ["de", 1.8000000000000000E+001, ""], ["fr", 1.2000000000000000E+000, ""], ["ro", 9.8999999999999999E-001, ""], ["hr", 3.2000000000000001E-001, ""], ["sk", 1.2000000000000000E-001, ""], ["sl", 5.0999999999999997E-002, ""]] }
+{ "op" : "official", "args" : ["IC", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["IC", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["IC", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["IC", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["IC"], "expect" : [["es", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["ID", false, false], "expect" : ["id"] }
+{ "op" : "official", "args" : ["ID", false, true], "expect" : ["id"] }
+{ "op" : "official", "args" : ["ID", true, false], "expect" : ["id"] }
+{ "op" : "official", "args" : ["ID", true, true], "expect" : ["id"] }
+{ "op" : "info", "args" : ["ID"], "expect" : [["id", 6.4000000000000000E+001, "official"], ["jv", 3.4000000000000000E+001, ""], ["su", 1.2000000000000000E+001, ""], ["mad", 6.2999999999999998E+000, ""], ["ms", 3.3999999999999999E+000, ""], ["min", 3.0000000000000000E+000, ""], ["bew", 2.1000000000000001E+000, ""], ["ban", 1.8000000000000000E+000, ""], ["bug", 1.6000000000000001E+000, ""], ["bjn", 1.5000000000000000E+000, ""], ["ace", 1.3999999999999999E+000, ""], ["ms_Arab", 1.2000000000000000E+000, ""], ["sas", 9.6999999999999997E-001, ""], ["bbc", 9.2000000000000004E-001, ""], ["zh_Hant", 9.2000000000000004E-001, ""], ["mak", 7.2999999999999998E-001, ""], ["ljp", 6.8999999999999995E-001, ""], ["rej", 4.6000000000000002E-001, ""], ["gor", 4.0999999999999998E-001, ""], ["nij", 3.7000000000000000E-001, ""], ["kge", 3.2000000000000001E-001, ""], ["aoz", 2.7000000000000002E-001, ""], ["kvr", 1.4000000000000001E-001, ""], ["lbw", 1.3000000000000000E-001, ""], ["gay", 1.2000000000000000E-001, ""], ["rob", 1.1000000000000000E-001, ""], ["mdr", 9.1999999999999998E-002, ""], ["sxn", 9.1999999999999998E-002, ""], ["sly", 5.3999999999999999E-002, ""], ["mwv", 2.4000000000000000E-002, ""], ["ban_Bali", 0.0000000000000000E+000, ""], ["kaw", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["IE", false, false], "expect" : ["en", "ga"] }
+{ "op" : "official", "args" : ["IE", false, true], "expect" : ["en", "ga"] }
+{ "op" : "official", "args" : ["IE", true, false], "expect" : ["en", "ga"] }
+{ "op" : "official", "args" : ["IE", true, true], "expect" : ["en", "ga"] }
+{ "op" : "info", "args" : ["IE"], "expect" : [["en", 9.8000000000000000E+001, "official"], ["ga", 2.2000000000000000E+001, "official"], ["fr", 1.3000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["IL", false, false], "expect" : ["he", "ar"] }
+{ "op" : "official", "args" : ["IL", false, true], "expect" : ["he", "ar"] }
+{ "op" : "official", "args" : ["IL", true, false], "expect" : ["he", "ar"] }
+{ "op" : "official", "args" : ["IL", true, true], "expect" : ["he", "ar"] }
+{ "op" : "info", "args" : ["IL"], "expect" : [["he", 1.0000000000000000E+002, "official"], ["en", 8.5000000000000000E+001, ""], ["ar", 2.0000000000000000E+001, "official"], ["apc", 1.7000000000000000E+001, ""], ["ru", 1.1000000000000000E+001, ""], ["ro", 3.7000000000000002E+000, ""], ["yi", 3.0000000000000000E+000, ""], ["pl", 1.5000000000000000E+000, ""], ["lad", 1.3000000000000000E+000, ""], ["hu", 1.0000000000000000E+000, ""], ["am", 5.8999999999999997E-001, ""], ["ti", 1.1000000000000000E-001, ""], ["ml", 8.5000000000000006E-002, ""]] }
+{ "op" : "official", "args" : ["IM", false, false], "expect" : ["en", "gv"] }
+{ "op" : "official", "args" : ["IM", false, true], "expect" : ["en", "gv"] }
+{ "op" : "official", "args" : ["IM", true, false], "expect" : ["en", "gv"] }
+{ "op" : "official", "args" : ["IM", true, true], "expect" : ["en", "gv"] }
+{ "op" : "info", "args" : ["IM"], "expect" : [["en", 1.0000000000000000E+002, "official"], ["gv", 1.8000000000000000E+000, "official"]] }
+{ "op" : "official", "args" : ["IN", false, false], "expect" : ["hi", "en"] }
+{ "op" : "official", "args" : ["IN", false, true], "expect" : ["hi", "en"] }
+{ "op" : "official", "args" : ["IN", true, false], "expect" : ["hi", "en", "bn", "te", "mr", "ta", "ur", "gu", "kn", "or", "ml", "pa", "as", "mai", "ne", "sat", "ks", "kok", "sd", "sd_Deva", "kha", "sa"] }
+{ "op" : "official", "args" : ["IN", true, true], "expect" : ["hi", "en", "bn", "te", "mr", "ta", "ur", "gu", "kn", "or", "ml", "pa", "as", "mai", "ne", "sat", "ks", "kok", "sd", "sd_Deva", "kha", "sa"] }
+{ "op" : "info", "args" : ["IN"], "expect" : [["hi", 4.1000000000000000E+001, "official"], ["en", 1.9000000000000000E+001, "official"], ["bn", 8.0999999999999996E+000, "official_regional"], ["te", 7.2000000000000002E+000, "official_regional"], ["mr", 7.0000000000000000E+000, "official_regional"], ["ta", 5.9000000000000004E+000, "official_regional"], ["ur", 5.0000000000000000E+000, "official_regional"], ["gu", 4.5000000000000000E+000, "official_regional"], ["kn", 3.7000000000000002E+000, "official_regional"], ["ml", 3.2000000000000002E+000, "official_regional"], ["or", 3.2000000000000002E+000, "official_regional"], ["pa", 2.7999999999999998E+000, "official_regional"], ["bho", 2.2999999999999998E+000, ""], ["awa", 1.8999999999999999E+000, ""], ["as", 1.3000000000000000E+000, "official_regional"], ["bgc", 1.2000000000000000E+000, ""], ["mag", 1.2000000000000000E+000, ""], ["mwr", 1.2000000000000000E+000, ""], ["mai", 1.2000000000000000E+000, "official_regional"], ["hne", 1.1000000000000001E+000, ""], ["dcc", 9.8999999999999999E-001, ""], ["bjj", 5.6000000000000005E-001, ""], ["ne", 5.6000000000000005E-001, "official_regional"], ["sat", 5.5000000000000004E-001, "official_regional"], ["wtm", 4.6000000000000002E-001, ""], ["rkt", 4.2999999999999999E-001, ""], ["ks", 4.0999999999999998E-001, "official_regional"], ["knn", 3.7000000000000000E-001, ""], ["kok", 3.2000000000000001E-001, "official_regional"], ["swv", 2.8000000000000003E-001, ""], ["gbm", 2.7000000000000002E-001, ""], ["lmn", 2.7000000000000002E-001, ""], ["sd", 2.6000000000000001E-001, "official_regional"], ["gon", 2.3999999999999999E-001, ""], ["kfy", 2.2000000000000000E-001, ""], ["doi", 2.0000000000000001E-001, ""], ["kru", 1.9000000000000000E-001, ""], ["sck", 1.7999999999999999E-001, ""], ["wbq", 1.7999999999999999E-001, ""], ["xnr", 1.6000000000000000E-001, ""], ["tcy", 1.4999999999999999E-001, ""], ["wbr", 1.4999999999999999E-001, ""], ["khn", 1.4999999999999999E-001, ""], ["sd_Deva", 1.4000000000000001E-001, "official_regional"], ["brx", 1.4000000000000001E-001, ""], ["noe", 1.3000000000000000E-001, ""], ["bhb", 1.2000000000000000E-001, ""], ["mni", 1.1000000000000000E-001, ""], ["raj", 1.0000000000000001E-001, ""], ["hi_Latn", 1.0000000000000001E-001, ""], ["hoc", 9.9000000000000005E-002, ""], ["mtr", 9.7000000000000003E-002, ""], ["unr", 9.4000000000000000E-002, ""], ["bhi", 9.1999999999999998E-002, ""], ["hoj", 8.2000000000000003E-002, ""], ["kha", 8.0000000000000002E-002, "official_regional"], ["kfr", 7.4999999999999997E-002, ""], ["grt", 5.2999999999999999E-002, ""], ["unx", 4.8000000000000001E-002, ""], ["bfy", 3.6999999999999998E-002, ""], ["srx", 3.5000000000000003E-002, ""], ["saz", 2.9000000000000001E-002, ""], ["ccp", 2.8000000000000001E-002, ""], ["bfq", 2.3000000000000000E-002, ""], ["njo", 2.3000000000000000E-002, ""], ["ria", 1.2999999999999999E-002, ""], ["bo", 1.0999999999999999E-002, ""], ["bpy", 6.7999999999999996E-003, ""], ["bft", 6.1999999999999998E-003, ""], ["bra", 4.1000000000000003E-003, ""], ["lep", 3.5000000000000001E-003, ""], ["kxv", 2.8999999999999998E-003, ""], ["btv", 2.5999999999999999E-003, ""], ["lif", 2.5999999999999999E-003, ""], ["lah", 2.5000000000000001E-003, ""], ["sa", 1.1999999999999999E-003, "official_regional"], ["kht", 5.9999999999999995E-004, ""], ["dv", 2.9999999999999997E-004, ""], ["dz", 2.0000000000000001E-004, ""]] }
+{ "op" : "official", "args" : ["IO", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["IO", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["IO", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["IO", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["IO"], "expect" : [["en", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["IQ", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["IQ", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["IQ", true, false], "expect" : ["ar", "ckb", "az_Arab"] }
+{ "op" : "official", "args" : ["IQ", true, true], "expect" : ["ar", "ckb", "az_Arab"] }
+{ "op" : "info", "args" : ["IQ"], "expect" : [["ar", 6.8000000000000000E+001, "official"], ["en", 3.5000000000000000E+001, ""], ["ckb", 2.0000000000000000E+001, "official_regional"], ["az_Arab", 1.8000000000000000E+000, "official_regional"], ["fa", 8.7000000000000000E-001, ""], ["lrc", 6.0999999999999999E-001, ""], ["syr", 5.0000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["IR", false, false], "expect" : ["fa"] }
+{ "op" : "official", "args" : ["IR", false, true], "expect" : ["fa"] }
+{ "op" : "official", "args" : ["IR", true, false], "expect" : ["fa"] }
+{ "op" : "official", "args" : ["IR", true, true], "expect" : ["fa"] }
+{ "op" : "info", "args" : ["IR"], "expect" : [["fa", 7.5000000000000000E+001, "official"], ["az_Arab", 2.4000000000000000E+001, ""], ["mzn", 5.0000000000000000E+000, ""], ["glk", 4.5999999999999996E+000, ""], ["ckb", 3.8999999999999999E+000, ""], ["sdh", 3.7000000000000002E+000, ""], ["tk", 2.7999999999999998E+000, ""], ["lrc", 2.1000000000000001E+000, ""], ["ar", 2.0000000000000000E+000, ""], ["bal", 2.0000000000000000E+000, ""], ["rmt", 1.8999999999999999E+000, ""], ["bqi", 1.3999999999999999E+000, ""], ["luz", 1.2000000000000000E+000, ""], ["lki", 7.6000000000000001E-001, ""], ["kaa", 6.7000000000000004E-001, ""], ["bgn", 5.6000000000000005E-001, ""], ["prd", 5.0000000000000000E-001, ""], ["hy", 2.3999999999999999E-001, ""], ["ps", 1.6000000000000000E-001, ""], ["ka", 7.0999999999999994E-002, ""], ["gbz", 9.1000000000000004E-003, ""], ["kk_Arab", 3.3999999999999998E-003, ""]] }
+{ "op" : "official", "args" : ["IS", false, false], "expect" : ["is"] }
+{ "op" : "official", "args" : ["IS", false, true], "expect" : ["is"] }
+{ "op" : "official", "args" : ["IS", true, false], "expect" : ["is"] }
+{ "op" : "official", "args" : ["IS", true, true], "expect" : ["is"] }
+{ "op" : "info", "args" : ["IS"], "expect" : [["is", 1.0000000000000000E+002, "official"], ["da", 6.2000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["IT", false, false], "expect" : ["it"] }
+{ "op" : "official", "args" : ["IT", false, true], "expect" : ["it"] }
+{ "op" : "official", "args" : ["IT", true, false], "expect" : ["it", "fr", "vec"] }
+{ "op" : "official", "args" : ["IT", true, true], "expect" : ["it", "fr", "vec"] }
+{ "op" : "info", "args" : ["IT"], "expect" : [["it", 9.5000000000000000E+001, "official"], ["en", 3.4000000000000000E+001, ""], ["fr", 2.0000000000000000E+001, "official_regional"], ["lmo", 5.7000000000000002E+000, ""], ["sc", 1.7000000000000000E+000, ""], ["de", 1.6000000000000001E+000, ""], ["vec", 1.3000000000000000E+000, "official_regional"], ["nap", 9.6999999999999997E-001, ""], ["lij", 8.5999999999999999E-001, ""], ["scn", 8.1999999999999995E-001, ""], ["sl", 1.7000000000000001E-001, ""], ["sdc", 1.7000000000000001E-001, ""], ["fur", 5.9999999999999998E-002, ""], ["egl", 5.0000000000000003E-002, ""], ["lld", 4.8000000000000001E-002, ""], ["ca", 3.5000000000000003E-002, ""], ["el", 3.5000000000000003E-002, ""], ["pms", 1.0000000000000000E-002, ""], ["hr", 5.7000000000000002E-003, ""], ["mhn", 2.3000000000000000E-003, ""], ["rgn", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["JE", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JE", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JE", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JE", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["JE"], "expect" : [["en", 9.5000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["JM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["JM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["JM"], "expect" : [["en", 9.8000000000000000E+001, "official"], ["jam", 9.5000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["JO", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["JO", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["JO", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["JO", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["JO"], "expect" : [["ar", 1.0000000000000000E+002, "official"], ["apc", 6.6000000000000000E+001, ""], ["en", 4.5000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["JP", false, false], "expect" : ["ja"] }
+{ "op" : "official", "args" : ["JP", false, true], "expect" : ["ja"] }
+{ "op" : "official", "args" : ["JP", true, false], "expect" : ["ja"] }
+{ "op" : "official", "args" : ["JP", true, true], "expect" : ["ja"] }
+{ "op" : "info", "args" : ["JP"], "expect" : [["ja", 9.5000000000000000E+001, "official"], ["ryu", 7.7000000000000002E-001, ""], ["ko", 5.2000000000000002E-001, ""]] }
+{ "op" : "official", "args" : ["KE", false, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["KE", false, true], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["KE", true, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["KE", true, true], "expect" : ["sw", "en"] }
+{ "op" : "info", "args" : ["KE"], "expect" : [["sw", 6.6000000000000000E+001, "official"], ["en", 1.9000000000000000E+001, "official"], ["ki", 1.7000000000000000E+001, ""], ["luy", 1.1000000000000000E+001, ""], ["luo", 9.8000000000000007E+000, ""], ["kam", 7.5999999999999996E+000, ""], ["kln", 7.5999999999999996E+000, ""], ["guz", 4.9000000000000004E+000, ""], ["mer", 4.0000000000000000E+000, ""], ["mas", 1.6000000000000001E+000, ""], ["ebu", 1.5000000000000000E+000, ""], ["so", 1.3000000000000000E+000, ""], ["dav", 8.1999999999999995E-001, ""], ["teo", 7.3999999999999999E-001, ""], ["pko", 6.8999999999999995E-001, ""], ["om", 4.6999999999999997E-001, ""], ["saq", 4.6000000000000002E-001, ""], ["ar", 4.5999999999999999E-002, ""], ["pa", 1.7000000000000001E-002, ""], ["gu", 8.6000000000000000E-003, ""]] }
+{ "op" : "official", "args" : ["KG", false, false], "expect" : ["ky", "ru"] }
+{ "op" : "official", "args" : ["KG", false, true], "expect" : ["ky", "ru"] }
+{ "op" : "official", "args" : ["KG", true, false], "expect" : ["ky", "ru"] }
+{ "op" : "official", "args" : ["KG", true, true], "expect" : ["ky", "ru"] }
+{ "op" : "info", "args" : ["KG"], "expect" : [["ky", 4.8000000000000000E+001, "official"], ["ru", 3.6000000000000000E+001, "official"], ["kaa", 1.9000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["KH", false, false], "expect" : ["km"] }
+{ "op" : "official", "args" : ["KH", false, true], "expect" : ["km"] }
+{ "op" : "official", "args" : ["KH", true, false], "expect" : ["km"] }
+{ "op" : "official", "args" : ["KH", true, true], "expect" : ["km"] }
+{ "op" : "info", "args" : ["KH"], "expect" : [["km", 8.9000000000000000E+001, "official"], ["cja", 1.6000000000000001E+000, ""], ["kdt", 1.1000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["KI", false, false], "expect" : ["en", "gil"] }
+{ "op" : "official", "args" : ["KI", false, true], "expect" : ["en", "gil"] }
+{ "op" : "official", "args" : ["KI", true, false], "expect" : ["en", "gil"] }
+{ "op" : "official", "args" : ["KI", true, true], "expect" : ["en", "gil"] }
+{ "op" : "info", "args" : ["KI"], "expect" : [["en", 1.0000000000000000E+002, "official"], ["gil", 6.0000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["KM", false, false], "expect" : ["ar", "zdj", "wni", "fr"] }
+{ "op" : "official", "args" : ["KM", false, true], "expect" : ["ar", "zdj", "wni", "fr"] }
+{ "op" : "official", "args" : ["KM", true, false], "expect" : ["ar", "zdj", "wni", "fr"] }
+{ "op" : "official", "args" : ["KM", true, true], "expect" : ["ar", "zdj", "wni", "fr"] }
+{ "op" : "info", "args" : ["KM"], "expect" : [["ar", 6.6000000000000000E+001, "official"], ["zdj", 3.7000000000000000E+001, "official"], ["wni", 3.4000000000000000E+001, "official"], ["fr", 2.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["KN", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KN", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KN", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KN", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["KN"], "expect" : [["en", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["KP", false, false], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KP", false, true], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KP", true, false], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KP", true, true], "expect" : ["ko"] }
+{ "op" : "info", "args" : ["KP"], "expect" : [["ko", 8.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["KR", false, false], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KR", false, true], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KR", true, false], "expect" : ["ko"] }
+{ "op" : "official", "args" : ["KR", true, true], "expect" : ["ko"] }
+{ "op" : "info", "args" : ["KR"], "expect" : [["ko", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["KW", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["KW", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["KW", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["KW", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["KW"], "expect" : [["ar", 1.0000000000000000E+002, "official"]] }
+{ "op" : "official", "args" : ["KY", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KY", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KY", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["KY", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["KY"], "expect" : [["en", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["KZ", false, false], "expect" : ["ru", "kk"] }
+{ "op" : "official", "args" : ["KZ", false, true], "expect" : ["ru", "kk"] }
+{ "op" : "official", "args" : ["KZ", true, false], "expect" : ["ru", "kk"] }
+{ "op" : "official", "args" : ["KZ", true, true], "expect" : ["ru", "kk"] }
+{ "op" : "info", "args" : ["KZ"], "expect" : [["ru", 7.2000000000000000E+001, "official"], ["kk", 6.4000000000000000E+001, "official"], ["en", 1.5000000000000000E+001, ""], ["de", 6.4000000000000004E+000, ""], ["ug_Cyrl", 2.0000000000000000E+000, ""], ["kaa", 1.7999999999999999E-002, ""]] }
+{ "op" : "official", "args" : ["LA", false, false], "expect" : ["lo"] }
+{ "op" : "official", "args" : ["LA", false, true], "expect" : ["lo"] }
+{ "op" : "official", "args" : ["LA", true, false], "expect" : ["lo"] }
+{ "op" : "official", "args" : ["LA", true, true], "expect" : ["lo"] }
+{ "op" : "info", "args" : ["LA"], "expect" : [["lo", 6.9000000000000000E+001, "official"], ["kjg", 5.7999999999999998E+000, ""], ["hnj", 3.0000000000000000E+000, ""], ["kdt", 9.5999999999999996E-001, ""]] }
+{ "op" : "official", "args" : ["LB", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LB", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LB", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LB", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["LB"], "expect" : [["apc", 1.0000000000000000E+002, ""], ["ar", 8.6000000000000000E+001, "official"], ["en", 4.0000000000000000E+001, ""], ["fr", 3.8000000000000000E+001, ""], ["hy", 5.2000000000000002E+000, ""], ["ku_Arab", 1.7000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["LC", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LC", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LC", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LC", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["LC"], "expect" : [["en", 9.0000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["LI", false, false], "expect" : ["de"] }
+{ "op" : "official", "args" : ["LI", false, true], "expect" : ["de", "gsw"] }
+{ "op" : "official", "args" : ["LI", true, false], "expect" : ["de"] }
+{ "op" : "official", "args" : ["LI", true, true], "expect" : ["de", "gsw"] }
+{ "op" : "info", "args" : ["LI"], "expect" : [["de", 1.0000000000000000E+002, "official"], ["gsw", 8.5000000000000000E+001, "de_facto_official"], ["wae", 3.2000000000000002E+000, ""]] }
+{ "op" : "official", "args" : ["LK", false, false], "expect" : ["si", "ta"] }
+{ "op" : "official", "args" : ["LK", false, true], "expect" : ["si", "ta"] }
+{ "op" : "official", "args" : ["LK", true, false], "expect" : ["si", "ta"] }
+{ "op" : "official", "args" : ["LK", true, true], "expect" : ["si", "ta"] }
+{ "op" : "info", "args" : ["LK"], "expect" : [["si", 6.8000000000000000E+001, "official"], ["ta", 1.5000000000000000E+001, "official"], ["en", 1.0000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["LR", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LR", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LR", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["LR", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["LR"], "expect" : [["en", 8.3000000000000000E+001, "official"], ["kpe", 1.4000000000000000E+001, ""], ["vai", 2.6000000000000001E+000, ""], ["men", 4.7999999999999998E-001, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""], ["vai_Latn", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["LS", false, false], "expect" : ["st", "en"] }
+{ "op" : "official", "args" : ["LS", false, true], "expect" : ["st", "en"] }
+{ "op" : "official", "args" : ["LS", true, false], "expect" : ["st", "en"] }
+{ "op" : "official", "args" : ["LS", true, true], "expect" : ["st", "en"] }
+{ "op" : "info", "args" : ["LS"], "expect" : [["st", 9.8000000000000000E+001, "official"], ["en", 2.7000000000000000E+001, "official"], ["zu", 1.4000000000000000E+001, ""], ["ss", 2.3999999999999999E+000, ""], ["xh", 9.8999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["LT", false, false], "expect" : ["lt"] }
+{ "op" : "official", "args" : ["LT", false, true], "expect" : ["lt"] }
+{ "op" : "official", "args" : ["LT", true, false], "expect" : ["lt"] }
+{ "op" : "official", "args" : ["LT", true, true], "expect" : ["lt"] }
+{ "op" : "info", "args" : ["LT"], "expect" : [["lt", 8.6000000000000000E+001, "official"], ["ru", 8.0000000000000000E+001, ""], ["en", 3.8000000000000000E+001, ""], ["de", 1.4000000000000000E+001, ""], ["sgs", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["LU", false, false], "expect" : ["fr", "lb", "de"] }
+{ "op" : "official", "args" : ["LU", false, true], "expect" : ["fr", "lb", "de"] }
+{ "op" : "official", "args" : ["LU", true, false], "expect" : ["fr", "lb", "de"] }
+{ "op" : "official", "args" : ["LU", true, true], "expect" : ["fr", "lb", "de"] }
+{ "op" : "info", "args" : ["LU"], "expect" : [["fr", 9.2000000000000000E+001, "official"], ["lb", 6.7000000000000000E+001, "official"], ["de", 6.3000000000000000E+001, "official"], ["en", 5.6000000000000000E+001, ""], ["pt", 1.6000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["LV", false, false], "expect" : ["lv"] }
+{ "op" : "official", "args" : ["LV", false, true], "expect" : ["lv"] }
+{ "op" : "official", "args" : ["LV", true, false], "expect" : ["lv"] }
+{ "op" : "official", "args" : ["LV", true, true], "expect" : ["lv"] }
+{ "op" : "info", "args" : ["LV"], "expect" : [["lv", 6.1000000000000000E+001, "official"], ["en", 4.6000000000000000E+001, ""], ["ru", 3.8000000000000000E+001, ""], ["ltg", 8.9000000000000004E+000, ""]] }
+{ "op" : "official", "args" : ["LY", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LY", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LY", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["LY", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["LY"], "expect" : [["ar", 7.4000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MA", false, false], "expect" : ["ar", "tzm"] }
+{ "op" : "official", "args" : ["MA", false, true], "expect" : ["ar", "fr", "tzm"] }
+{ "op" : "official", "args" : ["MA", true, false], "expect" : ["ar", "tzm"] }
+{ "op" : "official", "args" : ["MA", true, true], "expect" : ["ar", "fr", "tzm"] }
+{ "op" : "info", "args" : ["MA"], "expect" : [["ary", 8.7000000000000000E+001, ""], ["ar", 6.2000000000000000E+001, "official"], ["fr", 3.6000000000000000E+001, "de_facto_official"], ["zgh", 2.2000000000000000E+001, ""], ["en", 1.4000000000000000E+001, ""], ["tzm", 9.8000000000000007E+000, "official"], ["shi", 8.6999999999999993E+000, ""], ["shi_Latn", 8.6999999999999993E+000, ""], ["rif", 4.9000000000000004E+000, ""], ["rif_Tfng", 4.9000000000000004E+000, ""], ["es", 6.5000000000000002E-002, ""]] }
+{ "op" : "official", "args" : ["MC", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MC", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MC", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MC", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["MC"], "expect" : [["fr", 9.7000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MD", false, false], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["MD", false, true], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["MD", true, false], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["MD", true, true], "expect" : ["ro"] }
+{ "op" : "info", "args" : ["MD"], "expect" : [["ro", 6.3000000000000000E+001, "official"], ["uk", 1.4000000000000000E+001, ""], ["bg", 9.4000000000000004E+000, ""], ["gag", 3.2999999999999998E+000, ""], ["ru", 3.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["ME", false, false], "expect" : ["sr_Latn"] }
+{ "op" : "official", "args" : ["ME", false, true], "expect" : ["sr_Latn"] }
+{ "op" : "official", "args" : ["ME", true, false], "expect" : ["sr_Latn"] }
+{ "op" : "official", "args" : ["ME", true, true], "expect" : ["sr_Latn"] }
+{ "op" : "info", "args" : ["ME"], "expect" : [["sr_Latn", 1.0000000000000000E+002, "official"], ["sq", 7.9000000000000004E+000, ""], ["sr", 5.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["MF", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MF", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MF", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MF", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["MF"], "expect" : [["fr", 8.4000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MG", false, false], "expect" : ["mg", "fr", "en"] }
+{ "op" : "official", "args" : ["MG", false, true], "expect" : ["mg", "fr", "en"] }
+{ "op" : "official", "args" : ["MG", true, false], "expect" : ["mg", "fr", "en"] }
+{ "op" : "official", "args" : ["MG", true, true], "expect" : ["mg", "fr", "en"] }
+{ "op" : "info", "args" : ["MG"], "expect" : [["mg", 9.0000000000000000E+001, "official"], ["fr", 2.7000000000000000E+001, "official"], ["en", 1.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MH", false, false], "expect" : ["en", "mh"] }
+{ "op" : "official", "args" : ["MH", false, true], "expect" : ["en", "mh"] }
+{ "op" : "official", "args" : ["MH", true, false], "expect" : ["en", "mh"] }
+{ "op" : "official", "args" : ["MH", true, true], "expect" : ["en", "mh"] }
+{ "op" : "info", "args" : ["MH"], "expect" : [["en", 9.3000000000000000E+001, "official"], ["mh", 7.3000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MK", false, false], "expect" : ["mk"] }
+{ "op" : "official", "args" : ["MK", false, true], "expect" : ["mk"] }
+{ "op" : "official", "args" : ["MK", true, false], "expect" : ["mk", "sq"] }
+{ "op" : "official", "args" : ["MK", true, true], "expect" : ["mk", "sq"] }
+{ "op" : "info", "args" : ["MK"], "expect" : [["mk", 6.7000000000000000E+001, "official"], ["sq", 2.5000000000000000E+001, "official_regional"], ["tr", 3.5000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["ML", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["ML", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["ML", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["ML", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["ML"], "expect" : [["bm", 4.6000000000000000E+001, ""], ["fr", 1.7000000000000000E+001, "official"], ["ffm", 7.7000000000000002E+000, ""], ["snk", 5.9000000000000004E+000, ""], ["mwk", 5.0000000000000000E+000, ""], ["ses", 3.3999999999999999E+000, ""], ["tmh", 2.1000000000000001E+000, ""], ["bm_Nkoo", 2.0000000000000000E+000, ""], ["khq", 1.7000000000000000E+000, ""], ["dtm", 1.1000000000000001E+000, ""], ["kao", 1.0000000000000000E+000, ""], ["ar", 9.0000000000000002E-001, ""], ["bmq", 8.5999999999999999E-001, ""], ["bze", 8.4999999999999998E-001, ""]] }
+{ "op" : "official", "args" : ["MM", false, false], "expect" : ["my"] }
+{ "op" : "official", "args" : ["MM", false, true], "expect" : ["my"] }
+{ "op" : "official", "args" : ["MM", true, false], "expect" : ["my"] }
+{ "op" : "official", "args" : ["MM", true, true], "expect" : ["my"] }
+{ "op" : "info", "args" : ["MM"], "expect" : [["my", 6.4000000000000000E+001, "official"], ["shn", 6.4000000000000004E+000, ""], ["kac", 1.7000000000000000E+000, ""], ["rhg", 1.7000000000000000E+000, ""], ["mnw", 1.5000000000000000E+000, ""], ["hnj", 2.1999999999999999E-002, ""], ["kht", 7.4000000000000003E-003, ""]] }
+{ "op" : "official", "args" : ["MN", false, false], "expect" : ["mn"] }
+{ "op" : "official", "args" : ["MN", false, true], "expect" : ["mn"] }
+{ "op" : "official", "args" : ["MN", true, false], "expect" : ["mn"] }
+{ "op" : "official", "args" : ["MN", true, true], "expect" : ["mn"] }
+{ "op" : "info", "args" : ["MN"], "expect" : [["mn", 9.3000000000000000E+001, "official"], ["kk_Arab", 7.2000000000000002E+000, ""], ["zh", 1.3999999999999999E+000, ""], ["ru", 1.2000000000000000E-001, ""], ["ug_Cyrl", 2.9999999999999999E-002, ""]] }
+{ "op" : "official", "args" : ["MO", false, false], "expect" : ["zh_Hant", "pt"] }
+{ "op" : "official", "args" : ["MO", false, true], "expect" : ["zh_Hant", "yue", "pt"] }
+{ "op" : "official", "args" : ["MO", true, false], "expect" : ["zh_Hant", "pt"] }
+{ "op" : "official", "args" : ["MO", true, true], "expect" : ["zh_Hant", "yue", "pt"] }
+{ "op" : "info", "args" : ["MO"], "expect" : [["zh_Hant", 9.8000000000000000E+001, "official"], ["yue", 8.6000000000000000E+001, "de_facto_official"], ["en", 2.3000000000000000E+001, ""], ["zh", 5.0000000000000000E+000, ""], ["nan", 3.7000000000000002E+000, ""], ["fil", 3.1000000000000001E+000, ""], ["pt", 2.2999999999999998E+000, "official"]] }
+{ "op" : "official", "args" : ["MP", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["MP", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["MP", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["MP", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["MP"], "expect" : [["en", 9.7000000000000000E+001, "de_facto_official"], ["ch", 1.8000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["MQ", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MQ", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MQ", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["MQ", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["MQ"], "expect" : [["fr", 8.1000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MR", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["MR", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["MR", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["MR", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["MR"], "expect" : [["ar", 8.5000000000000000E+001, "official"], ["fr", 1.3000000000000000E+001, ""], ["ff", 5.7000000000000002E+000, ""], ["wo", 2.3000000000000001E-001, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["MS", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["MS", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["MS", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["MS", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["MS"], "expect" : [["en", 6.4000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["MT", false, false], "expect" : ["mt", "en"] }
+{ "op" : "official", "args" : ["MT", false, true], "expect" : ["mt", "en"] }
+{ "op" : "official", "args" : ["MT", true, false], "expect" : ["mt", "en"] }
+{ "op" : "official", "args" : ["MT", true, true], "expect" : ["mt", "en"] }
+{ "op" : "info", "args" : ["MT"], "expect" : [["mt", 1.0000000000000000E+002, "official"], ["en", 8.8000000000000000E+001, "official"], ["it", 5.6000000000000000E+001, ""], ["fr", 1.3000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["MU", false, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["MU", false, true], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["MU", true, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["MU", true, true], "expect" : ["fr", "en"] }
+{ "op" : "info", "args" : ["MU"], "expect" : [["mfe", 9.0000000000000000E+001, ""], ["fr", 7.3000000000000000E+001, "official"], ["en", 7.2000000000000000E+001, "official"], ["bho", 8.5999999999999996E+000, ""], ["ur", 5.2000000000000002E+000, ""], ["ta", 2.5000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["MV", false, false], "expect" : ["dv"] }
+{ "op" : "official", "args" : ["MV", false, true], "expect" : ["dv"] }
+{ "op" : "official", "args" : ["MV", true, false], "expect" : ["dv"] }
+{ "op" : "official", "args" : ["MV", true, true], "expect" : ["dv"] }
+{ "op" : "info", "args" : ["MV"], "expect" : [["dv", 9.8000000000000000E+001, "official"], ["en", 7.5000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["MW", false, false], "expect" : ["ny", "en"] }
+{ "op" : "official", "args" : ["MW", false, true], "expect" : ["ny", "en"] }
+{ "op" : "official", "args" : ["MW", true, false], "expect" : ["ny", "en"] }
+{ "op" : "official", "args" : ["MW", true, true], "expect" : ["ny", "en"] }
+{ "op" : "info", "args" : ["MW"], "expect" : [["en", 6.3000000000000000E+001, "official"], ["ny", 6.3000000000000000E+001, "official"], ["tum", 8.4000000000000004E+000, ""], ["tog", 9.7999999999999998E-001, ""], ["zu", 3.3000000000000002E-001, ""]] }
+{ "op" : "official", "args" : ["MX", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["MX", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["MX", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["MX", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["MX"], "expect" : [["es", 8.3000000000000000E+001, "de_facto_official"], ["en", 1.3000000000000000E+001, ""], ["yua", 6.7000000000000004E-001, ""], ["nhe", 3.9000000000000001E-001, ""], ["nhw", 3.9000000000000001E-001, ""], ["maz", 3.4000000000000002E-001, ""], ["nch", 1.9000000000000000E-001, ""], ["vec", 1.9000000000000000E-003, ""], ["sei", 6.9999999999999999E-004, ""]] }
+{ "op" : "official", "args" : ["MY", false, false], "expect" : ["ms"] }
+{ "op" : "official", "args" : ["MY", false, true], "expect" : ["ms"] }
+{ "op" : "official", "args" : ["MY", true, false], "expect" : ["ms"] }
+{ "op" : "official", "args" : ["MY", true, true], "expect" : ["ms"] }
+{ "op" : "info", "args" : ["MY"], "expect" : [["ms", 7.5000000000000000E+001, "official"], ["en", 2.1000000000000000E+001, ""], ["zh", 1.7000000000000000E+001, ""], ["ta", 4.2000000000000002E+000, ""], ["iba", 2.5000000000000000E+000, ""], ["jv", 1.2000000000000000E+000, ""], ["zmi", 1.2000000000000000E+000, ""], ["dtp", 5.6000000000000005E-001, ""], ["ml", 1.4999999999999999E-001, ""], ["bug", 7.9000000000000001E-002, ""], ["bjn", 1.4000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["MZ", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["MZ", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["MZ", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["MZ", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["MZ"], "expect" : [["pt", 2.7000000000000000E+001, "official"], ["vmw", 1.3000000000000000E+001, ""], ["ndc", 9.9000000000000004E+000, ""], ["ts", 7.9000000000000004E+000, ""], ["ngl", 6.7999999999999998E+000, ""], ["seh", 4.5999999999999996E+000, ""], ["mgh", 4.5000000000000000E+000, ""], ["rng", 3.3999999999999999E+000, ""], ["ny", 2.6000000000000001E+000, ""], ["yao", 2.3999999999999999E+000, ""], ["sw", 2.8000000000000001E-002, ""], ["zu", 5.4000000000000003E-003, ""]] }
+{ "op" : "official", "args" : ["NA", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NA", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NA", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NA", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["NA"], "expect" : [["af", 7.5000000000000000E+001, ""], ["kj", 3.5000000000000000E+001, ""], ["ng", 2.1000000000000000E+001, ""], ["naq", 1.1000000000000000E+001, ""], ["hz", 9.0999999999999996E+000, ""], ["en", 7.0000000000000000E+000, "official"], ["de", 9.0000000000000002E-001, ""], ["tn", 5.6000000000000005E-001, ""]] }
+{ "op" : "official", "args" : ["NC", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NC", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NC", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NC", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["NC"], "expect" : [["fr", 9.9000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["NE", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NE", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NE", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["NE", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["NE"], "expect" : [["ha", 4.1000000000000000E+001, ""], ["dje", 1.7000000000000000E+001, ""], ["fr", 1.3000000000000000E+001, "official"], ["fuq", 7.0000000000000000E+000, ""], ["tmh", 6.0000000000000000E+000, ""], ["ar", 2.0999999999999999E-001, ""], ["twq", 2.9999999999999999E-002, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["NF", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NF", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NF", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["NF", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["NF"], "expect" : [["en", 9.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["NG", false, false], "expect" : ["en", "yo"] }
+{ "op" : "official", "args" : ["NG", false, true], "expect" : ["en", "yo"] }
+{ "op" : "official", "args" : ["NG", true, false], "expect" : ["en", "yo"] }
+{ "op" : "official", "args" : ["NG", true, true], "expect" : ["en", "yo"] }
+{ "op" : "info", "args" : ["NG"], "expect" : [["en", 5.3000000000000000E+001, "official"], ["pcm", 2.1000000000000000E+001, ""], ["ha", 1.3000000000000000E+001, ""], ["ig", 1.3000000000000000E+001, ""], ["yo", 1.3000000000000000E+001, "official"], ["fuv", 6.7000000000000002E+000, ""], ["tiv", 1.6000000000000001E+000, ""], ["efi", 1.3999999999999999E+000, ""], ["ibb", 1.3999999999999999E+000, ""], ["ha_Arab", 1.0000000000000000E+000, ""], ["bin", 7.0999999999999996E-001, ""], ["kaj", 2.0999999999999999E-001, ""], ["kcg", 9.2999999999999999E-002, ""], ["ar", 7.0999999999999994E-002, ""], ["cch", 2.1000000000000001E-002, ""], ["amo", 8.6999999999999994E-003, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""], ["ann", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["NI", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["NI", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["NI", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["NI", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["NI"], "expect" : [["es", 7.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["NL", false, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["NL", false, true], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["NL", true, false], "expect" : ["nl", "fy"] }
+{ "op" : "official", "args" : ["NL", true, true], "expect" : ["nl", "fy"] }
+{ "op" : "info", "args" : ["NL"], "expect" : [["nl", 1.0000000000000000E+002, "official"], ["en", 9.0000000000000000E+001, ""], ["de", 7.1000000000000000E+001, ""], ["fr", 1.9000000000000000E+001, ""], ["nds", 1.1000000000000000E+001, ""], ["li", 5.5000000000000000E+000, ""], ["fy", 4.2999999999999998E+000, "official_regional"], ["gos", 3.6000000000000001E+000, ""], ["id", 1.8000000000000000E+000, ""], ["zea", 1.3999999999999999E+000, ""], ["rif", 1.2000000000000000E+000, ""], ["tr", 1.2000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["NO", false, false], "expect" : ["no", "nb", "nn"] }
+{ "op" : "official", "args" : ["NO", false, true], "expect" : ["no", "nb", "nn"] }
+{ "op" : "official", "args" : ["NO", true, false], "expect" : ["no", "nb", "nn", "se"] }
+{ "op" : "official", "args" : ["NO", true, true], "expect" : ["no", "nb", "nn", "se"] }
+{ "op" : "info", "args" : ["NO"], "expect" : [["nb", 1.0000000000000000E+002, "official"], ["no", 1.0000000000000000E+002, "official"], ["nn", 2.5000000000000000E+001, "official"], ["se", 2.8999999999999998E-001, "official_regional"]] }
+{ "op" : "official", "args" : ["NP", false, false], "expect" : ["ne"] }
+{ "op" : "official", "args" : ["NP", false, true], "expect" : ["ne"] }
+{ "op" : "official", "args" : ["NP", true, false], "expect" : ["ne"] }
+{ "op" : "official", "args" : ["NP", true, true], "expect" : ["ne"] }
+{ "op" : "info", "args" : ["NP"], "expect" : [["ne", 4.4000000000000000E+001, "official"], ["mai", 1.1000000000000000E+001, ""], ["bho", 6.7999999999999998E+000, ""], ["new", 3.2999999999999998E+000, ""], ["jml", 3.2000000000000002E+000, ""], ["en", 3.0000000000000000E+000, ""], ["dty", 2.5000000000000000E+000, ""], ["awa", 2.2000000000000002E+000, ""], ["thl", 2.0000000000000000E+000, ""], ["bap", 1.5000000000000000E+000, ""], ["tdg", 1.3000000000000000E+000, ""], ["thr", 1.2000000000000000E+000, ""], ["mgp", 1.1000000000000001E+000, ""], ["lif", 1.1000000000000001E+000, ""], ["thq", 1.0000000000000000E+000, ""], ["mrd", 8.2999999999999996E-001, ""], ["bfy", 5.4000000000000004E-001, ""], ["xsr", 5.2000000000000002E-001, ""], ["rjs", 4.4000000000000000E-001, ""], ["taj", 4.2999999999999999E-001, ""], ["hi", 4.1999999999999998E-001, ""], ["gvr", 2.8999999999999998E-001, ""], ["bo", 2.3999999999999999E-001, ""], ["tkt", 2.3999999999999999E-001, ""], ["tdh", 1.2000000000000000E-001, ""], ["bn", 9.4000000000000000E-002, ""], ["unr_Deva", 1.7999999999999999E-002, ""], ["lep", 9.1000000000000004E-003, ""]] }
+{ "op" : "official", "args" : ["NR", false, false], "expect" : ["en", "na"] }
+{ "op" : "official", "args" : ["NR", false, true], "expect" : ["en", "na"] }
+{ "op" : "official", "args" : ["NR", true, false], "expect" : ["en", "na"] }
+{ "op" : "official", "args" : ["NR", true, true], "expect" : ["en", "na"] }
+{ "op" : "info", "args" : ["NR"], "expect" : [["en", 9.5000000000000000E+001, "official"], ["na", 7.0000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["NU", false, false], "expect" : ["niu", "en"] }
+{ "op" : "official", "args" : ["NU", false, true], "expect" : ["niu", "en"] }
+{ "op" : "official", "args" : ["NU", true, false], "expect" : ["niu", "en"] }
+{ "op" : "official", "args" : ["NU", true, true], "expect" : ["niu", "en"] }
+{ "op" : "info", "args" : ["NU"], "expect" : [["en", 5.6000000000000000E+001, "official"], ["niu", 5.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["NZ", false, false], "expect" : ["mi"] }
+{ "op" : "official", "args" : ["NZ", false, true], "expect" : ["en", "mi"] }
+{ "op" : "official", "args" : ["NZ", true, false], "expect" : ["mi"] }
+{ "op" : "official", "args" : ["NZ", true, true], "expect" : ["en", "mi"] }
+{ "op" : "info", "args" : ["NZ"], "expect" : [["en", 9.8000000000000000E+001, "de_facto_official"], ["mi", 2.7999999999999998E+000, "official"]] }
+{ "op" : "official", "args" : ["OM", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["OM", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["OM", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["OM", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["OM"], "expect" : [["ar", 8.1000000000000000E+001, "official"], ["bal", 4.9000000000000004E+000, ""], ["fa", 9.3999999999999995E-001, ""]] }
+{ "op" : "official", "args" : ["PA", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["PA", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["PA", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["PA", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["PA"], "expect" : [["es", 6.9000000000000000E+001, "official"], ["en", 1.4000000000000000E+001, ""], ["zh_Hant", 1.3000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["PE", false, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["PE", false, true], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["PE", true, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["PE", true, true], "expect" : ["es", "qu"] }
+{ "op" : "info", "args" : ["PE"], "expect" : [["es", 7.3000000000000000E+001, "official"], ["qu", 1.5000000000000000E+001, "official"], ["ay", 1.6000000000000001E+000, ""]] }
+{ "op" : "official", "args" : ["PF", false, false], "expect" : ["fr", "ty"] }
+{ "op" : "official", "args" : ["PF", false, true], "expect" : ["fr", "ty"] }
+{ "op" : "official", "args" : ["PF", true, false], "expect" : ["fr", "ty"] }
+{ "op" : "official", "args" : ["PF", true, true], "expect" : ["fr", "ty"] }
+{ "op" : "info", "args" : ["PF"], "expect" : [["fr", 9.8000000000000000E+001, "official"], ["ty", 3.1000000000000000E+001, "official"], ["zh_Hant", 7.7999999999999998E+000, ""]] }
+{ "op" : "official", "args" : ["PG", false, false], "expect" : ["tpi", "en", "ho"] }
+{ "op" : "official", "args" : ["PG", false, true], "expect" : ["tpi", "en", "ho"] }
+{ "op" : "official", "args" : ["PG", true, false], "expect" : ["tpi", "en", "ho"] }
+{ "op" : "official", "args" : ["PG", true, true], "expect" : ["tpi", "en", "ho"] }
+{ "op" : "info", "args" : ["PG"], "expect" : [["tpi", 7.1000000000000000E+001, "official"], ["en", 5.0000000000000000E+001, "official"], ["ho", 2.1000000000000001E+000, "official"]] }
+{ "op" : "official", "args" : ["PH", false, false], "expect" : ["en", "fil"] }
+{ "op" : "official", "args" : ["PH", false, true], "expect" : ["en", "fil"] }
+{ "op" : "official", "args" : ["PH", true, false], "expect" : ["en", "fil", "ceb", "ilo", "hil", "war", "pag", "mdh", "tsg"] }
+{ "op" : "official", "args" : ["PH", true, true], "expect" : ["en", "fil", "ceb", "ilo", "hil", "war", "pag", "mdh", "tsg"] }
+{ "op" : "info", "args" : ["PH"], "expect" : [["en", 6.4000000000000000E+001, "official"], ["fil", 6.0000000000000000E+001, "official"], ["es", 3.1000000000000000E+001, ""], ["ceb", 2.4000000000000000E+001, "official_regional"], ["ilo", 9.5999999999999996E+000, "official_regional"], ["hil", 8.4000000000000004E+000, "official_regional"], ["bik", 3.0000000000000000E+000, ""], ["war", 2.8999999999999999E+000, "official_regional"], ["fbl", 2.2999999999999998E+000, ""], ["pam", 2.2999999999999998E+000, ""], ["pag", 1.3999999999999999E+000, "official_regional"], ["mdh", 1.2000000000000000E+000, "official_regional"], ["tsg", 1.1000000000000001E+000, "official_regional"], ["zh_Hant", 7.2999999999999998E-001, ""], ["cps", 6.6000000000000003E-001, ""], ["krj", 3.9000000000000001E-001, ""], ["bto", 2.8000000000000003E-001, ""], ["hnn", 1.6000000000000000E-002, ""], ["tbw", 8.5000000000000006E-003, ""], ["bku", 6.7999999999999996E-003, ""]] }
+{ "op" : "official", "args" : ["PK", false, false], "expect" : ["ur", "en"] }
+{ "op" : "official", "args" : ["PK", false, true], "expect" : ["ur", "en"] }
+{ "op" : "official", "args" : ["PK", true, false], "expect" : ["ur", "en"] }
+{ "op" : "official", "args" : ["PK", true, true], "expect" : ["ur", "en"] }
+{ "op" : "info", "args" : ["PK"], "expect" : [["ur", 9.5000000000000000E+001, "official"], ["pa_Arab", 7.0000000000000000E+001, ""], ["en", 5.0000000000000000E+001, "official"], ["lah", 4.0000000000000000E+001, ""], ["ps", 1.6000000000000000E+001, ""], ["sd", 1.5000000000000000E+001, ""], ["skr", 1.2000000000000000E+001, ""], ["bal", 2.6000000000000001E+000, ""], ["hno", 1.7000000000000000E+000, ""], ["brh", 1.3000000000000000E+000, ""], ["fa", 6.6000000000000003E-001, ""], ["bgn", 5.6999999999999995E-001, ""], ["hnd", 4.0999999999999998E-001, ""], ["tg_Arab", 3.3000000000000002E-001, ""], ["gju", 2.0000000000000001E-001, ""], ["bft", 1.7999999999999999E-001, ""], ["kvx", 1.6000000000000000E-001, ""], ["khw", 1.4999999999999999E-001, ""], ["mvy", 1.4000000000000001E-001, ""], ["kxp", 1.1000000000000000E-001, ""], ["gjk", 1.1000000000000000E-001, ""], ["ks", 6.9000000000000006E-002, ""], ["trw", 5.2999999999999999E-002, ""], ["btv", 1.9000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["PL", false, false], "expect" : ["pl"] }
+{ "op" : "official", "args" : ["PL", false, true], "expect" : ["pl"] }
+{ "op" : "official", "args" : ["PL", true, false], "expect" : ["pl", "de", "csb", "lt"] }
+{ "op" : "official", "args" : ["PL", true, true], "expect" : ["pl", "de", "csb", "lt"] }
+{ "op" : "info", "args" : ["PL"], "expect" : [["pl", 9.6000000000000000E+001, "official"], ["en", 3.3000000000000000E+001, ""], ["de", 1.9000000000000000E+001, "official_regional"], ["ru", 1.8000000000000000E+001, ""], ["szl", 1.3000000000000000E+000, ""], ["be", 5.7999999999999996E-001, ""], ["uk", 3.9000000000000001E-001, ""], ["csb", 1.3000000000000000E-001, "official_regional"], ["sli", 3.1000000000000000E-002, ""], ["lt", 2.1000000000000001E-002, "official_regional"], ["prg", 1.0000000000000000E-004, ""]] }
+{ "op" : "official", "args" : ["PM", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["PM", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["PM", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["PM", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["PM"], "expect" : [["fr", 1.0000000000000000E+002, "official"], ["en", 3.7000000000000002E+000, ""]] }
+{ "op" : "official", "args" : ["PN", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["PN", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["PN", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["PN", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["PN"], "expect" : [["en", 9.2000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["PR", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["PR", false, true], "expect" : ["es", "en"] }
+{ "op" : "official", "args" : ["PR", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["PR", true, true], "expect" : ["es", "en"] }
+{ "op" : "info", "args" : ["PR"], "expect" : [["es", 8.7000000000000000E+001, "official"], ["en", 4.9000000000000000E+001, "de_facto_official"]] }
+{ "op" : "official", "args" : ["PS", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["PS", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["PS", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["PS", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["PS"], "expect" : [["ar", 1.0000000000000000E+002, "official"], ["apc", 8.7000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["PT", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["PT", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["PT", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["PT", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["PT"], "expect" : [["pt", 9.6000000000000000E+001, "official"], ["en", 2.7000000000000000E+001, ""], ["fr", 1.5000000000000000E+001, ""], ["es", 1.0000000000000000E+001, ""], ["gl", 1.4000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["PW", false, false], "expect" : ["pau", "en"] }
+{ "op" : "official", "args" : ["PW", false, true], "expect" : ["pau", "en"] }
+{ "op" : "official", "args" : ["PW", true, false], "expect" : ["pau", "en"] }
+{ "op" : "official", "args" : ["PW", true, true], "expect" : ["pau", "en"] }
+{ "op" : "info", "args" : ["PW"], "expect" : [["pau", 7.4000000000000000E+001, "official"], ["en", 8.5999999999999996E+000, "official"]] }
+{ "op" : "official", "args" : ["PY", false, false], "expect" : ["gn", "es"] }
+{ "op" : "official", "args" : ["PY", false, true], "expect" : ["gn", "es"] }
+{ "op" : "official", "args" : ["PY", true, false], "expect" : ["gn", "es"] }
+{ "op" : "official", "args" : ["PY", true, true], "expect" : ["gn", "es"] }
+{ "op" : "info", "args" : ["PY"], "expect" : [["gn", 8.0000000000000000E+001, "official"], ["es", 3.2000000000000002E+000, "official"], ["de", 2.8999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["QA", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["QA", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["QA", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["QA", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["QA"], "expect" : [["ar", 8.9000000000000000E+001, "official"], ["fa", 1.1000000000000000E+001, ""], ["ml", 2.5000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["RE", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["RE", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["RE", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["RE", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["RE"], "expect" : [["fr", 8.9000000000000000E+001, "official"], ["rcf", 7.1000000000000000E+001, ""], ["ta", 1.5000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["RO", false, false], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["RO", false, true], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["RO", true, false], "expect" : ["ro"] }
+{ "op" : "official", "args" : ["RO", true, true], "expect" : ["ro"] }
+{ "op" : "info", "args" : ["RO"], "expect" : [["ro", 9.0000000000000000E+001, "official"], ["en", 3.1000000000000000E+001, ""], ["fr", 1.2000000000000000E+001, ""], ["es", 1.0000000000000000E+001, ""], ["hu", 6.5999999999999996E+000, ""], ["de", 2.0999999999999999E-001, ""], ["tr", 1.3000000000000000E-001, ""], ["sr_Latn", 1.2000000000000000E-001, ""], ["bg", 3.6999999999999998E-002, ""], ["el", 2.3000000000000000E-002, ""], ["pl", 1.4999999999999999E-002, ""]] }
+{ "op" : "official", "args" : ["RS", false, false], "expect" : ["sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["RS", false, true], "expect" : ["sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["RS", true, false], "expect" : ["sr_Latn", "sr", "hu", "ro", "hr", "sk", "uk"] }
+{ "op" : "official", "args" : ["RS", true, true], "expect" : ["sr_Latn", "sr", "hu", "ro", "hr", "sk", "uk"] }
+{ "op" : "info", "args" : ["RS"], "expect" : [["sr", 9.9000000000000000E+001, "official"], ["sr_Latn", 9.9000000000000000E+001, "official"], ["sq", 1.9000000000000000E+001, ""], ["hu", 4.7999999999999998E+000, "official_regional"], ["ro", 2.1000000000000001E+000, "official_regional"], ["hr", 9.3000000000000005E-001, "official_regional"], ["sk", 8.4999999999999998E-001, "official_regional"], ["uk", 0.0000000000000000E+000, "official_regional"]] }
+{ "op" : "official", "args" : ["RU", false, false], "expect" : ["ru"] }
+{ "op" : "official", "args" : ["RU", false, true], "expect" : ["ru"] }
+{ "op" : "official", "args" : ["RU", true, false], "expect" : ["ru", "tt", "ba", "ce", "av", "udm", "sah", "myv", "kbd", "mdf", "kum", "lez", "kv", "krc", "inh", "tyv", "az_Cyrl", "ady", "lbe", "koi"] }
+{ "op" : "official", "args" : ["RU", true, true], "expect" : ["ru", "tt", "ba", "ce", "av", "udm", "sah", "myv", "kbd", "mdf", "kum", "lez", "kv", "krc", "inh", "tyv", "az_Cyrl", "ady", "lbe", "koi"] }
+{ "op" : "info", "args" : ["RU"], "expect" : [["ru", 9.4000000000000000E+001, "official"], ["tt", 1.3999999999999999E+000, "official_regional"], ["ba", 1.3000000000000000E+000, "official_regional"], ["cv", 1.3000000000000000E+000, ""], ["hy", 8.3999999999999997E-001, ""], ["ce", 6.6000000000000003E-001, "official_regional"], ["av", 3.9000000000000001E-001, "official_regional"], ["udm", 3.8000000000000000E-001, "official_regional"], ["chm", 3.7000000000000000E-001, ""], ["sah", 3.2000000000000001E-001, "official_regional"], ["os", 3.2000000000000001E-001, ""], ["kbd", 3.1000000000000000E-001, "official_regional"], ["myv", 3.1000000000000000E-001, "official_regional"], ["dar", 2.6000000000000001E-001, ""], ["bua", 2.2000000000000000E-001, ""], ["mdf", 2.0999999999999999E-001, "official_regional"], ["kum", 2.0000000000000001E-001, "official_regional"], ["kv", 1.7999999999999999E-001, "official_regional"], ["lez", 1.7999999999999999E-001, "official_regional"], ["krc", 1.7000000000000001E-001, "official_regional"], ["inh", 1.6000000000000000E-001, "official_regional"], ["tyv", 1.3000000000000000E-001, "official_regional"], ["az_Cyrl", 9.2999999999999999E-002, "official_regional"], ["ady", 8.7999999999999995E-002, "official_regional"], ["krl", 8.2000000000000003E-002, ""], ["lbe", 7.8000000000000000E-002, "official_regional"], ["koi", 4.4999999999999998E-002, "official_regional"], ["pnt_Cyrl", 4.0000000000000001E-002, ""], ["mrj", 2.1000000000000001E-002, ""], ["alt", 1.4000000000000000E-002, ""], ["fi", 1.2000000000000000E-002, ""], ["sr", 4.1000000000000003E-003, ""], ["vep", 2.5999999999999999E-003, ""], ["mn", 1.5000000000000000E-003, ""], ["kaa", 5.9999999999999995E-004, ""], ["izh", 1.0000000000000000E-004, ""], ["vot", 0.0000000000000000E+000, ""], ["cu", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["RW", false, false], "expect" : ["rw", "en", "fr"] }
+{ "op" : "official", "args" : ["RW", false, true], "expect" : ["rw", "en", "fr"] }
+{ "op" : "official", "args" : ["RW", true, false], "expect" : ["rw", "en", "fr"] }
+{ "op" : "official", "args" : ["RW", true, true], "expect" : ["rw", "en", "fr"] }
+{ "op" : "info", "args" : ["RW"], "expect" : [["rw", 7.7000000000000000E+001, "official"], ["en", 1.5000000000000000E+001, "official"], ["fr", 5.7999999999999998E+000, "official"]] }
+{ "op" : "official", "args" : ["SA", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SA", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SA", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SA", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["SA"], "expect" : [["ar", 1.0000000000000000E+002, "official"], ["ars", 3.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["SB", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SB", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SB", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SB", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["SB"], "expect" : [["en", 1.0000000000000000E+002, "official"], ["pis", 8.2000000000000000E+001, ""], ["rug", 1.3999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["SC", false, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["SC", false, true], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["SC", true, false], "expect" : ["fr", "en"] }
+{ "op" : "official", "args" : ["SC", true, true], "expect" : ["fr", "en"] }
+{ "op" : "info", "args" : ["SC"], "expect" : [["crs", 9.8000000000000000E+001, ""], ["fr", 5.3000000000000000E+001, "official"], ["en", 3.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["SD", false, false], "expect" : ["en", "ar"] }
+{ "op" : "official", "args" : ["SD", false, true], "expect" : ["en", "ar"] }
+{ "op" : "official", "args" : ["SD", true, false], "expect" : ["en", "ar"] }
+{ "op" : "official", "args" : ["SD", true, true], "expect" : ["en", "ar"] }
+{ "op" : "info", "args" : ["SD"], "expect" : [["apd", 6.1000000000000000E+001, ""], ["ar", 6.1000000000000000E+001, "official"], ["en", 6.1000000000000000E+001, "official"], ["bej", 5.4000000000000004E+000, ""], ["fvr", 2.7000000000000002E+000, ""], ["ha_Arab", 1.8000000000000000E+000, ""], ["mls", 9.8999999999999999E-001, ""], ["fia", 8.2999999999999996E-001, ""], ["zag", 5.1000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["SE", false, false], "expect" : ["sv"] }
+{ "op" : "official", "args" : ["SE", false, true], "expect" : ["sv"] }
+{ "op" : "official", "args" : ["SE", true, false], "expect" : ["sv", "fi"] }
+{ "op" : "official", "args" : ["SE", true, true], "expect" : ["sv", "fi"] }
+{ "op" : "info", "args" : ["SE"], "expect" : [["sv", 9.5000000000000000E+001, "official"], ["en", 8.6000000000000000E+001, ""], ["fi", 2.2000000000000002E+000, "official_regional"], ["fit", 5.5000000000000004E-001, ""], ["se", 3.3000000000000002E-001, ""], ["rmu", 8.9999999999999997E-002, ""], ["yi", 2.8000000000000001E-002, ""], ["smj", 1.4000000000000000E-002, ""], ["sma", 2.8000000000000000E-003, ""], ["ia", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["SG", false, false], "expect" : ["en", "zh", "ms", "ta"] }
+{ "op" : "official", "args" : ["SG", false, true], "expect" : ["en", "zh", "ms", "ta"] }
+{ "op" : "official", "args" : ["SG", true, false], "expect" : ["en", "zh", "ms", "ta"] }
+{ "op" : "official", "args" : ["SG", true, true], "expect" : ["en", "zh", "ms", "ta"] }
+{ "op" : "info", "args" : ["SG"], "expect" : [["en", 9.3000000000000000E+001, "official"], ["zh", 7.7000000000000000E+001, "official"], ["ms", 1.4000000000000000E+001, "official"], ["ta", 2.1000000000000001E+000, "official"], ["ml", 1.7000000000000001E-001, ""], ["pa", 1.6000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["SH", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SH", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SH", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SH", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["SH"], "expect" : [["en", 6.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["SI", false, false], "expect" : ["sl"] }
+{ "op" : "official", "args" : ["SI", false, true], "expect" : ["sl"] }
+{ "op" : "official", "args" : ["SI", true, false], "expect" : ["sl", "vec"] }
+{ "op" : "official", "args" : ["SI", true, true], "expect" : ["sl", "vec"] }
+{ "op" : "info", "args" : ["SI"], "expect" : [["sl", 8.7000000000000000E+001, "official"], ["hr", 6.1000000000000000E+001, ""], ["en", 5.9000000000000000E+001, ""], ["de", 4.2000000000000000E+001, ""], ["vec", 1.3999999999999999E+000, "official_regional"], ["hu", 4.4000000000000000E-001, ""], ["it", 1.9000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["SJ", false, false], "expect" : ["nb"] }
+{ "op" : "official", "args" : ["SJ", false, true], "expect" : ["nb"] }
+{ "op" : "official", "args" : ["SJ", true, false], "expect" : ["nb"] }
+{ "op" : "official", "args" : ["SJ", true, true], "expect" : ["nb"] }
+{ "op" : "info", "args" : ["SJ"], "expect" : [["nb", 5.1000000000000000E+001, "official"], ["ru", 4.1000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["SK", false, false], "expect" : ["sk"] }
+{ "op" : "official", "args" : ["SK", false, true], "expect" : ["sk"] }
+{ "op" : "official", "args" : ["SK", true, false], "expect" : ["sk"] }
+{ "op" : "official", "args" : ["SK", true, true], "expect" : ["sk"] }
+{ "op" : "info", "args" : ["SK"], "expect" : [["sk", 9.0000000000000000E+001, "official"], ["cs", 4.7000000000000000E+001, ""], ["en", 2.6000000000000000E+001, ""], ["de", 2.2000000000000000E+001, ""], ["hu", 1.1000000000000000E+001, ""], ["uk", 1.8999999999999999E+000, ""], ["pl", 9.3000000000000005E-001, ""]] }
+{ "op" : "official", "args" : ["SL", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SL", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SL", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SL", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["SL"], "expect" : [["kri", 9.5000000000000000E+001, ""], ["en", 3.5000000000000000E+001, "official"], ["men", 2.7000000000000000E+001, ""], ["tem", 2.6000000000000000E+001, ""], ["ff", 0.0000000000000000E+000, ""], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["SM", false, false], "expect" : ["it"] }
+{ "op" : "official", "args" : ["SM", false, true], "expect" : ["it"] }
+{ "op" : "official", "args" : ["SM", true, false], "expect" : ["it"] }
+{ "op" : "official", "args" : ["SM", true, true], "expect" : ["it"] }
+{ "op" : "info", "args" : ["SM"], "expect" : [["it", 8.9000000000000000E+001, "official"], ["eo", 8.4999999999999998E-001, ""]] }
+{ "op" : "official", "args" : ["SN", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["SN", false, true], "expect" : ["wo", "fr"] }
+{ "op" : "official", "args" : ["SN", true, false], "expect" : ["fr", "ff", "srr", "dyo", "sav", "mfv", "bjt", "snf", "knf", "bsc", "mey", "tnr"] }
+{ "op" : "official", "args" : ["SN", true, true], "expect" : ["wo", "fr", "ff", "srr", "dyo", "sav", "mfv", "bjt", "snf", "knf", "bsc", "mey", "tnr"] }
+{ "op" : "info", "args" : ["SN"], "expect" : [["wo", 7.0000000000000000E+001, "de_facto_official"], ["fr", 2.6000000000000000E+001, "official"], ["ff", 2.1000000000000000E+001, "official_regional"], ["srr", 1.1000000000000000E+001, "official_regional"], ["dyo", 2.6000000000000001E+000, "official_regional"], ["sav", 1.5000000000000000E+000, "official_regional"], ["mfv", 7.7000000000000002E-001, "official_regional"], ["bjt", 6.0999999999999999E-001, "official_regional"], ["snf", 2.3999999999999999E-001, "official_regional"], ["knf", 2.0999999999999999E-001, "official_regional"], ["bsc", 9.7000000000000003E-002, "official_regional"], ["mey", 3.7999999999999999E-002, "official_regional"], ["tnr", 1.7999999999999999E-002, "official_regional"], ["ff_Adlm", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["SO", false, false], "expect" : ["so", "ar"] }
+{ "op" : "official", "args" : ["SO", false, true], "expect" : ["so", "ar"] }
+{ "op" : "official", "args" : ["SO", true, false], "expect" : ["so", "ar"] }
+{ "op" : "official", "args" : ["SO", true, true], "expect" : ["so", "ar"] }
+{ "op" : "info", "args" : ["SO"], "expect" : [["so", 7.8000000000000000E+001, "official"], ["ar", 3.4000000000000000E+001, "official"], ["sw", 2.0000000000000000E+000, ""], ["om", 4.1999999999999998E-001, ""]] }
+{ "op" : "official", "args" : ["SR", false, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["SR", false, true], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["SR", true, false], "expect" : ["nl"] }
+{ "op" : "official", "args" : ["SR", true, true], "expect" : ["nl"] }
+{ "op" : "info", "args" : ["SR"], "expect" : [["nl", 9.0000000000000000E+001, "official"], ["srn", 6.8000000000000000E+001, ""], ["zh_Hant", 1.1000000000000001E+000, ""], ["hnj", 3.5999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["SS", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SS", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SS", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["SS", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["SS"], "expect" : [["ar", 2.7000000000000000E+001, ""], ["en", 2.7000000000000000E+001, "official"], ["nus", 5.5999999999999996E+000, ""]] }
+{ "op" : "official", "args" : ["ST", false, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["ST", false, true], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["ST", true, false], "expect" : ["pt"] }
+{ "op" : "official", "args" : ["ST", true, true], "expect" : ["pt"] }
+{ "op" : "info", "args" : ["ST"], "expect" : [["pt", 8.5000000000000000E+001, "official"], ["fr", 2.0000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["SV", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["SV", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["SV", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["SV", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["SV"], "expect" : [["es", 8.9000000000000000E+001, "official"], ["ccr", 5.6000000000000001E-002, ""], ["ppl", 4.1000000000000002E-002, ""], ["len", 2.0000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["SX", false, false], "expect" : ["en", "nl"] }
+{ "op" : "official", "args" : ["SX", false, true], "expect" : ["en", "nl"] }
+{ "op" : "official", "args" : ["SX", true, false], "expect" : ["en", "nl"] }
+{ "op" : "official", "args" : ["SX", true, true], "expect" : ["en", "nl"] }
+{ "op" : "info", "args" : ["SX"], "expect" : [["en", 6.8000000000000000E+001, "official"], ["es", 1.1000000000000000E+001, ""], ["vic", 6.7000000000000002E+000, ""], ["nl", 3.3999999999999999E+000, "official"]] }
+{ "op" : "official", "args" : ["SY", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SY", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SY", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["SY", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["SY"], "expect" : [["apc", 8.5000000000000000E+001, ""], ["ar", 8.0000000000000000E+001, "official"], ["ku", 8.0000000000000000E+000, ""], ["fr", 5.9000000000000004E+000, ""], ["hy", 1.8000000000000000E+000, ""], ["syr", 8.4000000000000005E-002, ""]] }
+{ "op" : "official", "args" : ["SZ", false, false], "expect" : ["en", "ss"] }
+{ "op" : "official", "args" : ["SZ", false, true], "expect" : ["en", "ss"] }
+{ "op" : "official", "args" : ["SZ", true, false], "expect" : ["en", "ss"] }
+{ "op" : "official", "args" : ["SZ", true, true], "expect" : ["en", "ss"] }
+{ "op" : "info", "args" : ["SZ"], "expect" : [["en", 8.0000000000000000E+001, "official"], ["ss", 5.8000000000000000E+001, "official"], ["zu", 6.7999999999999998E+000, ""], ["ts", 1.7000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["TA", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["TA", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["TA", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["TA", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["TA"], "expect" : [["en", 9.9000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["TC", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TC", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TC", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TC", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["TC"], "expect" : [["en", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["TD", false, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TD", false, true], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TD", true, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TD", true, true], "expect" : ["ar", "fr"] }
+{ "op" : "info", "args" : ["TD"], "expect" : [["ar", 1.7000000000000000E+001, "official"], ["fr", 1.3000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["TF", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["TF", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["TF", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["TF", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["TF"], "expect" : [["fr", 1.0000000000000000E+002, ""]] }
+{ "op" : "official", "args" : ["TG", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["TG", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["TG", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["TG", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["TG"], "expect" : [["fr", 4.1000000000000000E+001, "official"], ["ee", 1.7000000000000000E+001, ""], ["ife", 1.3000000000000000E+000, ""], ["blo", 1.4999999999999999E-001, ""]] }
+{ "op" : "official", "args" : ["TH", false, false], "expect" : ["th"] }
+{ "op" : "official", "args" : ["TH", false, true], "expect" : ["th"] }
+{ "op" : "official", "args" : ["TH", true, false], "expect" : ["th"] }
+{ "op" : "official", "args" : ["TH", true, true], "expect" : ["th"] }
+{ "op" : "info", "args" : ["TH"], "expect" : [["th", 8.0000000000000000E+001, "official"], ["en", 2.7000000000000000E+001, ""], ["tts", 2.4000000000000000E+001, ""], ["nod", 9.5999999999999996E+000, ""], ["sou", 8.0000000000000000E+000, ""], ["mfa", 5.0000000000000000E+000, ""], ["zh_Hant", 1.8000000000000000E+000, ""], ["kxm", 1.7000000000000000E+000, ""], ["kdt", 4.7999999999999998E-001, ""], ["mnw", 1.7000000000000001E-001, ""], ["hnj", 9.8000000000000004E-002, ""], ["shn", 9.6000000000000002E-002, ""], ["lcp", 1.0000000000000000E-002, ""], ["lwl", 1.0000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["TJ", false, false], "expect" : ["tg"] }
+{ "op" : "official", "args" : ["TJ", false, true], "expect" : ["tg"] }
+{ "op" : "official", "args" : ["TJ", true, false], "expect" : ["tg"] }
+{ "op" : "official", "args" : ["TJ", true, true], "expect" : ["tg"] }
+{ "op" : "info", "args" : ["TJ"], "expect" : [["tg", 1.0000000000000000E+002, "official"], ["ru", 1.2000000000000000E+001, ""], ["fa", 7.8000000000000003E-001, ""], ["ar", 9.5999999999999992E-003, ""]] }
+{ "op" : "official", "args" : ["TK", false, false], "expect" : ["tkl", "en"] }
+{ "op" : "official", "args" : ["TK", false, true], "expect" : ["tkl", "en"] }
+{ "op" : "official", "args" : ["TK", true, false], "expect" : ["tkl", "en"] }
+{ "op" : "official", "args" : ["TK", true, true], "expect" : ["tkl", "en"] }
+{ "op" : "info", "args" : ["TK"], "expect" : [["tkl", 6.9000000000000000E+001, "official"], ["en", 3.8000000000000000E+001, "official"], ["sm", 2.0000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["TL", false, false], "expect" : ["tet", "pt"] }
+{ "op" : "official", "args" : ["TL", false, true], "expect" : ["tet", "pt"] }
+{ "op" : "official", "args" : ["TL", true, false], "expect" : ["tet", "pt"] }
+{ "op" : "official", "args" : ["TL", true, true], "expect" : ["tet", "pt"] }
+{ "op" : "info", "args" : ["TL"], "expect" : [["pt", 5.9000000000000000E+001, "official"], ["tet", 5.9000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["TM", false, false], "expect" : ["tk"] }
+{ "op" : "official", "args" : ["TM", false, true], "expect" : ["tk"] }
+{ "op" : "official", "args" : ["TM", true, false], "expect" : ["tk"] }
+{ "op" : "official", "args" : ["TM", true, true], "expect" : ["tk"] }
+{ "op" : "info", "args" : ["TM"], "expect" : [["tk", 7.0000000000000000E+001, "official"], ["ru", 1.2000000000000000E+001, ""], ["uz", 9.0000000000000000E+000, ""], ["ku", 4.0000000000000002E-001, ""], ["kaa", 1.0000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["TN", false, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TN", false, true], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TN", true, false], "expect" : ["ar", "fr"] }
+{ "op" : "official", "args" : ["TN", true, true], "expect" : ["ar", "fr"] }
+{ "op" : "info", "args" : ["TN"], "expect" : [["aeb", 9.0000000000000000E+001, ""], ["ar", 9.0000000000000000E+001, "official"], ["fr", 5.3000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["TO", false, false], "expect" : ["to", "en"] }
+{ "op" : "official", "args" : ["TO", false, true], "expect" : ["to", "en"] }
+{ "op" : "official", "args" : ["TO", true, false], "expect" : ["to", "en"] }
+{ "op" : "official", "args" : ["TO", true, true], "expect" : ["to", "en"] }
+{ "op" : "info", "args" : ["TO"], "expect" : [["to", 9.5000000000000000E+001, "official"], ["en", 2.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["TR", false, false], "expect" : ["tr"] }
+{ "op" : "official", "args" : ["TR", false, true], "expect" : ["tr"] }
+{ "op" : "official", "args" : ["TR", true, false], "expect" : ["tr"] }
+{ "op" : "official", "args" : ["TR", true, true], "expect" : ["tr"] }
+{ "op" : "info", "args" : ["TR"], "expect" : [["tr", 9.3000000000000000E+001, "official"], ["en", 1.7000000000000000E+001, ""], ["ku", 5.5000000000000000E+000, ""], ["apc", 5.2000000000000002E+000, ""], ["zza", 1.3999999999999999E+000, ""], ["kbd", 7.7000000000000002E-001, ""], ["az", 7.3999999999999999E-001, ""], ["az_Arab", 6.5000000000000002E-001, ""], ["ar", 5.6000000000000005E-001, ""], ["bgx", 4.6000000000000002E-001, ""], ["bg", 4.1999999999999998E-001, ""], ["ady", 3.9000000000000001E-001, ""], ["kiu", 1.9000000000000000E-001, ""], ["kaa", 1.0000000000000001E-001, ""], ["hy", 5.6000000000000001E-002, ""], ["ka", 5.6000000000000001E-002, ""], ["sr_Latn", 2.8000000000000001E-002, ""], ["lzz", 2.8000000000000001E-002, ""], ["sq", 2.1000000000000001E-002, ""], ["pnt_Latn", 6.1000000000000004E-003, ""], ["ab", 4.7999999999999996E-003, ""], ["el", 4.7999999999999996E-003, ""], ["tru", 3.5999999999999999E-003, ""], ["uz", 2.3999999999999998E-003, ""], ["ky_Latn", 1.4000000000000000E-003, ""], ["kk", 6.9999999999999999E-004, ""]] }
+{ "op" : "official", "args" : ["TT", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TT", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TT", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["TT", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["TT"], "expect" : [["en", 8.8000000000000000E+001, "official"], ["es", 2.8999999999999998E-001, ""]] }
+{ "op" : "official", "args" : ["TV", false, false], "expect" : ["tvl", "en"] }
+{ "op" : "official", "args" : ["TV", false, true], "expect" : ["tvl", "en"] }
+{ "op" : "official", "args" : ["TV", true, false], "expect" : ["tvl", "en"] }
+{ "op" : "official", "args" : ["TV", true, true], "expect" : ["tvl", "en"] }
+{ "op" : "info", "args" : ["TV"], "expect" : [["tvl", 8.5000000000000000E+001, "official"], ["en", 9.0999999999999996E+000, "official"]] }
+{ "op" : "official", "args" : ["TW", false, false], "expect" : ["zh_Hant", "nan_Hant", "hak_Hant"] }
+{ "op" : "official", "args" : ["TW", false, true], "expect" : ["zh_Hant", "nan_Hant", "hak_Hant"] }
+{ "op" : "official", "args" : ["TW", true, false], "expect" : ["zh_Hant", "nan_Hant", "hak_Hant"] }
+{ "op" : "official", "args" : ["TW", true, true], "expect" : ["zh_Hant", "nan_Hant", "hak_Hant"] }
+{ "op" : "info", "args" : ["TW"], "expect" : [["zh_Hant", 9.5000000000000000E+001, "official"], ["nan_Hant", 5.7000000000000000E+001, "official"], ["hak_Hant", 1.1000000000000000E+001, "official"], ["trv", 2.0000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["TZ", false, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["TZ", false, true], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["TZ", true, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["TZ", true, true], "expect" : ["sw", "en"] }
+{ "op" : "info", "args" : ["TZ"], "expect" : [["sw", 9.0000000000000000E+001, "official"], ["en", 6.9000000000000000E+001, "official"], ["suk", 8.6999999999999993E+000, ""], ["nym", 3.2999999999999998E+000, ""], ["kde", 2.5000000000000000E+000, ""], ["bez", 1.7000000000000000E+000, ""], ["ksb", 1.7000000000000000E+000, ""], ["mas", 1.5000000000000000E+000, ""], ["mgy", 1.3999999999999999E+000, ""], ["asa", 1.2000000000000000E+000, ""], ["lag", 8.7000000000000000E-001, ""], ["jmc", 7.3999999999999999E-001, ""], ["rof", 7.3999999999999999E-001, ""], ["vun", 7.3999999999999999E-001, ""], ["rwk", 2.2000000000000000E-001, ""], ["sbp", 2.0000000000000001E-001, ""]] }
+{ "op" : "official", "args" : ["UA", false, false], "expect" : ["uk"] }
+{ "op" : "official", "args" : ["UA", false, true], "expect" : ["uk", "ru"] }
+{ "op" : "official", "args" : ["UA", true, false], "expect" : ["uk"] }
+{ "op" : "official", "args" : ["UA", true, true], "expect" : ["uk", "ru"] }
+{ "op" : "info", "args" : ["UA"], "expect" : [["uk", 6.5000000000000000E+001, "official"], ["ru", 4.6000000000000000E+001, "de_facto_official"], ["pl", 2.3999999999999999E+000, ""], ["yi", 1.3000000000000000E+000, ""], ["rue", 1.2000000000000000E+000, ""], ["be", 8.2999999999999996E-001, ""], ["crh", 5.6000000000000005E-001, ""], ["ro", 5.2000000000000002E-001, ""], ["bg", 4.8999999999999999E-001, ""], ["tr", 4.1999999999999998E-001, ""], ["hu", 3.7000000000000000E-001, ""], ["el", 2.0000000000000000E-002, ""]] }
+{ "op" : "official", "args" : ["UG", false, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["UG", false, true], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["UG", true, false], "expect" : ["sw", "en"] }
+{ "op" : "official", "args" : ["UG", true, true], "expect" : ["sw", "en"] }
+{ "op" : "info", "args" : ["UG"], "expect" : [["sw", 7.5000000000000000E+001, "official"], ["lg", 1.3000000000000000E+001, ""], ["nyn", 6.2999999999999998E+000, ""], ["cgg", 5.4000000000000004E+000, ""], ["xog", 5.2999999999999998E+000, ""], ["en", 3.8999999999999999E+000, "official"], ["teo", 3.8999999999999999E+000, ""], ["laj", 3.7999999999999998E+000, ""], ["ach", 3.7000000000000002E+000, ""], ["myx", 2.8999999999999999E+000, ""], ["rw", 2.1000000000000001E+000, ""], ["ttj", 1.8999999999999999E+000, ""], ["hi", 4.4999999999999997E-003, ""]] }
+{ "op" : "official", "args" : ["UM", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["UM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["UM", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["UM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["UM"], "expect" : [["en", 1.0000000000000000E+002, "de_facto_official"]] }
+{ "op" : "official", "args" : ["US", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["US", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["US", true, false], "expect" : ["es", "haw"] }
+{ "op" : "official", "args" : ["US", true, true], "expect" : ["en", "es", "haw"] }
+{ "op" : "info", "args" : ["US"], "expect" : [["en", 9.6000000000000000E+001, "de_facto_official"], ["es", 9.5999999999999996E+000, "official_regional"], ["zh_Hant", 6.8999999999999995E-001, ""], ["fr", 5.6000000000000005E-001, ""], ["de", 4.6999999999999997E-001, ""], ["fil", 4.1999999999999998E-001, ""], ["it", 3.4000000000000002E-001, ""], ["vi", 3.4000000000000002E-001, ""], ["ko", 2.9999999999999999E-001, ""], ["ru", 2.3999999999999999E-001, ""], ["nv", 5.0000000000000003E-002, ""], ["yi", 4.9000000000000002E-002, ""], ["pdc", 3.9000000000000000E-002, ""], ["hnj", 3.5000000000000003E-002, ""], ["haw", 8.8999999999999999E-003, "official_regional"], ["frc", 8.3999999999999995E-003, ""], ["chr", 7.7000000000000002E-003, ""], ["esu", 6.3000000000000000E-003, ""], ["dak", 5.8999999999999999E-003, ""], ["cho", 3.3000000000000000E-003, ""], ["lkt", 2.3999999999999998E-003, ""], ["ik", 2.3000000000000000E-003, ""], ["mus", 1.1999999999999999E-003, ""], ["io", 0.0000000000000000E+000, ""], ["cic", 0.0000000000000000E+000, ""], ["cad", 0.0000000000000000E+000, ""], ["jbo", 0.0000000000000000E+000, ""], ["osa", 0.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["UY", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["UY", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["UY", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["UY", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["UY"], "expect" : [["es", 8.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["UZ", false, false], "expect" : ["uz", "uz_Cyrl"] }
+{ "op" : "official", "args" : ["UZ", false, true], "expect" : ["uz", "uz_Cyrl"] }
+{ "op" : "official", "args" : ["UZ", true, false], "expect" : ["uz", "uz_Cyrl"] }
+{ "op" : "official", "args" : ["UZ", true, true], "expect" : ["uz", "uz_Cyrl"] }
+{ "op" : "info", "args" : ["UZ"], "expect" : [["uz", 8.5000000000000000E+001, "official"], ["uz_Cyrl", 1.5000000000000000E+001, "official"], ["ru", 1.4000000000000000E+001, ""], ["kaa", 2.1000000000000001E+000, ""], ["tr", 6.2000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["VA", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["VA", false, true], "expect" : ["it"] }
+{ "op" : "official", "args" : ["VA", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["VA", true, true], "expect" : ["it"] }
+{ "op" : "info", "args" : ["VA"], "expect" : [["it", 8.2000000000000000E+001, "de_facto_official"], ["la", 8.2000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["VC", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VC", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VC", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VC", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["VC"], "expect" : [["en", 9.6000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["VE", false, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["VE", false, true], "expect" : ["es"] }
+{ "op" : "official", "args" : ["VE", true, false], "expect" : ["es"] }
+{ "op" : "official", "args" : ["VE", true, true], "expect" : ["es"] }
+{ "op" : "info", "args" : ["VE"], "expect" : [["es", 8.2000000000000000E+001, "official"], ["yrl", 6.4000000000000003E-003, ""]] }
+{ "op" : "official", "args" : ["VG", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VG", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VG", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VG", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["VG"], "expect" : [["en", 9.8000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["VI", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["VI", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["VI", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["VI", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["VI"], "expect" : [["en", 7.5000000000000000E+001, "de_facto_official"]] }
+{ "op" : "official", "args" : ["VN", false, false], "expect" : ["vi"] }
+{ "op" : "official", "args" : ["VN", false, true], "expect" : ["vi"] }
+{ "op" : "official", "args" : ["VN", true, false], "expect" : ["vi"] }
+{ "op" : "official", "args" : ["VN", true, true], "expect" : ["vi"] }
+{ "op" : "info", "args" : ["VN"], "expect" : [["vi", 8.6000000000000000E+001, "official"], ["zh_Hant", 1.1000000000000001E+000, ""], ["blt", 6.8999999999999995E-001, ""], ["hnj", 1.7000000000000001E-001, ""], ["cjm", 8.8999999999999996E-002, ""]] }
+{ "op" : "official", "args" : ["VU", false, false], "expect" : ["bi", "en", "fr"] }
+{ "op" : "official", "args" : ["VU", false, true], "expect" : ["bi", "en", "fr"] }
+{ "op" : "official", "args" : ["VU", true, false], "expect" : ["bi", "en", "fr"] }
+{ "op" : "official", "args" : ["VU", true, true], "expect" : ["bi", "en", "fr"] }
+{ "op" : "info", "args" : ["VU"], "expect" : [["bi", 9.0000000000000000E+001, "official"], ["en", 8.3000000000000000E+001, "official"], ["fr", 3.1000000000000000E+001, "official"]] }
+{ "op" : "official", "args" : ["WF", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["WF", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["WF", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["WF", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["WF"], "expect" : [["fr", 8.3000000000000000E+001, "official"], ["wls", 5.9000000000000000E+001, ""], ["fud", 3.0000000000000000E+001, ""]] }
+{ "op" : "official", "args" : ["WS", false, false], "expect" : ["sm", "en"] }
+{ "op" : "official", "args" : ["WS", false, true], "expect" : ["sm", "en"] }
+{ "op" : "official", "args" : ["WS", true, false], "expect" : ["sm", "en"] }
+{ "op" : "official", "args" : ["WS", true, true], "expect" : ["sm", "en"] }
+{ "op" : "info", "args" : ["WS"], "expect" : [["sm", 1.0000000000000000E+002, "official"], ["en", 2.1000000000000001E+000, "official"]] }
+{ "op" : "official", "args" : ["XK", false, false], "expect" : ["sq", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["XK", false, true], "expect" : ["sq", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["XK", true, false], "expect" : ["sq", "sr_Latn", "sr"] }
+{ "op" : "official", "args" : ["XK", true, true], "expect" : ["sq", "sr_Latn", "sr"] }
+{ "op" : "info", "args" : ["XK"], "expect" : [["sq", 9.2000000000000000E+001, "official"], ["aln", 7.4000000000000000E+001, ""], ["sr", 5.0000000000000000E+000, "official"], ["sr_Latn", 5.0000000000000000E+000, "official"]] }
+{ "op" : "official", "args" : ["YE", false, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["YE", false, true], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["YE", true, false], "expect" : ["ar"] }
+{ "op" : "official", "args" : ["YE", true, true], "expect" : ["ar"] }
+{ "op" : "info", "args" : ["YE"], "expect" : [["ar", 7.4000000000000000E+001, "official"], ["en", 9.0000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["YT", false, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["YT", false, true], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["YT", true, false], "expect" : ["fr"] }
+{ "op" : "official", "args" : ["YT", true, true], "expect" : ["fr"] }
+{ "op" : "info", "args" : ["YT"], "expect" : [["swb", 8.8000000000000000E+001, ""], ["fr", 6.3000000000000000E+001, "official"], ["buc", 2.3000000000000000E+001, ""], ["sw", 1.3999999999999999E+000, ""]] }
+{ "op" : "official", "args" : ["ZA", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["ZA", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["ZA", true, false], "expect" : ["en", "zu", "xh", "af", "nso", "tn", "st", "ts", "ss", "ve", "nr"] }
+{ "op" : "official", "args" : ["ZA", true, true], "expect" : ["en", "zu", "xh", "af", "nso", "tn", "st", "ts", "ss", "ve", "nr"] }
+{ "op" : "info", "args" : ["ZA"], "expect" : [["en", 3.1000000000000000E+001, "official"], ["zu", 2.4000000000000000E+001, "official_regional"], ["xh", 1.8000000000000000E+001, "official_regional"], ["af", 1.3000000000000000E+001, "official_regional"], ["nso", 9.4000000000000004E+000, "official_regional"], ["tn", 8.1999999999999993E+000, "official_regional"], ["st", 7.9000000000000004E+000, "official_regional"], ["ts", 4.4000000000000004E+000, "official_regional"], ["ss", 2.7000000000000002E+000, "official_regional"], ["ve", 2.2999999999999998E+000, "official_regional"], ["hi", 2.0000000000000000E+000, ""], ["nr", 1.6000000000000001E+000, "official_regional"], ["sw", 1.6999999999999999E-003, ""]] }
+{ "op" : "official", "args" : ["ZM", false, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["ZM", false, true], "expect" : ["en"] }
+{ "op" : "official", "args" : ["ZM", true, false], "expect" : ["en"] }
+{ "op" : "official", "args" : ["ZM", true, true], "expect" : ["en"] }
+{ "op" : "info", "args" : ["ZM"], "expect" : [["bem", 3.4000000000000000E+001, ""], ["ny", 1.9000000000000000E+001, ""], ["en", 1.6000000000000000E+001, "official"], ["toi", 1.1000000000000000E+001, ""], ["loz", 5.5000000000000000E+000, ""], ["nse", 3.0000000000000000E+000, ""], ["leb", 2.7999999999999998E+000, ""], ["tum", 2.6000000000000001E+000, ""], ["kqn", 1.8999999999999999E+000, ""], ["lun", 1.8999999999999999E+000, ""], ["lue", 1.5000000000000000E+000, ""]] }
+{ "op" : "official", "args" : ["ZW", false, false], "expect" : ["sn", "en", "nd"] }
+{ "op" : "official", "args" : ["ZW", false, true], "expect" : ["sn", "en", "nd"] }
+{ "op" : "official", "args" : ["ZW", true, false], "expect" : ["sn", "en", "nd"] }
+{ "op" : "official", "args" : ["ZW", true, true], "expect" : ["sn", "en", "nd"] }
+{ "op" : "info", "args" : ["ZW"], "expect" : [["sn", 8.1000000000000000E+001, "official"], ["en", 4.2000000000000000E+001, "official"], ["nd", 1.2000000000000000E+001, "official"], ["mxc", 6.5000000000000000E+000, ""], ["ndc", 6.0999999999999996E+000, ""], ["kck", 5.2999999999999998E+000, ""], ["ny", 1.8999999999999999E+000, ""], ["ve", 6.4000000000000001E-001, ""], ["tn", 2.2000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["ZZ", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["ZZ"], "expect" : [] }
+{ "op" : "official", "args" : ["ch", false, false], "expect" : ["de", "fr", "it"] }
+{ "op" : "official", "args" : ["ch", false, true], "expect" : ["de", "gsw", "fr", "it"] }
+{ "op" : "official", "args" : ["ch", true, false], "expect" : ["de", "fr", "it", "rm"] }
+{ "op" : "official", "args" : ["ch", true, true], "expect" : ["de", "gsw", "fr", "it", "rm"] }
+{ "op" : "info", "args" : ["ch"], "expect" : [["de", 7.6000000000000000E+001, "official"], ["gsw", 6.6000000000000000E+001, "de_facto_official"], ["en", 4.5000000000000000E+001, ""], ["fr", 3.9000000000000000E+001, "official"], ["it", 1.5000000000000000E+001, "official"], ["lmo", 4.0999999999999996E+000, ""], ["pt", 3.3999999999999999E+000, ""], ["rm", 5.0000000000000000E-001, "official_regional"], ["rmo", 2.8999999999999998E-001, ""], ["wae", 1.1000000000000000E-001, ""]] }
+{ "op" : "official", "args" : ["Pe", false, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["Pe", false, true], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["Pe", true, false], "expect" : ["es", "qu"] }
+{ "op" : "official", "args" : ["Pe", true, true], "expect" : ["es", "qu"] }
+{ "op" : "info", "args" : ["Pe"], "expect" : [["es", 7.3000000000000000E+001, "official"], ["qu", 1.5000000000000000E+001, "official"], ["ay", 1.6000000000000001E+000, ""]] }
+{ "op" : "official", "args" : ["XX", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["XX", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["XX", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["XX", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["XX"], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["ZZ", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["ZZ"], "expect" : [] }
+{ "op" : "official", "args" : ["001", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["001", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["001", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["001", true, true], "expect" : [] }
+{ "op" : "info", "args" : ["001"], "expect" : [] }
+{ "op" : "official", "args" : ["", false, false], "expect" : [] }
+{ "op" : "official", "args" : ["", false, true], "expect" : [] }
+{ "op" : "official", "args" : ["", true, false], "expect" : [] }
+{ "op" : "official", "args" : ["", true, true], "expect" : [] }
+{ "op" : "info", "args" : [""], "expect" : [] }

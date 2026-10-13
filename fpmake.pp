@@ -87,6 +87,8 @@ begin
     P.Targets.AddUnit('babel.dates.pas');
     P.Targets.AddUnit('babel.lists.pas');
     P.Targets.AddUnit('babel.units.pas');
+    P.Targets.AddUnit('babel.languages.pas');
+    P.Targets.AddUnit('babel.support.pas');
     Run;
   end;
 end.

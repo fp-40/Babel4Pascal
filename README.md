@@ -25,7 +25,15 @@ Work in progress. Done so far:
 
 - lists ('A, B, and C') in the locale's styles (`babel.lists`);
 - measurement units ('12 kilometers', '150 km/h'), unit names, compound
-  units (`babel.units`).
+  units (`babel.units`);
+- the official languages of a territory and their population shares
+  (`babel.languages`);
+- `TFormat`, the formatting functions bound to a locale, a time zone and
+  a numbering system (`babel.support`, Babel's `Format`).
+
+Not ported: Babel's gettext support (`babel.messages`, and the
+`Translations`/`NullTranslations` classes of `babel.support`) and
+`LazyProxy`, a deferred evaluation of Python objects.
 
 The API follows Python Babel 2.18.0, which uses CLDR 47. The library
 started as an exact reproduction of Babel's output and then departed
@@ -189,7 +197,11 @@ options.
    CLDR 47/48 data;
 8. `tests/lists/test_lists` and `tests/units/test_units` with their
    reference files (tests/lists/README.md, tests/units/README.md),
-   sampled from the cases on which the modules matched Babel.
+   sampled from the cases on which the modules matched Babel, and, when
+   gcc and the ICU headers are installed, compared with ICU4C;
+9. `tests/languages/test_languages` and `tests/format/test_format` with
+   their reference files (tests/languages/README.md,
+   tests/format/README.md).
 
 Each comparison must report 0 differences, except the listed data
 differences of the ICU comparisons.
