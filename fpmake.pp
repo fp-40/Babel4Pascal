@@ -84,6 +84,7 @@ begin
     P.Targets.AddUnit('babel.core.pas');
     P.Targets.AddUnit('babel.numbers.pas');
     P.Targets.AddUnit('babel.tz.pas');
+    P.Targets.AddUnit('babel.dates.pas');
     Run;
   end;
 end.

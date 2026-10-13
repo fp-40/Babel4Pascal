@@ -17,9 +17,13 @@ Work in progress. Done so far:
   of Python's `Decimal` (`babel.decimal`);
 - numbers, currencies and percentages: formatting (standard, compact,
   scientific, accounting, currency names), parsing, currency data
-  (`babel.numbers`).
+  (`babel.numbers`);
+- dates and times: formatting with the locale's patterns and with any
+  CLDR pattern or skeleton, intervals, durations, day periods, time zone
+  names, simple parsing (`babel.dates`), with the time zone rules of the
+  system's tz database (`babel.tz`).
 
-Not written yet: dates and times, lists, units.
+Not written yet: lists, units.
 
 The target is the output of Python Babel 2.18.0, which uses CLDR 47: the
 same strings, including where Babel departs from CLDR. The checks below
@@ -77,6 +81,23 @@ WriteLn(FormatCompactDecimal(1234567, 'en'));             // 1M
 WriteLn(FormatCurrency(-50, 'USD', 'en',
   CurrencyOptions.WithFormatType('accounting')));         // ($50.00)
 ```
+
+```pascal
+uses babel.dates, babel.cldr_es_PE, babel.cldr_en;
+
+T := EncodeDateTime(2026, 10, 13, 14, 30, 0, 0);          // UTC
+FormatDate(T, 'es_PE', 'full');                           // martes, 13 de octubre de 2026
+FormatDateAndTime(T, 'en', DateTimeOptions.WithFormat('full')
+  .WithTimeZone('America/Lima'));                         // Tuesday, October 13, 2026, 9:30:00 AM Peru Standard Time
+FormatInterval(T, IncDay(T, 3), 'en',
+  IntervalOptions.WithSkeleton('yMMMd'));                 // Oct 13 – 16, 2026
+FormatTimedelta(-3 * 3600, 'es_PE',
+  TimedeltaOptions.WithAddDirection(True));               // hace 3 horas
+```
+
+A `TDateTime` is taken as UTC, as Babel takes a naive datetime; the time
+zone to show it in is an option. Babel's `format_datetime` is
+`FormatDateAndTime`, as SysUtils already has a `FormatDateTime`.
 
 The optional parameters of Babel's functions are fields of an options
 record (`NumberOptions`, `CurrencyOptions`, `CompactOptions`,
@@ -136,7 +157,15 @@ options.
    (every locale, Latin and native digits). When node is installed, the
    results are also compared with ICU's on 18 000 cases
    (tests/js/README.md); the only differences allowed are those from the
-   CLDR 47/48 data.
+   CLDR 47/48 data;
+6. `tests/tz/test_tz` with vectors from `tests/python/gen_tz_vectors.py`:
+   offsets and DST of every zone of the system's tz database against
+   Python's zoneinfo (581 000 lookups);
+7. `tests/dates/test_dates` with vectors from
+   `tests/python/gen_dates_vectors.py`: 352 000 calls of the dates
+   functions (every pattern field and length, predefined formats,
+   skeletons, intervals, durations, day periods, zone names in 19 zones,
+   parsing) against Babel.
 
 Each comparison must report 0 differences (the ICU report is
 informative).

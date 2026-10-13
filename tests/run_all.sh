@@ -20,6 +20,8 @@
 # 6. babel.tz against Python's zoneinfo on the system's tz database: every
 #    zone, offsets and DST at UTC instants and local times
 #    (tests/python/gen_tz_vectors.py + tests/tz/test_tz).
+# 7. babel.dates against vectors of the oracle's results
+#    (tests/python/gen_dates_vectors.py + tests/dates/test_dates).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -55,7 +57,7 @@ check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '
 echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
-for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz; do
+for prog in core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates; do
   fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
     "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
     || { tail -n 5 "$OUT/build.log"; exit 1; }
@@ -74,4 +76,7 @@ fi
 echo "== babel.tz vs Python zoneinfo (system tz database)"
 check tz_vectors python3 -I "$ROOT/tests/python/gen_tz_vectors.py" "$OUT/vectors/tz.jsonl"
 check tz "$OUT/bin/test_tz" "$OUT/vectors/tz.jsonl"
+echo "== babel.dates vs Babel"
+check dates_vectors python3 -I "$ROOT/tests/python/gen_dates_vectors.py" "$OUT/vectors/dates.jsonl"
+check dates "$OUT/bin/test_dates" "$OUT/vectors/dates.jsonl"
 echo "== all passed"

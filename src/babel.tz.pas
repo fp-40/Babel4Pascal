@@ -103,6 +103,9 @@ procedure SetZoneInfoPath(const Path: string);
   second, from its decoded fields), and back. }
 function UnixSeconds(DT: TDateTime): Int64;
 function DateTimeOfUnix(Seconds: Int64): TDateTime;
+{ The fields of a TDateTime rounded to the nearest millisecond
+  (DecodeDateTime truncates: a value encoded with 123 ms gives 122). }
+procedure DecodeDateTimeMs(DT: TDateTime; out Y, M, D, H, N, S, MS: Word);
 
 implementation
 
@@ -160,11 +163,30 @@ begin
     Dec(Result);
 end;
 
+procedure DecodeDateTimeMs(DT: TDateTime; out Y, M, D, H, N, S, MS: Word);
+var
+  Day: Int64;
+  Ms_: Int64;
+begin
+  Day := Trunc(DT);
+  Ms_ := Round(Abs(DT - Day) * 86400000);
+  if Ms_ >= 86400000 then
+  begin
+    Dec(Ms_, 86400000);
+    if DT >= 0 then Inc(Day) else Dec(Day);
+  end;
+  DecodeDate(Day, Y, M, D);
+  H := Ms_ div 3600000;
+  N := (Ms_ div 60000) mod 60;
+  S := (Ms_ div 1000) mod 60;
+  MS := Ms_ mod 1000;
+end;
+
 function UnixSeconds(DT: TDateTime): Int64;
 var
   Y, M, D, H, N, S, MS: Word;
 begin
-  DecodeDateTime(DT, Y, M, D, H, N, S, MS);
+  DecodeDateTimeMs(DT, Y, M, D, H, N, S, MS);
   Result := DaysFromCivil(Y, M, D) * 86400 + H * 3600 + N * 60 + S;
 end;
 
