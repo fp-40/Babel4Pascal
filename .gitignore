@@ -1,0 +1,16 @@
+# downloaded CLDR release (tools/gencldr.py fetch)
+/.cache/
+# build output (compiles, test runs)
+/build/
+# fpmake output (tools/install-package.sh, or fpc fpmake.pp by hand)
+/units/
+/fpmake
+/fpmake.o
+/*.fpm
+__pycache__/
+*.o
+*.ppu
+*.a
+*.compiled
+# generated CLDR data units (tools/gencldr.py generate; install-package.sh runs it)
+/src/data/
