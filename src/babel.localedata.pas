@@ -107,6 +107,8 @@ function LoadLocaleData(const Name: string; MergeInherited: Boolean = True): TCL
   empty map for an unknown key. Raises ELocaleDataError when no global
   data is linked. }
 function GetGlobal(const Key: string): TCLDRValue;
+{ A map with no entries (shared; never changes). }
+function EmptyCLDRMap: TCLDRValue;
 
 implementation
 
@@ -866,6 +868,11 @@ begin
   Result := T.Get(Key);
   if Result = nil then
     Result := EmptyMap;
+end;
+
+function EmptyCLDRMap: TCLDRValue;
+begin
+  Result := EmptyMap;
 end;
 
 procedure FreeNodes;

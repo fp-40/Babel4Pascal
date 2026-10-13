@@ -8,9 +8,16 @@ The API mimics the one used by the Python [Babel](https://babel.pocoo.org/) libr
 
 ## Status
 
-Work in progress. Done so far: the CLDR data and its loading
-(`babel.localedata`). The formatting API (`Locale`, numbers, dates,
-plurals, lists, units) is not written yet.
+Work in progress. Done so far:
+
+- the CLDR data and its loading (`babel.localedata`);
+- locales: `TLocale` (Babel's `Locale`), identifiers, negotiation and the
+  default locale (`babel.core`);
+- plural rules (`babel.plural`) and decimal numbers as Python's `Decimal`
+  holds them (`babel.decimal`).
+
+Not written yet: formatting of numbers, currencies, dates and times,
+lists and units.
 
 The target is the output of Python Babel 2.18.0, which uses CLDR 47: the
 same strings, including where Babel departs from CLDR. The checks below
@@ -36,6 +43,32 @@ its wheel from PyPI into `.cache/oracle`; no install is needed).
 - `babel.localedata` loads a locale on first use: it merges the locale's
   data with what it inherits and resolves aliases exactly as Babel's
   `babel.localedata.load` and `LocaleDataDict` do.
+
+## Using it
+
+```pascal
+uses babel.core, babel.cldr_es_PE, babel.cldr_en;   { the locales to link }
+
+var L: TLocale;
+begin
+  L := TLocale.Parse('es_PE');
+  WriteLn(L.DisplayName);                 // español (Perú)
+  WriteLn(L.GetDisplayName('en'));        // Spanish (Peru): a string converts to TLocale
+  WriteLn(L.Territories.Str('DE'));       // Alemania
+  WriteLn(L.PluralForm.Evaluate(1));      // one
+end.
+```
+
+Names follow Babel's in Pascal case (`Locale.parse` is `TLocale.Parse`,
+`get_display_name` is `GetDisplayName`). Where Babel returns `None` for a
+missing name, these functions return `''`. Errors are `EBabelError`
+subclasses named after Babel's exceptions (`EUnknownLocaleError`,
+`EBabelValueError`, `EPluralRuleError`).
+
+A `Double` given to the library is read as Babel reads a Python `float`:
+as the shortest decimal that converts back to the same `Double` (2.675 is
+2.675, not its binary value 2.67499999...). Use `TDecimal` (or an integer)
+for exact decimal values.
 
 ## Installing
 
@@ -63,9 +96,16 @@ options.
    locale files of the release;
 3. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (merged and alias-resolved), against
-   the oracle's `load()`, for every generated locale and the global data.
+   the oracle's `load()`, for every generated locale and the global data;
+4. `tests/core/test_core` with vectors from
+   `tests/python/gen_core_vectors.py`: identifiers, `Locale.parse`,
+   negotiation, names and properties of every generated locale, plural
+   rules (evaluation, `rules`, gettext and JavaScript forms), plural
+   operands, `Decimal` parsing and float-to-decimal conversion (30 000
+   doubles); `tests/python/check_default_locale.py`: the default locale
+   under several environments.
 
-Each comparison must report 0 differences (keys, their order and values).
+Each comparison must report 0 differences.
 
 ## Licenses
 

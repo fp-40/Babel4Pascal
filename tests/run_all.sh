@@ -7,6 +7,10 @@
 # 3. The Pascal library's loaded data against the oracle's
 #    (tests/data/dumpdata + tests/python/compare_dump.py): every generated
 #    locale, and the global data.
+# 4. babel.core, babel.plural and babel.decimal against vectors of the
+#    oracle's results (tests/python/gen_core_vectors.py +
+#    tests/core/test_core), and DefaultLocale under several environments
+#    (tests/python/check_default_locale.py + tests/core/print_default).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -39,4 +43,14 @@ fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
 "$OUT/bin/dumpdata" --global > "$OUT/dump-global.txt"
 check locales sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' < '$OUT/dump-locales.txt'"
 check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '$OUT/dump-global.txt'"
+echo "== babel.core, babel.plural, babel.decimal vs Babel"
+mkdir -p "$OUT/vectors"
+check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
+for prog in test_core print_default; do
+  fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
+    "tests/core/$prog.pas" > "$OUT/$prog.build.log" 2>&1 \
+    || { tail -n 5 "$OUT/$prog.build.log"; exit 1; }
+done
+check core "$OUT/bin/test_core" "$OUT/vectors/core.jsonl"
+check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
 echo "== all passed"
