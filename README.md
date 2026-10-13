@@ -13,11 +13,13 @@ Work in progress. Done so far:
 - the CLDR data and its loading (`babel.localedata`);
 - locales: `TLocale` (Babel's `Locale`), identifiers, negotiation and the
   default locale (`babel.core`);
-- plural rules (`babel.plural`) and decimal numbers as Python's `Decimal`
-  holds them (`babel.decimal`).
+- plural rules (`babel.plural`) and decimal numbers with the arithmetic
+  of Python's `Decimal` (`babel.decimal`);
+- numbers, currencies and percentages: formatting (standard, compact,
+  scientific, accounting, currency names), parsing, currency data
+  (`babel.numbers`).
 
-Not written yet: formatting of numbers, currencies, dates and times,
-lists and units.
+Not written yet: dates and times, lists, units.
 
 The target is the output of Python Babel 2.18.0, which uses CLDR 47: the
 same strings, including where Babel departs from CLDR. The checks below
@@ -65,6 +67,24 @@ missing name, these functions return `''`. Errors are `EBabelError`
 subclasses named after Babel's exceptions (`EUnknownLocaleError`,
 `EBabelValueError`, `EPluralRuleError`).
 
+```pascal
+uses babel.numbers, babel.cldr_es_PE, babel.cldr_en;
+
+WriteLn(FormatDecimal(1250, 'es_PE'));                    // 1,250
+WriteLn(FormatCurrency(1234.5, 'PEN', 'es_PE'));          // S/ 1,234.50
+WriteLn(FormatPercent(0.18, 'en'));                       // 18%
+WriteLn(FormatCompactDecimal(1234567, 'en'));             // 1M
+WriteLn(FormatCurrency(-50, 'USD', 'en',
+  CurrencyOptions.WithFormatType('accounting')));         // ($50.00)
+```
+
+The optional parameters of Babel's functions are fields of an options
+record (`NumberOptions`, `CurrencyOptions`, `CompactOptions`,
+`ParseOptions`): start from the function, which returns Babel's
+defaults, and change fields or chain `With...` calls. A number can be an
+integer, a `Double`, a `TDecimal` or a string; the library remembers
+which, as Babel's results depend on it.
+
 A `Double` given to the library is read as Babel reads a Python `float`:
 as the shortest decimal that converts back to the same `Double` (2.675 is
 2.675, not its binary value 2.67499999...). Use `TDecimal` (or an integer)
@@ -102,8 +122,14 @@ options.
    negotiation, names and properties of every generated locale, plural
    rules (evaluation, `rules`, gettext and JavaScript forms), plural
    operands, `Decimal` parsing and float-to-decimal conversion (30 000
-   doubles); `tests/python/check_default_locale.py`: the default locale
-   under several environments.
+   doubles), and the decimal arithmetic against Python's `decimal` (4 000
+   random operations); `tests/python/check_default_locale.py`: the
+   default locale under several environments;
+5. `tests/numbers/test_numbers` with vectors from
+   `tests/python/gen_numbers_vectors.py`: about 263 000 calls of the
+   formatting, parsing and currency functions over every locale (basic
+   cases) and 59 locales (every combination of number kind, pattern and
+   option).
 
 Each comparison must report 0 differences.
 

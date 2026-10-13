@@ -11,6 +11,8 @@
 #    oracle's results (tests/python/gen_core_vectors.py +
 #    tests/core/test_core), and DefaultLocale under several environments
 #    (tests/python/check_default_locale.py + tests/core/print_default).
+# 5. babel.numbers against vectors of the oracle's results
+#    (tests/python/gen_numbers_vectors.py + tests/numbers/test_numbers).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -46,11 +48,14 @@ check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '
 echo "== babel.core, babel.plural, babel.decimal vs Babel"
 mkdir -p "$OUT/vectors"
 check vectors python3 -I "$ROOT/tests/python/gen_core_vectors.py" "$OUT/vectors/core.jsonl"
-for prog in test_core print_default; do
-  fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
-    "tests/core/$prog.pas" > "$OUT/$prog.build.log" 2>&1 \
-    || { tail -n 5 "$OUT/$prog.build.log"; exit 1; }
+for prog in core/test_core core/print_default numbers/test_numbers; do
+  fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data -Futests/support \
+    "tests/$prog.pas" > "$OUT/build.log" 2>&1 \
+    || { tail -n 5 "$OUT/build.log"; exit 1; }
 done
 check core "$OUT/bin/test_core" "$OUT/vectors/core.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
+echo "== babel.numbers vs Babel"
+check numbers_vectors python3 -I "$ROOT/tests/python/gen_numbers_vectors.py" "$OUT/vectors/numbers.jsonl"
+check numbers "$OUT/bin/test_numbers" "$OUT/vectors/numbers.jsonl"
 echo "== all passed"

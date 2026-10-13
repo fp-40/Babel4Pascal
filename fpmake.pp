@@ -76,11 +76,13 @@ begin
     P.SourcePath.Add('src/data');
     P.IncludePath.Add('src');    { babel.pyfloatrepr.inc }
     P.Targets.AddUnit('babel.errors.pas');
+    P.Targets.AddUnit('babel.pystr.pas');
     P.Targets.AddUnit('babel.decimal.pas');
     P.Targets.AddUnit('babel.localedata.pas');
     P.Targets.AddUnit('babel.plural.pas');
     AddDataUnits(P);
     P.Targets.AddUnit('babel.core.pas');
+    P.Targets.AddUnit('babel.numbers.pas');
     Run;
   end;
 end.

@@ -170,9 +170,10 @@ begin
     raise EBabelOverflowError.Create('cannot convert float infinity to integer');
   if Frac(A) = 0 then
   begin
-    { Babel: an integral float becomes int(n). }
+    { Babel: an integral float becomes int(n), its exact binary value
+      (1e25 is 10000000000000000905969664). }
     Result := Default(TPluralOperands);
-    Result.N := TDecimal.FromDouble(A).Truncate;
+    Result.N := TDecimal.FromDoubleExact(A);
     Result.I := Result.N;
     Result.F := TDecimal.FromInt64(0);
     Result.T := Result.F;

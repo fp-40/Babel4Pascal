@@ -10,53 +10,14 @@ program test_core;
 {$mode objfpc}{$H+}
 
 uses
-  cwstring,   { fpjson converts strings through UnicodeString }
-  SysUtils, Classes, fpjson, jsonparser,
+  SysUtils, Classes, fpjson, jsonparser, testkit,
   babel.errors, babel.decimal, babel.plural, babel.localedata, babel.core,
   babel.cldr_all;
 
 var
-  Failures, Total: Integer;
-  OpCounts, OpFails: TStringList;
   PluralInts: array of Int64;
   PluralFloats: array of Double;
   PluralDecs: array of string;
-
-procedure Fail(const Op, Detail: string);
-begin
-  Inc(Failures);
-  OpFails.Values[Op] := IntToStr(StrToIntDef(OpFails.Values[Op], 0) + 1);
-  if Failures <= 40 then
-    WriteLn('FAIL ', Op, ': ', Detail);
-end;
-
-function ErrorName(E: Exception): string;
-begin
-  if E is EUnknownLocaleError then Result := 'UnknownLocaleError'
-  else if E is EPluralRuleError then Result := 'RuleError'
-  else if E is EBabelValueError then Result := 'ValueError'
-  else if E is EBabelTypeError then Result := 'TypeError'
-  else if E is EBabelKeyError then Result := 'KeyError'
-  else if E is EBabelOverflowError then Result := 'OverflowError'
-  else Result := E.ClassName + ': ' + E.Message;
-end;
-
-function DoubleOfHex(const S: string): Double;
-var
-  Q: QWord;
-begin
-  Q := StrToQWord('$' + S);
-  Move(Q, Result, 8);
-end;
-
-function StrArray(const A: array of string): TJSONArray;
-var
-  S: string;
-begin
-  Result := TJSONArray.Create;
-  for S in A do
-    Result.Add(S);
-end;
 
 { ---- one case per operation; each returns the result as JSON ---- }
 
@@ -200,6 +161,39 @@ begin
   Result := A;
 end;
 
+function DecimalOpJSON(const Op, SA, SB: string): TJSONData;
+var
+  A, R: TDecimal;
+  J: TJSONArray;
+begin
+  A := TDecimal.Parse(SA);
+  if Op = 'adjusted' then Exit(TJSONIntegerNumber.Create(A.Adjusted));
+  if Op = 'fixed' then Exit(TJSONString.Create(A.FormatFixed));
+  if Op = 'compare' then Exit(TJSONIntegerNumber.Create(A.Compare(TDecimal.Parse(SB))));
+  if Op = 'abs' then R := A.Abs
+  else if Op = 'normalize' then R := A.Normalize
+  else if Op = 'scaleb' then R := A.ScaleB(StrToInt64(SB))
+  else if Op = 'pow10' then R := TDecimal.Pow10(StrToInt64(SB))
+  else if Op = 'mul' then R := A.Multiply(TDecimal.Parse(SB))
+  else if Op = 'div' then R := A.Divide(TDecimal.Parse(SB))
+  else if Op = 'quantize' then R := A.Quantize(StrToInt64(SB))
+  else if Op = 'round' then R := A.Round(StrToInt64(SB))
+  else raise Exception.Create('unknown decimal op ' + Op);
+  J := TJSONArray.Create;
+  J.Add(R.ToString);
+  case R.Kind of
+    dkFinite: J.Add('finite');
+    dkInfinity: J.Add('inf');
+    dkNaN: J.Add('nan');
+    dkSNaN: J.Add('snan');
+  end;
+  J.Add(Ord(R.Negative));
+  J.Add(R.Digits);
+  if R.Kind = dkFinite then J.Add(R.Exponent) else J.Add(0);
+  J.Add(R.ToString);
+  Result := J;
+end;
+
 function RuleFromArgs(A: TJSONArray): TPluralRule;
 var
   Items: array of TPluralRuleItem;
@@ -266,6 +260,8 @@ begin
     Result := OperandsJSON(ExtractOperands(Args.Int64s[0]))
   else if Op = 'decimal' then
     Result := DecimalJSON(Args.Strings[0])
+  else if Op = 'decimal_op' then
+    Result := DecimalOpJSON(Args.Strings[0], Args.Strings[1], Args.Strings[2])
   else
     raise Exception.Create('unknown op ' + Op);
 end;
@@ -281,16 +277,13 @@ begin
   begin
     C := Cases.Arrays[I];
     X := DoubleOfHex(C.Strings[0]);
-    Inc(Total);
     Got := PyFloatRepr(X);
-    if Got <> C.Strings[1] then
-      Fail('float_repr', Format('%s: got %s want %s', [C.Strings[0], Got, C.Strings[1]]));
+    Check('float_repr', Got = C.Strings[1], Format('%s: got %s want %s', [C.Strings[0], Got, C.Strings[1]]));
     if C.Strings[2] <> '' then
     begin
-      Inc(Total);
       Got := TDecimal.FromDouble(X).ToString;
-      if Got <> C.Strings[2] then
-        Fail('float_decimal', Format('%s: got %s want %s', [C.Strings[0], Got, C.Strings[2]]));
+      Check('float_decimal', Got = C.Strings[2],
+        Format('%s: got %s want %s', [C.Strings[0], Got, C.Strings[2]]));
     end;
   end;
 end;
@@ -314,78 +307,27 @@ begin
     PluralDecs[I] := A.Strings[I];
 end;
 
-procedure RunCase(Line: TJSONObject);
+{ The lines that are not single cases. }
+function SpecialLine(Line: TJSONObject): Boolean;
 var
-  Op, Want, GotText: string;
-  Got: TJSONData;
+  Op: string;
 begin
   Op := Line.Strings['op'];
+  Result := True;
   if Op = 'plural_inputs' then
-  begin
-    LoadPluralInputs(Line.Objects['expect']);
-    Exit;
-  end;
-  if Op = 'float_repr' then
-  begin
-    CheckFloatRepr(Line.Arrays['expect']);
-    Exit;
-  end;
-  Inc(Total);
-  OpCounts.Values[Op] := IntToStr(StrToIntDef(OpCounts.Values[Op], 0) + 1);
-  if Line.IndexOfName('error') >= 0 then
-    Want := 'error ' + Line.Strings['error']
+    LoadPluralInputs(Line.Objects['expect'])
+  else if Op = 'float_repr' then
+    CheckFloatRepr(Line.Arrays['expect'])
   else
-    Want := Line.Elements['expect'].AsJSON;
-  try
-    Got := Run(Op, Line.Arrays['args']);
-    try
-      GotText := Got.AsJSON;
-    finally
-      Got.Free;
-    end;
-  except
-    on E: Exception do
-      GotText := 'error ' + ErrorName(E);
-  end;
-  if GotText <> Want then
-    Fail(Op, Line.Arrays['args'].AsJSON + LineEnding + '    got  ' + Copy(GotText, 1, 400) +
-      LineEnding + '    want ' + Copy(Want, 1, 400));
+    Result := False;
 end;
 
-var
-  F: TextFile;
-  S: string;
-  J: TJSONData;
-  I: Integer;
 begin
   if ParamCount <> 1 then
   begin
     WriteLn('usage: test_core VECTORS.jsonl');
     Halt(2);
   end;
-  { The library's strings are UTF-8; make fpjson's conversions UTF-8 too. }
-  DefaultSystemCodePage := CP_UTF8;
-  SetMultiByteConversionCodePage(CP_UTF8);
-  OpCounts := TStringList.Create;
-  OpFails := TStringList.Create;
-  AssignFile(F, ParamStr(1));
-  Reset(F);
-  while not EOF(F) do
-  begin
-    ReadLn(F, S);
-    if S = '' then
-      Continue;
-    J := GetJSON(S);
-    try
-      RunCase(TJSONObject(J));
-    finally
-      J.Free;
-    end;
-  end;
-  CloseFile(F);
-  for I := 0 to OpFails.Count - 1 do
-    WriteLn('  ', OpFails.Names[I], ': ', OpFails.ValueFromIndex[I], ' failed');
-  WriteLn(Total, ' cases, ', Failures, ' failed');
-  if Failures > 0 then
+  if RunVectors(ParamStr(1), @Run, @SpecialLine) > 0 then
     Halt(1);
 end.

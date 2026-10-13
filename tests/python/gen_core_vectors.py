@@ -9,49 +9,19 @@ units in src/data), so that Locale.parse chooses among the same locales.
 Usage: gen_core_vectors.py OUT.jsonl
 """
 import decimal
-import glob
 import json
 import os
 import random
-import re
 import struct
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(ROOT, 'tools'))
-import oracle  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import oracle_linked  # noqa: E402
 
-oracle.ensure()
+LINKED = oracle_linked.setup()
 from babel import Locale, localedata  # noqa: E402
 from babel import core  # noqa: E402
 from babel.plural import PluralRule, RuleError, extract_operands, to_gettext, to_javascript  # noqa: E402
-
-
-def linked_locales():
-    names = set()
-    for path in glob.glob(os.path.join(ROOT, 'src', 'data', 'babel.cldr_*.pas')):
-        with open(path, encoding='utf-8') as f:
-            m = re.search(r"RegisterLocaleData\('([^']+)'", f.read())
-        if m:
-            names.add(m.group(1))
-    if not names:
-        raise SystemExit('no data units in src/data (tools/gencldr.py generate)')
-    return names
-
-
-LINKED = linked_locales()
-_identifiers = sorted(LINKED - {'root'})
-
-
-def _exists(name):
-    """localedata.exists over the linked locales only."""
-    if not name or not isinstance(name, str):
-        return False
-    return name in LINKED or bool(localedata.normalize_locale(name))
-
-
-localedata.locale_identifiers = lambda: _identifiers
-localedata.exists = _exists
 
 out = []
 
@@ -61,10 +31,10 @@ def case(op, args, fn):
     try:
         out.append({'op': op, 'args': args, 'expect': fn()})
     except (ValueError, TypeError, KeyError, OverflowError, RuleError,
-            core.UnknownLocaleError, decimal.InvalidOperation) as e:
+            core.UnknownLocaleError, decimal.DecimalException) as e:
         name = type(e).__name__
-        if isinstance(e, decimal.InvalidOperation):
-            name = 'ValueError'
+        if isinstance(e, decimal.DecimalException):
+            name = 'DecimalException'
         out.append({'op': op, 'args': args, 'error': name})
 
 
@@ -146,7 +116,8 @@ FLOATS = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 0.1 + 0.2, 1e-7, 1.25, 11.0, 21.5, 1e16,
           -1.5, 3.0, 1000000.0, 0.001, 1.1, 2.75, 1e22]
 DECS = ['0', '1', '1.0', '1.00', '0.05', '2.10', '1E+3', '1000000', '1.000000', '1e6', '-1',
         '0.0001', '21.0', '12345678901234567890.5', '1.5', '0.0', '2', '3', '4', '5', '11',
-        '101', '1000000.0', '1E6', '-0', '0.10', '1.10', '22.5', '1e-3', '0E-5', '105.1']
+        '101', '1000000.0', '1E6', '-0', '0.10', '1.10', '22.5', '1e-3', '0E-5', '105.1',
+        '1234567890123456789012345678.95', '1.000000000000000000000000000001', '١٢٣.٥']
 
 
 def bits_of(x):
@@ -219,7 +190,8 @@ DEC_STRS = ['1_000', '_1', '1__0', '1_', '1.5_0', ' 12 ', '\t-0.00\n', '+.5', '5
             '1e', '1E+3', '1e-3', '0012.50', '-0', 'Inf', '-infinity', 'nan', 'NaN0123', 'sNaN',
             '-sNaN7', 'nan12a', '1.2.3', '1e999999999999999999', '0.000001', '0.0000001', '1e+16',
             '12345678901234567890123', '', ' ', '+', '-', '1e+', '0', '00', '0.0', '1.', '-.0',
-            '123e-10', '1E-6', '1E-7', '-12.3400E+5', 'infinit', 'Infinityx', 'NaN0']
+            '123e-10', '1E-6', '1E-7', '-12.3400E+5', 'infinit', 'Infinityx', 'NaN0',
+            '١٢٣', '\u00a012\u2003', '۱۲.۵', '1\u00b2']
 
 
 def dec(s):
@@ -233,6 +205,61 @@ def dec(s):
 
 for s in DEC_STRS:
     case('decimal', [s], lambda: dec(s))
+
+# --- decimal arithmetic (Python's default context) ----------------------------
+
+drnd = random.Random(47)
+
+
+def rand_dec():
+    r = drnd.random()
+    if r < 0.03:
+        return drnd.choice(['Infinity', '-Infinity', 'NaN', '-NaN', '0', '-0', '0E-5', '0E+3'])
+    n = drnd.choice([1, 1, 2, 3, 5, 8, 15, 27, 28, 29, 30, 40])
+    digits = ''.join(drnd.choice('0123456789') for _ in range(n)).lstrip('0') or '0'
+    if drnd.random() < 0.3:
+        digits = digits.rstrip('0') + '0' * drnd.randrange(0, 6) if digits != '0' else '0'
+    exp = drnd.randrange(-40, 41) if drnd.random() < 0.7 else drnd.randrange(-8, 9)
+    return ('-' if drnd.random() < 0.3 else '') + digits + 'E' + str(exp)
+
+
+def dec_ops(op, a, b):
+    A = decimal.Decimal(a)
+    if op == 'abs': r = abs(A)
+    elif op == 'normalize': r = A.normalize()
+    elif op == 'adjusted': return A.adjusted()
+    elif op == 'scaleb': r = A.scaleb(int(b))
+    elif op == 'pow10': r = decimal.Decimal(10) ** int(b)
+    elif op == 'mul': r = A * decimal.Decimal(b)
+    elif op == 'div': r = A / decimal.Decimal(b)
+    elif op == 'quantize': r = A.quantize(decimal.Decimal('1E' + b))
+    elif op == 'round': r = round(A, int(b))
+    elif op == 'fixed': return f'{A:f}'
+    elif op == 'compare': return (A > decimal.Decimal(b)) - (A < decimal.Decimal(b))
+    return dec(str(r)) + [str(r)]
+
+
+decimal.setcontext(decimal.Context())   # the default context
+for _ in range(4000):
+    op = drnd.choice(['abs', 'normalize', 'adjusted', 'scaleb', 'pow10', 'mul', 'div',
+                      'quantize', 'round', 'fixed', 'compare'])
+    a = rand_dec()
+    if op in ('scaleb', 'pow10', 'round'):
+        b = str(drnd.randrange(-35, 36))
+    elif op == 'quantize':
+        b = str(drnd.randrange(-35, 10))
+    elif op == 'compare':
+        if 'N' in a.upper() and 'INF' not in a.upper():
+            a = '1E1'
+        b = rand_dec()
+        if 'N' in b.upper() and 'INF' not in b.upper():
+            b = '2'
+    else:
+        b = rand_dec()
+    case('decimal_op', [op, a, b], lambda: dec_ops(op, a, b))
+for a, b in [('1500', '1000'), ('1000', '1000'), ('1', '3'), ('12345', '100'), ('2', '3'),
+             ('1', '0'), ('0', '0'), ('0', '5'), ('-7', '2'), ('1E+30', '7'), ('5', '2')]:
+    case('decimal_op', ['div', a, b], lambda: dec_ops('div', a, b))
 
 rnd = random.Random(46)
 specials = [0.0, -0.0, 1.0, 0.1, 1e16, 1e15, 123456789012345680.0, 5e-324, 1.7976931348623157e308,
