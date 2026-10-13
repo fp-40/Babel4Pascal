@@ -8693,3 +8693,15 @@
 { "op" : "parse_date", "args" : ["Oct 13", "medium", "en"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["13/10", "short", "es"], "error" : "ParseError" }
 { "op" : "parse_date", "args" : ["5", "short", "en"], "error" : "ParseError" }
+{ "op" : "parse_time", "args" : ["3:15 p.m.", "short", "es"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["3:15 p. m.", "short", "es"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["3:15 p.m", "short", "es"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["3:15 P.M.", "short", "es"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["3:15 p.m.", "short", "es_PE"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["12:05 a.m.", "short", "es"], "expect" : [0, 5, 0] }
+{ "op" : "parse_time", "args" : ["12:05 a. m.", "short", "es"], "expect" : [0, 5, 0] }
+{ "op" : "parse_time", "args" : ["3:15 p.m.", "short", "en"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["3:15 P. M.", "short", "en"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["15:15", "short", "es"], "expect" : [15, 15, 0] }
+{ "op" : "parse_time", "args" : ["lunes 9:00 a.m.", "short", "es"], "expect" : [9, 0, 0] }
+{ "op" : "parse_time", "args" : ["3:15 am", "short", "fr"], "expect" : [3, 15, 0] }

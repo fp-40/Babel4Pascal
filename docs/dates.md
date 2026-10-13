@@ -543,7 +543,8 @@ The rules:
   compared without case.
 - A time is read as hour, minute and second (the minute and second may
   be missing). An am or pm marker in the text (the locale's names in any
-  width, or `am`/`pm`, ASCII letters without case) reads the hour on the
+  width, or `am`/`pm`, compared without case, spaces and periods: `p.m.`,
+  `p. m.` and `PM` are the same marker) reads the hour on the
   12-hour clock: 12 am is 0:00, 12 pm is 12:00, 1 pm to 11 pm are 13:00
   to 23:00.
 - A text without digits, or with fewer numbers than the date needs,

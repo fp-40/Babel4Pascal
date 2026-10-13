@@ -563,8 +563,9 @@ function ParseTime(const S: string; const Locale: TLocale;
 A time from the numbers of `S`, read as hour, minute and second in the
 order of the locale's pattern; minute and second may be missing. An am
 or pm marker in `S` (the locale's am/pm names in every width, format and
-stand-alone, or `am`/`pm`; as a whole word, ASCII letters without case,
-no-break spaces read as spaces) reads the hour on the 12-hour clock:
+stand-alone, or `am`/`pm`; as a whole word, compared without case,
+spaces and periods, so `p.m.`, `p. m.` and `PM` are the same marker)
+reads the hour on the 12-hour clock:
 12 am is 0, 1 pm to 11 pm are 13 to 23. The result has no date part.
 
 Raises `EDateParseError` for a text without digits and
@@ -574,6 +575,7 @@ Raises `EDateParseError` for a text without digits and
 WriteLn(FormatDateTime('hh:nn:ss', ParseTime('3:30:15 PM', 'en')));          // 15:30:15
 WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 AM', 'en', 'short')));   // 00:30:00
 WriteLn(FormatDateTime('hh:nn:ss', ParseTime('12:30 p. m.', 'es', 'short'))); // 12:30:00
+WriteLn(FormatDateTime('hh:nn:ss', ParseTime('3:15 p.m.', 'es', 'short')));   // 15:15:00
 ```
 
 ### Patterns

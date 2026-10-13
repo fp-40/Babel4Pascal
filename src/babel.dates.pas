@@ -2577,9 +2577,62 @@ begin
   Result := EncodeDate(Year, Month, Day);
 end;
 
+{ S in lower case without spaces (the no-break ones included) and
+  periods: 'p. m.', 'p.m.' and 'PM' are all 'pm'. }
+function MarkerForm(const S: string): string;
+begin
+  Result := StringReplace(SpacesOf(LowerCase(S)), ' ', '', [rfReplaceAll]);
+  Result := StringReplace(Result, '.', '', [rfReplaceAll]);
+end;
+
+{ The index in Names of the longest name found in S as a word (not
+  preceded or followed by an ASCII letter), both compared in MarkerForm;
+  -1 when none is found. }
+function FindMarker(const S: string; const Names: array of string): Integer;
+var
+  Text, N: string;
+  I, Best, P, From: Integer;
+  Found: Boolean;
+
+  function IsLetter(C: Char): Boolean;
+  begin
+    Result := C in ['a'..'z'];
+  end;
+
+begin
+  Text := MarkerForm(S);
+  Result := -1;
+  Best := 0;
+  for I := 0 to High(Names) do
+  begin
+    N := MarkerForm(Names[I]);
+    if (N = '') or (Length(N) <= Best) then
+      Continue;
+    From := 1;
+    Found := False;
+    repeat
+      P := Pos(N, Copy(Text, From, MaxInt));
+      if P = 0 then
+        Break;
+      P := P + From - 1;
+      if ((P = 1) or not IsLetter(Text[P - 1])) and
+         ((P + Length(N) > Length(Text)) or not IsLetter(Text[P + Length(N)])) then
+        Found := True
+      else
+        From := P + 1;
+    until Found;
+    if Found then
+    begin
+      Result := I;
+      Best := Length(N);
+    end;
+  end;
+end;
+
 { The AM/PM marker in S: 1 for pm, 0 for am, -1 for none. The markers
   are the locale's am and pm names (every width, format and stand-alone)
-  and 'am'/'pm'. }
+  and 'am'/'pm', compared without case, spaces and periods ('p.m.',
+  'p. m.' and 'PM' are the same marker). }
 function AmPmInText(const S: string; const Locale: TLocale): Integer;
 const
   Widths: array[0..2] of string = ('wide', 'abbreviated', 'narrow');
@@ -2602,7 +2655,7 @@ begin
       if Map.Has('pm') then
         NV.Add(Map.Str('pm'), 1);
     end;
-  Idx := FindName(S, NV.Names);
+  Idx := FindMarker(S, NV.Names);
   if Idx < 0 then
     Result := -1
   else

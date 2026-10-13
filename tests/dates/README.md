@@ -1,6 +1,6 @@
 # babel.dates tests
 
-`reference.jsonl` holds the expected results of 8 695 calls of
+`reference.jsonl` holds the expected results of 8 707 calls of
 `babel.dates` (one JSON object per line: `op`, `args`, and `expect` or
 `error`). `test_dates` runs them:
 
