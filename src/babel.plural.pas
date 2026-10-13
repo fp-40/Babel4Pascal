@@ -13,8 +13,9 @@
   - the conditions are tried in alphabetical order of the category, and
     'other' is the answer when none holds;
   - the operands come from ExtractOperands: an Int64 is an integer; a
-    Double is turned into Decimal(str(x)) unless it is integral; a
-    TDecimal keeps its digits, so '1.0' and '1' differ (v = 1 and v = 0);
+    Double is its shortest decimal (TDecimal.FromDouble), an integer when
+    it is integral; a TDecimal keeps its digits, so '1.0' and '1' differ
+    (v = 1 and v = 0);
   - the operands c and e are always 0 (Babel does not support them).
 
   The textual forms are Babel's: Rules (its PluralRule.rules), ToGettext
@@ -164,16 +165,13 @@ var
   A: Double;
 begin
   A := System.Abs(N);
-  if IsNan(A) then
-    raise EBabelValueError.Create('cannot convert float NaN to integer');
-  if IsInfinite(A) then
-    raise EBabelOverflowError.Create('cannot convert float infinity to integer');
+  if IsNan(A) or IsInfinite(A) then
+    raise EBabelValueError.Create('no plural category for NaN or infinity');
   if Frac(A) = 0 then
   begin
-    { Babel: an integral float becomes int(n), its exact binary value
-      (1e25 is 10000000000000000905969664). }
+    { an integral double is the integer it reads as (1e25 is 10^25) }
     Result := Default(TPluralOperands);
-    Result.N := TDecimal.FromDoubleExact(A);
+    Result.N := TDecimal.FromDouble(A).Truncate;
     Result.I := Result.N;
     Result.F := TDecimal.FromInt64(0);
     Result.T := Result.F;

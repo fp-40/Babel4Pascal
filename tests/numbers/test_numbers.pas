@@ -15,7 +15,7 @@ uses
   babel.errors, babel.decimal, babel.core, babel.numbers, babel.cldr_all;
 
 { A number as the vectors encode it: [kind, text]. }
-function Num(A: TJSONArray): TNumber;
+function Num(A: TJSONArray): TDecimal;
 var
   Kind, Text: string;
 begin
@@ -179,6 +179,20 @@ begin
     A.Add(P.Scale);
     Result := A;
   end
+  { ICU's results (tests/js/icu_numbers.mjs): the locale's default
+    numbering system, as ICU uses }
+  else if Op = 'icu_decimal' then
+    Result := TJSONString.Create(FormatDecimal(TDecimal.Parse(Args.Strings[0]), Args.Strings[1],
+      NumberOptions.WithNumberingSystem('default')))
+  else if Op = 'icu_percent' then
+    Result := TJSONString.Create(FormatPercent(TDecimal.Parse(Args.Strings[0]), Args.Strings[1],
+      NumberOptions.WithNumberingSystem('default')))
+  else if Op = 'icu_currency' then
+    Result := TJSONString.Create(FormatCurrency(TDecimal.Parse(Args.Strings[0]), Args.Strings[1],
+      Args.Strings[2], CurrencyOptions.WithFormatType(Args.Strings[3]).WithNumberingSystem('default')))
+  else if Op = 'icu_compact' then
+    Result := TJSONString.Create(FormatCompactDecimal(TDecimal.Parse(Args.Strings[0]), Args.Strings[1],
+      CompactOptions.WithFormatType(Args.Strings[2]).WithNumberingSystem('default')))
   else if Op = 'parse_grouping' then
     Result := TJSONArray.Create([ParseGrouping(Args.Strings[0]).Min, ParseGrouping(Args.Strings[0]).Max])
   else

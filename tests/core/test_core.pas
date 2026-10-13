@@ -146,7 +146,7 @@ end;
 
 function DecimalJSON(const S: string): TJSONData;
 const
-  Kinds: array[TDecimalKind] of string = ('finite', 'inf', 'nan', 'snan');
+  Kinds: array[TDecimalKind] of string = ('finite', 'inf', 'nan');
 var
   D: TDecimal;
   A: TJSONArray;
@@ -185,7 +185,6 @@ begin
     dkFinite: J.Add('finite');
     dkInfinity: J.Add('inf');
     dkNaN: J.Add('nan');
-    dkSNaN: J.Add('snan');
   end;
   J.Add(Ord(R.Negative));
   J.Add(R.Digits);

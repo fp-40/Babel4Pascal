@@ -84,7 +84,8 @@ def main(argv):
     srcdir = argv[1]
     bad = 0
 
-    g_ours = ours_norm(importer.parse_global(srcdir))
+    g_ours = ours_norm({k: v for k, v in importer.parse_global(srcdir).items()
+                        if k not in importer.EXTRA_GLOBAL_KEYS})
     with open(os.path.join(babel_dir, 'global.dat'), 'rb') as f:
         g_babel = babel_norm(pickle.load(f))
     d = first_difference(g_ours, g_babel)

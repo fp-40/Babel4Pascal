@@ -3,7 +3,8 @@ extracted) into Python dicts: one dict of global data and one sparse dict
 per locale.
 
 The dicts have the same keys and values as the global.dat and
-locale-data/*.dat files of Python Babel 2.18.0, which its
+locale-data/*.dat files of Python Babel 2.18.0 (plus the keys listed in
+EXTRA_GLOBAL_KEYS, which Babel does not have), which its
 scripts/import_cldr.py builds from the same XML release. This module
 follows that script rule by rule (which elements are skipped as drafts or
 alternates, how aliases are recorded, which numbering systems are kept),
@@ -29,6 +30,9 @@ import re
 from xml.etree import ElementTree
 
 from .model import Alias
+
+# Global data that Babel does not import.
+EXTRA_GLOBAL_KEYS = {'numbering_system_digits'}
 
 WEEKDAYS = {'mon': 0, 'tue': 1, 'wed': 2, 'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6}
 
@@ -322,6 +326,13 @@ def parse_global(srcdir):
             int(fraction.attrib.get('cashDigits', digits)),
             int(fraction.attrib.get('cashRounding', rounding)),
         ]
+
+    # Not in Babel: the digits of each numeric numbering system, so that
+    # numbers can be written in the locale's digits.
+    digits = g.setdefault('numbering_system_digits', {})
+    for ns in _parse(os.path.join(sup_dir, 'numberingSystems.xml')).findall('.//numberingSystem'):
+        if ns.attrib.get('type') == 'numeric':
+            digits[ns.attrib['id']] = ns.attrib['digits']
 
     for territory in sup.findall('.//territoryInfo/territory'):
         languages = {}

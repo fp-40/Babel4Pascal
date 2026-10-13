@@ -1,33 +1,33 @@
-{ babel.decimal - decimal numbers as Python's decimal.Decimal holds them.
+{ babel.decimal - exact decimal numbers.
 
-  Babel computes with Python's Decimal: a sign, a string of coefficient
-  digits and a base-10 exponent (Decimal('12.50') is 1250 x 10^-2: digits
-  "1250", exponent -2), plus the special values Infinity, NaN and sNaN.
-  The digits keep trailing zeros, which matter: they are the "visible
-  fraction digits" of the plural rules and of number formatting.
+  A TDecimal is a sign, a string of coefficient digits and a base-10
+  exponent (12.50 is 1250 x 10^-2: digits "1250", exponent -2), or one of
+  the special values Infinity and NaN. The digits keep trailing zeros,
+  which matter: they are the visible fraction digits of number formatting
+  and of the plural rules (1.50 has two). The representation is that of
+  Python's decimal.Decimal, which Babel uses; the arithmetic is exact,
+  with no precision limit (Python rounds to 28 digits).
 
-  TDecimal holds the same parts. It is a value type (a record); nothing
-  needs freeing.
+  TDecimal is a value type (a record); nothing needs freeing.
 
-  Ways in:
-  - TDecimal.Parse: the text syntax of Python's Decimal(str), with the same
-    results (whitespace around, '_' anywhere removed, 'Inf', 'NaN123',
-    exponents, decimal digits of any script: '١٢٣' is 123).
-  - TDecimal.FromInt64.
-  - TDecimal.FromDouble: as Babel converts a float, Decimal(str(x)): the
-    shortest decimal text that reads back as the same Double
-    (babel.pyfloatrepr.inc). 2.675 becomes 2.675, not the binary value
-    2.67499999999999982236...
+  Ways in (also as implicit conversions, so a function that takes a
+  TDecimal accepts 1234, 1234.5 or '1234.50'):
+  - from a string: the syntax of Python's Decimal(str): optional sign,
+    digits with an optional '.', an optional exponent ('1.5E+3'),
+    'Infinity' or 'Inf', 'NaN', in any case, with whitespace around;
+    decimal digits of any script are accepted ('١٢٣' is 123). An invalid
+    string raises EBabelValueError.
+  - from an Int64.
+  - from a Double: the shortest decimal text that reads back as the same
+    Double (babel.pyfloatrepr.inc), as Python and ICU read a double: 2.675
+    is 2.675, not its binary value 2.67499999999999982236...
+    FromDoubleExact gives the binary value.
 
-  The arithmetic follows Python's default decimal context, which Babel
-  uses: results are rounded to 28 significant digits with ROUND_HALF_EVEN,
-  exponents stay within Emin = -999999 and Emax = 999999, and the
-  operations that Python signals with a trapped condition
-  (InvalidOperation, DivisionByZero, Overflow) raise EBabelDecimalError.
-  Each operation reproduces the corresponding method of Python's
-  decimal.py (_fix, _rescale, quantize, normalize, __truediv__, ...),
-  digits and exponent included: 1500 / 1000 is 1.5, Decimal(10) ** 30 is
-  1.000000000000000000000000000E+30.
+  Arithmetic: products, scaling, normalization and quantization are exact.
+  Quantize rounds half-even (ROUND_HALF_EVEN, as CLDR and ICU do by
+  default). Division rounds its result to a given number of significant
+  digits. An invalid operation (infinity * 0, 0 / 0) and division by zero
+  raise EBabelDecimalError.
 
   Threading: no shared state. }
 unit babel.decimal;
@@ -41,88 +41,89 @@ uses
   SysUtils, babel.errors, babel.pystr;
 
 type
-  TDecimalKind = (dkFinite, dkInfinity, dkNaN, dkSNaN);
+  TDecimalKind = (dkFinite, dkInfinity, dkNaN);
 
   TDecimal = record
   private
     FKind: TDecimalKind;
     FNegative: Boolean;
-    FDigits: string;     { finite: no leading zeros, '0' for zero; NaN: payload }
+    FDigits: string;     { finite: no leading zeros, '0' for zero; Infinity: '0'; NaN: '' }
     FExponent: Int64;    { finite only }
     function IntDigitsCount: Int64;
   public
-    { Python's Decimal(S). Raises EBabelDecimalError when S is not a
-      number (Python raises decimal.InvalidOperation). }
+    { The number written in S (see above). Raises EBabelValueError when S
+      is not a number. }
     class function Parse(const S: string): TDecimal; static;
     { True and Value set when S parses; False otherwise. }
     class function TryParse(const S: string; out Value: TDecimal): Boolean; static;
     class function FromInt64(V: Int64): TDecimal; static;
-    { Decimal(str(V)), as Babel converts a float. }
+    { The shortest decimal that reads back as V; an integer when V is
+      integral (1.0 is 1). }
     class function FromDouble(V: Double): TDecimal; static;
-    { Decimal(V): the exact binary value of the double
+    { The exact binary value of V
       (2.675 is 2.67499999999999982236431605997495353221893310546875). }
     class function FromDoubleExact(V: Double): TDecimal; static;
     { A finite value from its parts (Digits: ASCII digits, may be ''
       for zero; leading zeros are dropped). }
     class function Make(Negative: Boolean; const Digits: string; Exponent: Int64): TDecimal; static;
 
+    class operator :=(V: Int64): TDecimal;
+    class operator :=(V: Double): TDecimal;
+    class operator :=(const S: string): TDecimal;
+
     property Kind: TDecimalKind read FKind;
     property Negative: Boolean read FNegative;
-    { As Decimal.as_tuple(): the coefficient digits ('' for NaN without a
-      payload, '0' for Infinity) and the exponent (finite values only). }
+    { The coefficient digits ('' for NaN, '0' for Infinity) and the
+      exponent (finite values only). }
     property Digits: string read FDigits;
     property Exponent: Int64 read FExponent;
     function IsFinite: Boolean;
-    function IsNaN: Boolean;      { NaN or sNaN }
+    function IsNaN: Boolean;
     function IsInfinite: Boolean;
     function IsZero: Boolean;     { finite and zero }
-    { The value has no fraction (Python: num == int(num)). Finite only. }
+    { The value has no fraction. Finite only. }
     function IsIntegral: Boolean;
 
-    { str(Decimal): '12.50', '1E+3', '1E-7', '-0', 'Infinity', 'NaN123'. }
+    { As Python's str(Decimal): '12.50', '1E+3', '1E-7', '-0',
+      'Infinity', 'NaN'. }
     function ToString: string;
-    { abs(): the absolute value, rounded to the context; a NaN keeps its
-      sign. }
+    { The absolute value (a NaN keeps its sign). }
     function Abs: TDecimal;
-    { int(Decimal): the value truncated toward zero, as an integer
-      (exponent 0). Raises EBabelValueError for NaN and EBabelOverflowError
-      for Infinity, as Python. }
+    { The value truncated toward zero, as an integer (exponent 0). Raises
+      EBabelValueError for NaN and Infinity. }
     function Truncate: TDecimal;
-    { Decimal.adjusted(): the exponent of the most significant digit
-      (0 for Infinity and NaN). }
+    { The exponent of the most significant digit (0 for Infinity and
+      NaN). }
     function Adjusted: Int64;
-    { The sign bit (also for -0 and -NaN): Decimal.is_signed(). }
+    { The sign bit (also for -0 and -NaN). }
     function IsSigned: Boolean;
-    { Rounded to the context (28 digits): Python's _fix, applied after
-      every arithmetic operation. }
-    function Fix: TDecimal;
-    { Decimal.normalize(): rounded, trailing zeros stripped (1200 is
-      1.2E+3), a zero is 0 with its sign. }
+    { Trailing zeros stripped (1200 is 1.2E+3); a zero is 0 with its
+      sign. }
     function Normalize: TDecimal;
-    { Decimal.scaleb(N): the exponent moved by N, rounded. }
+    { The value times 10^N (the exponent moved by N). }
     function ScaleB(N: Int64): TDecimal;
-    { Decimal(10) ** N. }
+    { 10^N. }
     class function Pow10(N: Int64): TDecimal; static;
-    { The product and the quotient, rounded (Decimal's * and /). }
+    { The exact product. }
     function Multiply(const B: TDecimal): TDecimal;
-    function Divide(const B: TDecimal): TDecimal;
-    { Decimal.quantize(Decimal('1E' + Exp)): rounded half-even to that
-      exponent. Raises EBabelDecimalError when the result needs more than
-      28 digits (Python's InvalidOperation). }
+    { The quotient rounded half-even to Precision significant digits; an
+      exact quotient keeps no more trailing zeros than the operands' call
+      for (1500 / 1000 is 1.5). Raises EBabelDecimalError for x / 0. }
+    function Divide(const B: TDecimal; Precision: Integer = 28): TDecimal;
+    { Rounded half-even to the exponent Exp (Quantize(-2) gives two
+      fraction digits). Raises EBabelDecimalError for Infinity. }
     function Quantize(Exp: Int64): TDecimal;
-    { round(d, N): Quantize(-N). }
+    { Quantize(-N): N fraction digits. }
     function Round(N: Int64): TDecimal;
-    { format(d, 'f'): every digit, in positional notation ('1.2E+3' is
-      '1200', '1E-7' is '0.0000001'); 'NaN', 'Infinity' with a '-' sign
-      when signed. }
+    { Every digit in positional notation ('1.2E+3' is '1200', '1E-7' is
+      '0.0000001'); 'NaN', 'Infinity' with a '-' sign when signed. }
     function FormatFixed: string;
     { -1, 0 or 1 comparing the values (infinities included; NaN raises
       EBabelValueError). }
     function Compare(const B: TDecimal): Integer;
     function CompareInt(B: Int64): Integer;
     { The remainder of the division by M (M > 0), with the sign of the
-      value, exact (Python's Decimal % int; the exponent is
-      min(Exponent, 0)). Finite only. }
+      value, exact (the exponent is min(Exponent, 0)). Finite only. }
     function ModInt(M: Int64): TDecimal;
     { The value as Int64 when it is an integer that fits; else False. }
     function TryToInt64(out V: Int64): Boolean;
@@ -139,7 +140,6 @@ uses
 
 {$I babel.pyfloatrepr.inc}
 
-function CheckNaN(const A: TDecimal): TDecimal; forward;
 
 procedure NotFinite(const Op: string);
 begin
@@ -207,9 +207,8 @@ var
 begin
   Value := Default(TDecimal);
   Result := False;
-  { Python strips whitespace, maps decimal digits of any script to ASCII,
-    then removes every underscore. }
-  T := StringReplace(AsciiDigits(PyStrip(S)), '_', '', [rfReplaceAll]);
+  { whitespace around; decimal digits of any script }
+  T := AsciiDigits(PyStrip(S));
   if T = '' then
     Exit;
   Neg := False;
@@ -226,27 +225,10 @@ begin
     Value.FDigits := '0';
     Exit(True);
   end;
-  if (Copy(Lower, 1, 3) = 'nan') or (Copy(Lower, 1, 4) = 'snan') then
+  if Lower = 'nan' then
   begin
-    if Lower[1] = 's' then
-    begin
-      Value.FKind := dkSNaN;
-      T := Copy(T, 5, MaxInt);
-    end
-    else
-    begin
-      Value.FKind := dkNaN;
-      T := Copy(T, 4, MaxInt);
-    end;
-    if not AllDigits(T) then
-      Exit;
+    Value.FKind := dkNaN;
     Value.FNegative := Neg;
-    if T <> '' then
-    begin
-      Value.FDigits := StripLeadingZeros(T);
-      if Value.FDigits = '0' then
-        Value.FDigits := '';
-    end;
     Exit(True);
   end;
 
@@ -302,7 +284,7 @@ end;
 class function TDecimal.Parse(const S: string): TDecimal;
 begin
   if not TryParse(S, Result) then
-    raise EBabelDecimalError.CreateFmt('InvalidOperation: invalid literal for Decimal: ''%s''', [S]);
+    raise EBabelValueError.CreateFmt('not a number: ''%s''', [S]);
 end;
 
 class function TDecimal.FromInt64(V: Int64): TDecimal;
@@ -315,8 +297,14 @@ begin
 end;
 
 class function TDecimal.FromDouble(V: Double): TDecimal;
+var
+  R: string;
 begin
-  Result := Parse(PyFloatRepr(V));
+  R := PyFloatRepr(V);
+  { an integral double is an integer: Python writes 1.0, ICU 1 }
+  if (Length(R) > 2) and (Copy(R, Length(R) - 1, 2) = '.0') then
+    SetLength(R, Length(R) - 2);
+  Result := Parse(R);
 end;
 
 class function TDecimal.FromDoubleExact(V: Double): TDecimal;
@@ -363,6 +351,21 @@ begin
   end;
 end;
 
+class operator TDecimal.:=(V: Int64): TDecimal;
+begin
+  Result := TDecimal.FromInt64(V);
+end;
+
+class operator TDecimal.:=(V: Double): TDecimal;
+begin
+  Result := TDecimal.FromDouble(V);
+end;
+
+class operator TDecimal.:=(const S: string): TDecimal;
+begin
+  Result := TDecimal.Parse(S);
+end;
+
 function TDecimal.IsFinite: Boolean;
 begin
   Result := FKind = dkFinite;
@@ -370,7 +373,7 @@ end;
 
 function TDecimal.IsNaN: Boolean;
 begin
-  Result := FKind in [dkNaN, dkSNaN];
+  Result := FKind = dkNaN;
 end;
 
 function TDecimal.IsInfinite: Boolean;
@@ -419,8 +422,7 @@ begin
     Sign := '';
   case FKind of
     dkInfinity: Exit(Sign + 'Infinity');
-    dkNaN: Exit(Sign + 'NaN' + FDigits);
-    dkSNaN: Exit(Sign + 'sNaN' + FDigits);
+    dkNaN: Exit(Sign + 'NaN');
   end;
   { Python's Decimal.__str__ (scientific notation rules). }
   LeftDigits := FExponent + Length(FDigits);
@@ -454,12 +456,9 @@ end;
 
 function TDecimal.Abs: TDecimal;
 begin
-  if FKind in [dkNaN, dkSNaN] then
-    Exit(CheckNaN(Self));
   Result := Self;
-  Result.FNegative := False;
-  if FKind = dkFinite then
-    Result := Result.Fix;
+  if FKind <> dkNaN then
+    Result.FNegative := False;
 end;
 
 function TDecimal.Truncate: TDecimal;
@@ -467,7 +466,7 @@ var
   N: Int64;
 begin
   if FKind = dkInfinity then
-    raise EBabelOverflowError.Create('cannot convert Infinity to integer');
+    raise EBabelValueError.Create('cannot convert Infinity to integer');
   if FKind <> dkFinite then
     raise EBabelValueError.Create('cannot convert NaN to integer');
   if FExponent >= 0 then
@@ -667,35 +666,18 @@ begin
 end;
 
 
-{ ---- Python's default context arithmetic ---- }
-
-const
-  Prec = 28;
-  Emax = 999999;
-  Emin = -999999;
-  Etiny = Emin - Prec + 1;     { -1000026 }
-  Etop = Emax - Prec + 1;      { 999972 }
+{ ---- arithmetic ---- }
 
 procedure Signal(const Condition: string);
 begin
   raise EBabelDecimalError.Create(Condition);
 end;
 
-{ Python's _check_nans for one or two operands: a signaling NaN raises
-  InvalidOperation; else the first NaN operand is the result. Callers
-  test IsNaN first. }
-function CheckNaN(const A: TDecimal): TDecimal;
-begin
-  if A.Kind = dkSNaN then
-    Signal('InvalidOperation: sNaN');
-  Result := A;
-end;
-
+{ The NaN operand is the result of an operation on NaN. Callers test
+  IsNaN first. }
 function CheckNaNs(const A, B: TDecimal): TDecimal;
 begin
-  if (A.Kind = dkSNaN) or (B.Kind = dkSNaN) then
-    Signal('InvalidOperation: sNaN');
-  if A.Kind = dkNaN then
+  if A.IsNaN then
     Result := A
   else
     Result := B;
@@ -724,11 +706,10 @@ begin
   Result := True;
 end;
 
-{ Python's _round_half_even(prec) on coefficient D keeping Keep digits:
-  1 to round up, 0 when the dropped digits are zero, -1 to truncate. }
+{ Rounding half-even of coefficient D keeping Keep digits: 1 to round
+  up, 0 when the dropped digits are zero, -1 to truncate. }
 function RoundHalfEven(const D: string; Keep: Integer): Integer;
 begin
-  { _round_half_up }
   if D[Keep + 1] in ['5'..'9'] then
     Result := 1
   else if AllZeros(D, Keep + 1) then
@@ -759,53 +740,28 @@ begin
     Result[I] := Chr(Ord(Result[I]) + 1);
 end;
 
-function TDecimal.Fix: TDecimal;
+{ The value rounded half-even to Precision significant digits (for the
+  division, whose result may not end). }
+function RoundToDigits(const V: TDecimal; Precision: Integer): TDecimal;
 var
-  ExpMin, NewExp: Int64;
-  Keep: Integer;
-  Coeff, D: string;
-  Changed: Integer;
+  Drop: Integer;
+  Coeff: string;
 begin
-  if FKind <> dkFinite then
-    Exit(Self);
-  if FDigits = '0' then
-  begin
-    NewExp := FExponent;
-    if NewExp < Etiny then NewExp := Etiny;
-    if NewExp > Emax then NewExp := Emax;
-    Exit(Triple(FNegative, '0', NewExp));
-  end;
-  ExpMin := Length(FDigits) + FExponent - Prec;
-  if ExpMin > Etop then
-    Signal('Overflow');
-  if ExpMin < Etiny then
-    ExpMin := Etiny;
-  if FExponent >= ExpMin then
-    Exit(Self);
-  { round to exponent ExpMin }
-  D := FDigits;
-  Keep := Length(D) + FExponent - ExpMin;
-  if Keep < 0 then
-  begin
-    D := '1';
-    Keep := 0;
-  end;
-  Changed := RoundHalfEven(D, Keep);
-  Coeff := Copy(D, 1, Keep);
-  if Coeff = '' then
-    Coeff := '0';
-  if Changed > 0 then
+  Result := V;
+  if (V.Kind <> dkFinite) or (Length(V.FDigits) <= Precision) then
+    Exit;
+  Drop := Length(V.FDigits) - Precision;
+  Coeff := Copy(V.FDigits, 1, Precision);
+  if RoundHalfEven(V.FDigits, Precision) = 1 then
   begin
     Coeff := DigitsInc(Coeff);
-    if Length(Coeff) > Prec then
+    if Length(Coeff) > Precision then
     begin
       SetLength(Coeff, Length(Coeff) - 1);
-      Inc(ExpMin);
-      if ExpMin > Etop then
-        Signal('Overflow');
+      Inc(Drop);
     end;
   end;
-  Result := Triple(FNegative, Coeff, ExpMin);
+  Result := Triple(V.FNegative, Coeff, V.FExponent + Drop);
 end;
 
 function TDecimal.Adjusted: Int64;
@@ -822,49 +778,33 @@ end;
 
 function TDecimal.Normalize: TDecimal;
 var
-  D: TDecimal;
-  E: Int64;
   Last: Integer;
+  E: Int64;
 begin
-  if FKind in [dkNaN, dkSNaN] then
-    Exit(CheckNaN(Self));
-  D := Fix;
-  if D.FKind = dkInfinity then
-    Exit(D);
-  if D.FDigits = '0' then
-    Exit(Triple(D.FNegative, '0', 0));
-  Last := Length(D.FDigits);
-  E := D.FExponent;
-  while (D.FDigits[Last] = '0') and (E < Emax) do
+  if FKind <> dkFinite then
+    Exit(Self);
+  if FDigits = '0' then
+    Exit(Triple(FNegative, '0', 0));
+  Last := Length(FDigits);
+  E := FExponent;
+  while FDigits[Last] = '0' do
   begin
     Inc(E);
     Dec(Last);
   end;
-  Result := Triple(D.FNegative, Copy(D.FDigits, 1, Last), E);
+  Result := Triple(FNegative, Copy(FDigits, 1, Last), E);
 end;
 
 function TDecimal.ScaleB(N: Int64): TDecimal;
 begin
-  if FKind in [dkNaN, dkSNaN] then
-    Exit(CheckNaN(Self));
-  if FKind = dkInfinity then
+  if FKind <> dkFinite then
     Exit(Self);
-  Result := Triple(FNegative, FDigits, FExponent + N).Fix;
+  Result := Triple(FNegative, FDigits, FExponent + N);
 end;
 
 class function TDecimal.Pow10(N: Int64): TDecimal;
 begin
-  { Python computes 10 ** n exactly when it fits: the coefficient 10^n
-    with exponent 0 for n >= 0 (rounded to 28 digits beyond that), and
-    1E-n for n < 0. }
-  if N >= 0 then
-  begin
-    if N > Emax then
-      Signal('Overflow');
-    Result := Triple(False, '1' + StringOfChar('0', N), 0).Fix;
-  end
-  else
-    Result := Triple(False, '1', N).Fix;
+  Result := Triple(False, '1', N);
 end;
 
 { Product of two digit strings. }
@@ -953,22 +893,16 @@ begin
   begin
     if IsNaN or B.IsNaN then
       Exit(CheckNaNs(Self, B));
-    if FKind = dkInfinity then
-    begin
-      if B.IsZero then
-        Signal('InvalidOperation: (+-)INF * 0');
-      Exit(InfinityOf(Neg));
-    end;
-    if IsZero then
-      Signal('InvalidOperation: 0 * (+-)INF');
+    if IsZero or B.IsZero then
+      Signal('invalid operation: infinity * 0');
     Exit(InfinityOf(Neg));
   end;
   if (FDigits = '0') or (B.FDigits = '0') then
-    Exit(Triple(Neg, '0', FExponent + B.FExponent).Fix);
-  Result := Triple(Neg, DigitsMul(FDigits, B.FDigits), FExponent + B.FExponent).Fix;
+    Exit(Triple(Neg, '0', FExponent + B.FExponent));
+  Result := Triple(Neg, DigitsMul(FDigits, B.FDigits), FExponent + B.FExponent);
 end;
 
-function TDecimal.Divide(const B: TDecimal): TDecimal;
+function TDecimal.Divide(const B: TDecimal; Precision: Integer): TDecimal;
 var
   Neg: Boolean;
   Shift, Exp, IdealExp: Int64;
@@ -980,99 +914,80 @@ begin
     if IsNaN or B.IsNaN then
       Exit(CheckNaNs(Self, B));
     if (FKind = dkInfinity) and (B.FKind = dkInfinity) then
-      Signal('InvalidOperation: (+-)INF/(+-)INF');
+      Signal('invalid operation: infinity / infinity');
     if FKind = dkInfinity then
       Exit(InfinityOf(Neg));
-    { finite / infinity }
-    Exit(Triple(Neg, '0', Etiny));
+    Exit(Triple(Neg, '0', 0));   { finite / infinity }
   end;
   if B.FDigits = '0' then
   begin
     if FDigits = '0' then
-      Signal('InvalidOperation: 0 / 0');
-    Signal('DivisionByZero: x / 0');
+      Signal('invalid operation: 0 / 0');
+    Signal('division by zero');
   end;
   if FDigits = '0' then
+    Exit(Triple(Neg, '0', FExponent - B.FExponent));
+  { Precision + 1 digits of quotient, the last one made inexact (sticky)
+    when there is a remainder, then rounded; an exact quotient keeps only
+    the trailing zeros its operands' exponents call for (1500 / 1000 is
+    1.5). The same method as Python's decimal module. }
+  Shift := Length(B.FDigits) - Length(FDigits) + Precision + 1;
+  Exp := FExponent - B.FExponent - Shift;
+  if Shift >= 0 then
   begin
-    Exp := FExponent - B.FExponent;
-    Coeff := '0';
+    Op1 := FDigits + StringOfChar('0', Shift);
+    Op2 := B.FDigits;
   end
   else
   begin
-    Shift := Length(B.FDigits) - Length(FDigits) + Prec + 1;
-    Exp := FExponent - B.FExponent - Shift;
-    if Shift >= 0 then
+    Op1 := FDigits;
+    Op2 := B.FDigits + StringOfChar('0', -Shift);
+  end;
+  DigitsDivMod(Op1, Op2, Coeff, Remainder);
+  if Remainder <> '0' then
+  begin
+    if (Ord(Coeff[Length(Coeff)]) - 48) mod 5 = 0 then
+      Coeff := DigitsInc(Coeff);
+  end
+  else
+  begin
+    IdealExp := FExponent - B.FExponent;
+    while (Exp < IdealExp) and (Length(Coeff) > 1) and (Coeff[Length(Coeff)] = '0') do
     begin
-      Op1 := FDigits + StringOfChar('0', Shift);
-      Op2 := B.FDigits;
-    end
-    else
-    begin
-      Op1 := FDigits;
-      Op2 := B.FDigits + StringOfChar('0', -Shift);
-    end;
-    DigitsDivMod(Op1, Op2, Coeff, Remainder);
-    if Remainder <> '0' then
-    begin
-      { inexact: make the last digit sticky (not 0 or 5) }
-      if (Ord(Coeff[Length(Coeff)]) - 48) mod 5 = 0 then
-        Coeff := DigitsInc(Coeff);
-    end
-    else
-    begin
-      { exact: drop trailing zeros down to the ideal exponent }
-      IdealExp := FExponent - B.FExponent;
-      while (Exp < IdealExp) and (Length(Coeff) > 1) and (Coeff[Length(Coeff)] = '0') do
-      begin
-        SetLength(Coeff, Length(Coeff) - 1);
-        Inc(Exp);
-      end;
+      SetLength(Coeff, Length(Coeff) - 1);
+      Inc(Exp);
     end;
   end;
-  Result := Triple(Neg, Coeff, Exp).Fix;
+  Result := RoundToDigits(Triple(Neg, Coeff, Exp), Precision);
 end;
 
 function TDecimal.Quantize(Exp: Int64): TDecimal;
 var
   Keep: Int64;
   D, Coeff: string;
-  Changed: Integer;
 begin
-  if FKind in [dkNaN, dkSNaN] then
-    Exit(CheckNaN(Self));
+  if FKind = dkNaN then
+    Exit(Self);
   if FKind = dkInfinity then
-    Signal('InvalidOperation: quantize with one INF');
-  if (Exp < Etiny) or (Exp > Emax) then
-    Signal('InvalidOperation: target exponent out of bounds in quantize');
+    Signal('invalid operation: quantize of infinity');
   if FDigits = '0' then
-    Exit(Triple(FNegative, '0', Exp).Fix);
-  if Adjusted > Emax then
-    Signal('InvalidOperation: exponent of quantize result too large for current context');
-  if Adjusted - Exp + 1 > Prec then
-    Signal('InvalidOperation: quantize result has too many digits for current context');
-  { _rescale(Exp, ROUND_HALF_EVEN) }
+    Exit(Triple(FNegative, '0', Exp));
   if FExponent >= Exp then
-    Result := Triple(FNegative, FDigits + StringOfChar('0', FExponent - Exp), Exp)
-  else
+    Exit(Triple(FNegative, FDigits + StringOfChar('0', FExponent - Exp), Exp));
+  { round half-even at exponent Exp }
+  D := FDigits;
+  Keep := Length(D) + FExponent - Exp;
+  if Keep < 0 then
   begin
-    D := FDigits;
-    Keep := Length(D) + FExponent - Exp;
-    if Keep < 0 then
-    begin
-      D := '1';
-      Keep := 0;
-    end;
-    Changed := RoundHalfEven(D, Keep);
-    Coeff := Copy(D, 1, Keep);
-    if Coeff = '' then
-      Coeff := '0';
-    if Changed = 1 then
-      Coeff := DigitsInc(Coeff);
-    Result := Triple(FNegative, Coeff, Exp);
+    D := '1';                    { far below the quantum: rounds to 0 }
+    Keep := 0;
   end;
-  if (Result.Adjusted > Emax) or (Length(Result.FDigits) > Prec) then
-    Signal('InvalidOperation: exponent of quantize result too large for current context');
-  Result := Result.Fix;
+  Coeff := Copy(D, 1, Keep);
+  if Coeff = '' then
+    Coeff := '0';
+  if RoundHalfEven(D, Keep) = 1 then
+    Coeff := DigitsInc(Coeff);
+  Result := Triple(FNegative, Coeff, Exp);
 end;
 
 function TDecimal.Round(N: Int64): TDecimal;
@@ -1091,8 +1006,7 @@ begin
     Sign := '';
   case FKind of
     dkInfinity: Exit(Sign + 'Infinity');
-    dkNaN: Exit(Sign + 'NaN' + FDigits);
-    dkSNaN: Exit(Sign + 'sNaN' + FDigits);
+    dkNaN: Exit(Sign + 'NaN');
   end;
   { Python rescales a zero with a positive exponent to 0E0 first. }
   if (FDigits = '0') and (FExponent > 0) then

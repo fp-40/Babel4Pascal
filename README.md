@@ -125,13 +125,17 @@ options.
    doubles), and the decimal arithmetic against Python's `decimal` (4 000
    random operations); `tests/python/check_default_locale.py`: the
    default locale under several environments;
-5. `tests/numbers/test_numbers` with vectors from
-   `tests/python/gen_numbers_vectors.py`: about 263 000 calls of the
-   formatting, parsing and currency functions over every locale (basic
-   cases) and 59 locales (every combination of number kind, pattern and
-   option).
+5. `tests/numbers/test_numbers` with `tests/numbers/reference.jsonl`:
+   6 448 calls of the formatting, parsing and currency functions with
+   their expected results. `babel.numbers` matched Babel exactly on
+   263 000 calls (commit 0535909) and then departed from it on purpose to
+   follow CLDR and ICU (localized signs and digits, plural of the number
+   shown, exact arithmetic); the reference file records the current
+   behavior (tests/numbers/README.md). When node is installed, the run
+   also reports the differences from ICU (`tests/js/icu_numbers.mjs`).
 
-Each comparison must report 0 differences.
+Each comparison must report 0 differences (the ICU report is
+informative).
 
 ## Licenses
 

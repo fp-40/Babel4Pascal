@@ -1,21 +1,26 @@
 { babel.numbers - formatting and parsing of numbers, currencies and
-  percentages, as Python Babel's babel.numbers.
+  percentages, after Python Babel's babel.numbers.
 
   FormatDecimal(1234.5, 'es_PE') gives '1,234.5'; FormatCurrency(1234.5,
-  'PEN', 'es_PE') gives 'S/ 1,234.50'. The results are Babel's, character
-  for character, including where Babel departs from CLDR: the percent and
-  minus signs of a pattern are written as they are (not localized), and
-  digits are always ASCII (the numbering system only selects the
-  separators).
+  'PEN', 'es_PE') gives 'S/ 1,234.50'.
 
-  Numbers. A TNumber is made implicitly from an Int64, a Double, a
-  TDecimal or a string, and remembers which, because Babel's results
-  depend on it: a Double is read as Python reads a float (2.675 is
-  2.675), and the plural rule sees 1.0 as the integer 1 but
-  TDecimal('1.0') as having one fraction digit ("1.00 US dollar" against
-  "1.00 US dollars"). Numbers are computed with Python's decimal rules
-  (babel.decimal), so a number with more than 28 significant digits after
-  scaling fails with EBabelDecimalError, as in Babel.
+  The functions, their options and the pattern logic are Babel's, and the
+  results were checked to equal Babel's on 263 000 calls (commit 0535909).
+  Since then they follow CLDR (UTS #35) and ICU where Babel does not:
+  - the signs of a pattern are the locale's: '-' is the minus sign ('−'
+    in Swedish), '%' the percent sign ('٪؜' in Arabic), and so on, except
+    inside quotes;
+  - digits are written in the numbering system asked for
+    (NumberingSystem 'default' gives ar_EG's '١٬٢٣٤٫٥'; 'latn', the
+    default, gives ASCII digits);
+  - a plural form depends on the number as shown: FormatCurrency(1, 'USD',
+    'en') with the 'name' format type gives '1.00 US dollars', as ICU;
+  - NaN is the locale's nan symbol;
+  - the arithmetic is exact (Babel fails on numbers of more than 28
+    digits).
+
+  Numbers are TDecimal (babel.decimal), which converts implicitly from an
+  Int64, a Double (its shortest decimal: 2.675 is 2.675) and a string.
 
   Options. The optional parameters of Babel's functions are fields of an
   options record: NumberOptions, CurrencyOptions and CompactOptions return
@@ -56,31 +61,6 @@ type
       with Strict). }
     Suggestions: TStringArray;
     constructor CreateWith(const Msg: string; const ASuggestions: TStringArray);
-  end;
-
-  TNumberKind = (nkInt, nkFloat, nkDecimal, nkString);
-
-  { A number as a caller gives it: Babel's int, float, Decimal or str. }
-  TNumber = record
-  private
-    FKind: TNumberKind;
-    FInt: Int64;
-    FFloat: Double;
-    FDecimal: TDecimal;
-    FString: string;
-  public
-    class operator :=(V: Int64): TNumber;
-    class operator :=(V: Double): TNumber;
-    class operator :=(const V: TDecimal): TNumber;
-    class operator :=(const V: string): TNumber;
-    property Kind: TNumberKind read FKind;
-    { Decimal(str(value)), as Babel converts a number before formatting;
-      a TDecimal stays as it is. Raises EBabelDecimalError for a string
-      that is not a number. }
-    function ToDecimal: TDecimal;
-    { The plural category of the number under Rule (Babel calls the rule
-      with the value as given; a string raises EBabelTypeError). }
-    function PluralCategory(const Rule: TPluralRule): string;
   end;
 
   { format_decimal, format_percent and format_scientific options. }
@@ -175,7 +155,11 @@ type
     ExpPrec: TIntPair;
     ExpPlus: Boolean;
     Scale: Integer;                  { 0, 2 (percent) or 3 (per mille) }
-    function Apply(const Value: TNumber; const Locale: TLocale; const Options: TApplyOptions): string;
+    function Apply(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions): string;
+    { Apply, and in Shown the number as shown (rounded, with the fraction
+      digits written), from which plural forms are chosen. }
+    function ApplyShown(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions;
+      out Shown: TDecimal): string;
   end;
 
 function NumberOptions: TNumberOptions;
@@ -200,13 +184,13 @@ function NormalizeCurrency(const Currency: string): string; overload;
 function NormalizeCurrency(const Currency: string; const Locale: TLocale): string; overload;
 { The currency's name; with Count, the plural form for that count. }
 function GetCurrencyName(const Currency: string; const Locale: TLocale): string; overload;
-function GetCurrencyName(const Currency: string; const Count: TNumber; const Locale: TLocale): string; overload;
+function GetCurrencyName(const Currency: string; const Count: TDecimal; const Locale: TLocale): string; overload;
 function GetCurrencySymbol(const Currency: string; const Locale: TLocale): string;
 { The currency's number of fraction digits (2 when not listed). }
 function GetCurrencyPrecision(const Currency: string): Integer;
 (* The pattern that joins number and currency name ('{0} {1}'). *)
 function GetCurrencyUnitPattern(const Currency: string; const Locale: TLocale): string; overload;
-function GetCurrencyUnitPattern(const Currency: string; const Count: TNumber; const Locale: TLocale): string; overload;
+function GetCurrencyUnitPattern(const Currency: string; const Count: TDecimal; const Locale: TLocale): string; overload;
 function GetTerritoryCurrencies(const Territory: string): TStringArray; overload;
 function GetTerritoryCurrencies(const Territory: string; const Options: TTerritoryCurrencyOptions): TStringArray; overload;
 function GetTerritoryCurrencyDetails(const Territory: string; const Options: TTerritoryCurrencyOptions): TCurrencyPeriods;
@@ -227,20 +211,20 @@ function GetDecimalPrecision(const Number: TDecimal): Integer;
 function GetDecimalQuantum(Precision: Int64): TDecimal;
 
 { Formatting }
-function FormatDecimal(const Number: TNumber; const Locale: TLocale): string; overload;
-function FormatDecimal(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string; overload;
-function FormatCompactDecimal(const Number: TNumber; const Locale: TLocale): string; overload;
-function FormatCompactDecimal(const Number: TNumber; const Locale: TLocale; const Options: TCompactOptions): string; overload;
-function FormatCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale): string; overload;
-function FormatCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale;
+function FormatDecimal(const Number: TDecimal; const Locale: TLocale): string; overload;
+function FormatDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string; overload;
+function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale): string; overload;
+function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TCompactOptions): string; overload;
+function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string; overload;
+function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCurrencyOptions): string; overload;
-function FormatCompactCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale): string; overload;
-function FormatCompactCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale;
+function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string; overload;
+function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCompactOptions): string; overload;
-function FormatPercent(const Number: TNumber; const Locale: TLocale): string; overload;
-function FormatPercent(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string; overload;
-function FormatScientific(const Number: TNumber; const Locale: TLocale): string; overload;
-function FormatScientific(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string; overload;
+function FormatPercent(const Number: TDecimal; const Locale: TLocale): string; overload;
+function FormatPercent(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string; overload;
+function FormatScientific(const Number: TDecimal; const Locale: TLocale): string; overload;
+function FormatScientific(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string; overload;
 
 { Parsing }
 { parse_number: an integer written in the locale's format ('1,099' in
@@ -373,85 +357,6 @@ constructor ENumberFormatError.CreateWith(const Msg: string; const ASuggestions:
 begin
   inherited Create(Msg);
   Suggestions := ASuggestions;
-end;
-
-{ ---- TNumber ---- }
-
-class operator TNumber.:=(V: Int64): TNumber;
-begin
-  Result := Default(TNumber);
-  Result.FKind := nkInt;
-  Result.FInt := V;
-end;
-
-class operator TNumber.:=(V: Double): TNumber;
-begin
-  Result := Default(TNumber);
-  Result.FKind := nkFloat;
-  Result.FFloat := V;
-end;
-
-class operator TNumber.:=(const V: TDecimal): TNumber;
-begin
-  Result := Default(TNumber);
-  Result.FKind := nkDecimal;
-  Result.FDecimal := V;
-end;
-
-class operator TNumber.:=(const V: string): TNumber;
-begin
-  Result := Default(TNumber);
-  Result.FKind := nkString;
-  Result.FString := V;
-end;
-
-function TNumber.ToDecimal: TDecimal;
-begin
-  case FKind of
-    nkInt: Result := TDecimal.FromInt64(FInt);
-    nkFloat: Result := TDecimal.FromDouble(FFloat);
-    nkDecimal: Result := FDecimal;
-  else
-    Result := TDecimal.Parse(FString);
-  end;
-end;
-
-function TNumber.PluralCategory(const Rule: TPluralRule): string;
-begin
-  case FKind of
-    nkInt: Result := Rule.Evaluate(FInt);
-    nkFloat: Result := Rule.Evaluate(FFloat);
-    nkDecimal: Result := Rule.Evaluate(FDecimal);
-  else
-    raise EBabelTypeError.Create('bad operand type for abs(): ''str''');
-  end;
-end;
-
-{ float(s) for a string, with Python's float() syntax. }
-function PyFloatOf(const S: string): Double;
-var
-  T, L: string;
-  Code: Integer;
-  D: TDecimal;
-begin
-  T := AsciiDigits(PyStrip(S));
-  L := LowerCase(T);
-  if (L = 'inf') or (L = '+inf') or (L = 'infinity') or (L = '+infinity') then
-    Exit(Infinity);
-  if (L = '-inf') or (L = '-infinity') then
-    Exit(NegInfinity);
-  if (L = 'nan') or (L = '+nan') or (L = '-nan') then
-    Exit(NaN);
-  { the same syntax as Decimal for finite values (digits, '.', exponent,
-    underscores); FPC's Val reads the normalized form digits'E'exponent }
-  if not TDecimal.TryParse(T, D) or not D.IsFinite then
-    raise EBabelValueError.CreateFmt('could not convert string to float: ''%s''', [S]);
-  L := D.Digits + 'E' + IntToStr(D.Exponent);
-  if D.Negative then
-    L := '-' + L;
-  Val(L, Result, Code);
-  if Code <> 0 then
-    raise EBabelValueError.CreateFmt('could not convert string to float: ''%s''', [S]);
 end;
 
 { ---- option records ---- }
@@ -670,17 +575,21 @@ begin
   Result := Locale.Currencies.Str(Currency, Currency);
 end;
 
-function GetCurrencyName(const Currency: string; const Count: TNumber; const Locale: TLocale): string;
+{ The plural category of Count in the locale ('other' for NaN and
+  infinity). }
+function PluralOf(const Count: TDecimal; const Locale: TLocale): string;
+begin
+  if not Count.IsFinite then
+    Exit('other');
+  Result := Locale.PluralForm.Evaluate(Count);
+end;
+
+function GetCurrencyName(const Currency: string; const Count: TDecimal; const Locale: TLocale): string;
 var
   Form: string;
   Names, ForCurrency: TCLDRValue;
 begin
-  try
-    Form := Count.PluralCategory(Locale.PluralForm);
-  except
-    on EBabelOverflowError do Form := 'other';
-    on EBabelValueError do Form := 'other';
-  end;
+  Form := PluralOf(Count, Locale);
   Names := Locale.Data.Get('currency_names_plural');
   if Names = nil then
     raise EBabelKeyError.Create('currency_names_plural');
@@ -728,12 +637,12 @@ begin
   Result := P.Str('other');
 end;
 
-function GetCurrencyUnitPattern(const Currency: string; const Count: TNumber; const Locale: TLocale): string;
+function GetCurrencyUnitPattern(const Currency: string; const Count: TDecimal; const Locale: TLocale): string;
 var
   P: TCLDRValue;
   Form: string;
 begin
-  Form := Count.PluralCategory(Locale.PluralForm);
+  Form := PluralOf(Count, Locale);
   P := UnitPatterns(Locale);
   if P.Has(Form) then
     Exit(P.Str(Form));
@@ -960,9 +869,24 @@ begin
       Break;
 end;
 
+{ The text of an affix outside its quotes. }
+function Unquoted(const Affix: string): string;
+var
+  I: Integer;
+  Quoted: Boolean;
+begin
+  Result := '';
+  Quoted := False;
+  for I := 1 to Length(Affix) do
+    if Affix[I] = '''' then
+      Quoted := not Quoted
+    else if not Quoted then
+      Result := Result + Affix[I];
+end;
+
 function ParseNumberPattern(const Pattern: string): TNumberPattern;
 var
-  PosPattern, NegPattern, Number, Dummy, Exp, IntegerPart, Fraction: string;
+  PosPattern, NegPattern, Number, Dummy, Exp, IntegerPart, Fraction, Affixes: string;
   P: Integer;
 begin
   Result := Default(TNumberPattern);
@@ -1017,13 +941,59 @@ begin
   end;
   Result.Grouping := ParseGrouping(IntegerPart);
   Result.NumberPattern := Number;
-  if (Pos('%', Result.PosPrefix + Result.NegPrefix + Result.PosSuffix + Result.NegSuffix) > 0) then
+  { a percent or per mille sign outside quotes scales the number }
+  Affixes := Unquoted(Result.PosPrefix) + Unquoted(Result.NegPrefix) +
+    Unquoted(Result.PosSuffix) + Unquoted(Result.NegSuffix);
+  if Pos('%', Affixes) > 0 then
     Result.Scale := 2
-  else if Pos(#$E2#$80#$B0, Result.PosPrefix + Result.NegPrefix + Result.PosSuffix + Result.NegSuffix) > 0 then
-    Result.Scale := 3;   { per mille }
+  else if Pos(#$E2#$80#$B0, Affixes) > 0 then
+    Result.Scale := 3;
 end;
 
 { ---- NumberPattern.apply ---- }
+
+{ The ten digits of a numbering system ('' for 'latn' or a system without
+  digits in the data: ASCII digits are kept). }
+function SystemDigits(const Locale: TLocale; const NumberingSystem: string): TCodePoints;
+var
+  NS: string;
+  V: TCLDRValue;
+begin
+  Result := nil;
+  NS := NumberingSystem;
+  if NS = 'default' then
+    NS := Locale.DefaultNumberingSystem;
+  if NS = 'latn' then
+    Exit;
+  V := GetGlobal('numbering_system_digits').Get(NS);
+  if (V <> nil) and (V.Kind = ckString) then
+  begin
+    Result := CodePoints(V.AsString);
+    if Length(Result) <> 10 then
+      Result := nil;
+  end;
+end;
+
+{ S with its ASCII digits written in Digits (unchanged when Digits is
+  empty). }
+function LocalizeDigits(const S: string; const Digits: TCodePoints): string;
+var
+  C: Char;
+  One: TCodePoints;
+begin
+  if Digits = nil then
+    Exit(S);
+  Result := '';
+  SetLength(One, 1);
+  for C in S do
+    if C in ['0'..'9'] then
+    begin
+      One[0] := Digits[Ord(C) - Ord('0')];
+      Result := Result + CodePointsToUTF8(One, 0, 1);
+    end
+    else
+      Result := Result + C;
+end;
 
 function FormatInt(const Pat: TNumberPattern; const Value: string; Min: Integer;
   const Locale: TLocale; const NumberingSystem: string): string;
@@ -1046,8 +1016,9 @@ begin
   Result := V + Result;
 end;
 
-function FormatFrac(const Value: string; const Prec: TIntPair; const Locale: TLocale;
-  const NumberingSystem: string): string;
+{ The fraction digits shown: Value padded to Prec.Min, trailing zeros
+  dropped down to Prec.Min, '' when none are shown. }
+function FractionShown(const Value: string; const Prec: TIntPair): string;
 var
   V: string;
   AllZero: Boolean;
@@ -1064,20 +1035,19 @@ begin
     Exit('');
   while (Length(V) > Prec.Min) and (V[Length(V)] = '0') do
     SetLength(V, Length(V) - 1);
-  Result := GetDecimalSymbol(Locale, NumberingSystem) + V;
+  Result := V;
 end;
 
+{ The rounded number with its symbols (ASCII digits), and in Shown the
+  digits shown ('1234.50'). }
 function QuantizeValue(const Pat: TNumberPattern; const Value: TDecimal; const Locale: TLocale;
-  const FracPrec: TIntPair; GroupSeparator: Boolean; const NumberingSystem: string): string;
+  const FracPrec: TIntPair; GroupSeparator: Boolean; const NumberingSystem: string;
+  out Shown: string): string;
 var
-  Rounded: TDecimal;
-  Text, A, B, IntegerPart: string;
+  Text, A, B, IntegerPart, Frac: string;
   P: Integer;
 begin
-  if Value.IsInfinite then
-    Exit(GetInfinitySymbol(Locale, NumberingSystem));
-  Rounded := Value.Quantize(-FracPrec.Max);
-  Text := Rounded.FormatFixed;
+  Text := Value.Quantize(-FracPrec.Max).FormatFixed;
   P := Pos('.', Text);
   if P > 0 then
   begin
@@ -1089,12 +1059,19 @@ begin
     A := Text;
     B := '';
   end;
+  if B = '' then
+    B := '0';
   IntegerPart := A;
   if GroupSeparator then
     IntegerPart := FormatInt(Pat, A, Pat.IntPrec.Min, Locale, NumberingSystem);
-  if B = '' then
-    B := '0';
-  Result := IntegerPart + FormatFrac(B, FracPrec, Locale, NumberingSystem);
+  Frac := FractionShown(B, FracPrec);
+  Shown := A;
+  Result := IntegerPart;
+  if Frac <> '' then
+  begin
+    Shown := Shown + '.' + Frac;
+    Result := Result + GetDecimalSymbol(Locale, NumberingSystem) + Frac;
+  end;
 end;
 
 function FormatSignificant(const Value: TDecimal; Minimum, Maximum: Integer): string;
@@ -1105,7 +1082,7 @@ var
 begin
   Exp := Value.Adjusted;
   Scale := Maximum - 1 - Exp;
-  Digits := Value.ScaleB(Scale).Quantize(0).ToString;
+  Digits := Value.ScaleB(Scale).Quantize(0).FormatFixed;
   if Scale <= 0 then
     Result := Digits + StringOfChar('0', -Scale)
   else
@@ -1127,65 +1104,102 @@ begin
   end;
 end;
 
-{ re.sub(r"'([^']*)'", lambda m: m.group(1) or "'", s) }
-function Unquote(const S: string): string;
+{ An affix (prefix or suffix) as written: quoted text is literal ('' is a
+  quote); outside quotes '-', '+', '%' and the per mille sign are the
+  locale's symbols and the currency signs are replaced (UTS #35, "Special
+  Pattern Characters"). }
+function ExpandAffix(const Affix: string; const Locale: TLocale; const Options: TApplyOptions;
+  const Shown: TDecimal): string;
 var
-  I, J: Integer;
+  I, J, N: Integer;
+  NS: string;
 begin
+  NS := Options.NumberingSystem;
   Result := '';
   I := 1;
-  while I <= Length(S) do
+  while I <= Length(Affix) do
   begin
-    if S[I] = '''' then
+    if Affix[I] = '''' then
     begin
       J := I + 1;
-      while (J <= Length(S)) and (S[J] <> '''') do
+      while (J <= Length(Affix)) and (Affix[J] <> '''') do
         Inc(J);
-      if J <= Length(S) then
+      if J > Length(Affix) then
       begin
-        if J = I + 1 then
-          Result := Result + ''''
-        else
-          Result := Result + Copy(S, I + 1, J - I - 1);
-        I := J + 1;
-        Continue;
+        Result := Result + Copy(Affix, I, MaxInt);   { unclosed: literal }
+        Break;
       end;
+      if J = I + 1 then
+        Result := Result + ''''
+      else
+        Result := Result + Copy(Affix, I + 1, J - I - 1);
+      I := J + 1;
+      Continue;
     end;
-    Result := Result + S[I];
+    if Copy(Affix, I, 2) = #$C2#$A4 then
+    begin
+      N := 1;
+      while Copy(Affix, I + 2 * N, 2) = #$C2#$A4 do
+        Inc(N);
+      if Options.Currency = '' then
+        Result := Result + Copy(Affix, I, 2 * N)
+      else
+        case N of
+          1: Result := Result + GetCurrencySymbol(Options.Currency, Locale);
+          2: Result := Result + UpperCase(Options.Currency);
+        else
+          Result := Result + GetCurrencyName(Options.Currency, Shown, Locale);
+        end;
+      Inc(I, 2 * N);
+      Continue;
+    end;
+    if Affix[I] = '-' then
+      Result := Result + GetMinusSignSymbol(Locale, NS)
+    else if Affix[I] = '+' then
+      Result := Result + GetPlusSignSymbol(Locale, NS)
+    else if Affix[I] = '%' then
+      Result := Result + NumberSymbols(Locale, NS).Str('percentSign', '%')
+    else if Copy(Affix, I, 3) = #$E2#$80#$B0 then
+    begin
+      Result := Result + NumberSymbols(Locale, NS).Str('perMille', #$E2#$80#$B0);
+      Inc(I, 3);
+      Continue;
+    end
+    else
+      Result := Result + Affix[I];
     Inc(I);
   end;
 end;
 
-function TNumberPattern.Apply(const Value: TNumber; const Locale: TLocale;
-  const Options: TApplyOptions): string;
+function TNumberPattern.ApplyShown(const Value: TDecimal; const Locale: TLocale;
+  const Options: TApplyOptions; out Shown: TDecimal): string;
 var
   V: TDecimal;
   IsNegative: Boolean;
   Exp, LeadShift: Int64;
-  ExpSign, Number, Text, A, B: string;
+  ExpSign, Number, Text, A, B, ShownText, ExpDigits: string;
   Frac: TIntPair;
   Prec, P: Integer;
   NS: string;
 begin
   NS := Options.NumberingSystem;
-  V := Value.ToDecimal;
-  V := V.ScaleB(Scale);
-  IsNegative := V.IsSigned;
+  V := Value.ScaleB(Scale);
+  IsNegative := V.IsSigned and not V.IsNaN;
   V := V.Abs.Normalize;
+  Shown := V;
 
   Exp := 0;
   ExpSign := '';
-  if HasExp then
+  if HasExp and V.IsFinite then
   begin
-    { scientific_notation_elements }
     Exp := V.Adjusted;
-    V := V.Multiply(GetDecimalQuantum(Exp));
+    V := V.ScaleB(-Exp);
     if IntPrec.Min > 1 then
       LeadShift := IntPrec.Min - 1
     else
       LeadShift := 0;
     Exp := Exp - LeadShift;
-    V := V.Multiply(GetDecimalQuantum(-LeadShift));
+    V := V.ScaleB(LeadShift);
     if Exp < 0 then
       ExpSign := GetMinusSignSymbol(Locale, NS)
     else if ExpPlus then
@@ -1208,13 +1222,23 @@ begin
       Frac.Max := Prec;
   end;
 
-  if HasExp then
-    Number := QuantizeValue(Self, V, Locale, Frac, Options.GroupSeparator, NS) +
-      GetExponentialSymbol(Locale, NS) + ExpSign +
-      FormatInt(Self, IntToStr(Exp), ExpPrec.Min, Locale, NS)
-  else if Pos('@', Pattern) > 0 then
+  if V.IsNaN then
+    Number := NumberSymbols(Locale, NS).Str('nan', 'NaN')
+  else if V.IsInfinite then
+    Number := GetInfinitySymbol(Locale, NS)
+  else if HasExp then
+  begin
+    Number := QuantizeValue(Self, V, Locale, Frac, Options.GroupSeparator, NS, ShownText);
+    Shown := TDecimal.Parse(ShownText).ScaleB(Exp);
+    ExpDigits := IntToStr(Exp);
+    if Length(ExpDigits) < ExpPrec.Min then
+      ExpDigits := StringOfChar('0', ExpPrec.Min - Length(ExpDigits)) + ExpDigits;
+    Number := Number + GetExponentialSymbol(Locale, NS) + ExpSign + ExpDigits;
+  end
+  else if Pos('@', NumberPattern) > 0 then
   begin
     Text := FormatSignificant(V, IntPrec.Min, IntPrec.Max);
+    Shown := TDecimal.Parse(Text);
     P := Pos('.', Text);
     if P > 0 then
     begin
@@ -1231,27 +1255,30 @@ begin
       Number := Number + GetDecimalSymbol(Locale, NS) + B;
   end
   else
-    Number := QuantizeValue(Self, V, Locale, Frac, Options.GroupSeparator, NS);
+  begin
+    Number := QuantizeValue(Self, V, Locale, Frac, Options.GroupSeparator, NS, ShownText);
+    Shown := TDecimal.Parse(ShownText);
+  end;
+  Number := LocalizeDigits(Number, SystemDigits(Locale, NS));
 
   if IsNegative then
-    Result := NegPrefix
+    Result := ExpandAffix(NegPrefix, Locale, Options, Shown)
   else
-    Result := PosPrefix;
+    Result := ExpandAffix(PosPrefix, Locale, Options, Shown);
   if NumberPattern <> '' then
     Result := Result + Number;
   if IsNegative then
-    Result := Result + NegSuffix
+    Result := Result + ExpandAffix(NegSuffix, Locale, Options, Shown)
   else
-    Result := Result + PosSuffix;
+    Result := Result + ExpandAffix(PosSuffix, Locale, Options, Shown);
+end;
 
-  if (Pos(#$C2#$A4, Result) > 0) and (Options.Currency <> '') then
-  begin
-    Result := StringReplace(Result, #$C2#$A4#$C2#$A4#$C2#$A4,
-      GetCurrencyName(Options.Currency, V, Locale), [rfReplaceAll]);
-    Result := StringReplace(Result, #$C2#$A4#$C2#$A4, UpperCase(Options.Currency), [rfReplaceAll]);
-    Result := StringReplace(Result, #$C2#$A4, GetCurrencySymbol(Options.Currency, Locale), [rfReplaceAll]);
-  end;
-  Result := Unquote(Result);
+function TNumberPattern.Apply(const Value: TDecimal; const Locale: TLocale;
+  const Options: TApplyOptions): string;
+var
+  Shown: TDecimal;
+begin
+  Result := ApplyShown(Value, Locale, Options, Shown);
 end;
 
 { ---- format functions ---- }
@@ -1269,12 +1296,12 @@ begin
   Result := V.AsString;
 end;
 
-function FormatDecimal(const Number: TNumber; const Locale: TLocale): string;
+function FormatDecimal(const Number: TDecimal; const Locale: TLocale): string;
 begin
   Result := FormatDecimal(Number, Locale, NumberOptions);
 end;
 
-function FormatDecimal(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string;
+function FormatDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string;
 var
   Fmt: string;
   AO: TApplyOptions;
@@ -1291,7 +1318,7 @@ end;
 
 { _get_compact_format: the number to format and the pattern ('' when
   none applies). }
-procedure GetCompactFormat(const Number: TNumber; CompactFormat: TCLDRValue; const Locale: TLocale;
+procedure GetCompactFormat(const Number: TDecimal; CompactFormat: TCLDRValue; const Locale: TLocale;
   FractionDigits: Integer; out Value: TDecimal; out Format: string);
 
   { a > b for non-negative integers written without leading zeros }
@@ -1312,7 +1339,7 @@ var
   C: Char;
 begin
   Format := '';
-  Value := Number.ToDecimal;
+  Value := Number;
   if Value.IsNaN or Value.IsInfinite then
     Exit;
   Others := CompactFormat.Get('other');
@@ -1354,13 +1381,19 @@ begin
         Divisor := Copy(MagKey, 1, Length(MagKey) - (Zeros - 1))
       else
         Divisor := '0';
-      Value := Value.Divide(TDecimal.Parse(Divisor));
-      Rounded := Value.Round(FractionDigits);
-      AbsValue := Value.Abs;
+      { the magnitudes are powers of ten: the division is exact }
+      if (Divisor <> '0') and (Copy(Divisor, 2, MaxInt) = StringOfChar('0', Length(Divisor) - 1)) and
+         (Divisor[1] = '1') then
+        Value := Value.ScaleB(-(Length(Divisor) - 1))
+      else
+        Value := Value.Divide(TDecimal.Parse(Divisor));
+      Rounded := Value.Round(FractionDigits).Normalize;
+      { the plural form of the number shown }
+      AbsValue := Rounded.Abs;
       PluralForm := Locale.PluralForm.Evaluate(AbsValue);
       if not CompactFormat.Has(PluralForm) then
         PluralForm := 'other';
-      if (Value.CompareInt(1) = 0) and CompactFormat.Has('1') then
+      if (Rounded.CompareInt(1) = 0) and CompactFormat.Has('1') then
         PluralForm := '1';
       if not CompactFormat.Get(PluralForm).Has(MagKey) then
         PluralForm := 'other';
@@ -1371,12 +1404,12 @@ begin
   end;
 end;
 
-function FormatCompactDecimal(const Number: TNumber; const Locale: TLocale): string;
+function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale): string;
 begin
   Result := FormatCompactDecimal(Number, Locale, CompactOptions);
 end;
 
-function FormatCompactDecimal(const Number: TNumber; const Locale: TLocale; const Options: TCompactOptions): string;
+function FormatCompactDecimal(const Number: TDecimal; const Locale: TLocale; const Options: TCompactOptions): string;
 var
   Compact: TCLDRValue;
   Value: TDecimal;
@@ -1395,19 +1428,13 @@ begin
   Result := ParseNumberPattern(Fmt).Apply(Value, Locale, AO);
 end;
 
-function FormatCurrencyLongName(const Number: TNumber; const Currency: string; const Locale: TLocale;
+function FormatCurrencyLongName(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCurrencyOptions): string;
 var
-  N: TNumber;
   UnitPattern, DisplayName, Fmt, NumberPart: string;
   AO: TApplyOptions;
+  Shown: TDecimal;
 begin
-  if Number.Kind = nkString then
-    N := PyFloatOf(Number.FString)
-  else
-    N := Number;
-  UnitPattern := GetCurrencyUnitPattern(Currency, N, Locale);
-  DisplayName := GetCurrencyName(Currency, N, Locale);
   Fmt := Options.Format;
   if Fmt = '' then
     Fmt := PatternOf(Locale, Locale.DecimalFormats, '', True);
@@ -1417,16 +1444,19 @@ begin
   AO.DecimalQuantization := Options.DecimalQuantization;
   AO.GroupSeparator := Options.GroupSeparator;
   AO.NumberingSystem := Options.NumberingSystem;
-  NumberPart := ParseNumberPattern(Fmt).Apply(Number, Locale, AO);
+  NumberPart := ParseNumberPattern(Fmt).ApplyShown(Number, Locale, AO, Shown);
+  { the plural forms of the number as shown ('1.00' is not 'one' in en) }
+  UnitPattern := GetCurrencyUnitPattern(Currency, Shown.Abs, Locale);
+  DisplayName := GetCurrencyName(Currency, Shown.Abs, Locale);
   Result := PyFormat2(UnitPattern, NumberPart, DisplayName);
 end;
 
-function FormatCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale): string;
+function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string;
 begin
   Result := FormatCurrency(Number, Currency, Locale, CurrencyOptions);
 end;
 
-function FormatCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale;
+function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCurrencyOptions): string;
 var
   Fmt: string;
@@ -1493,12 +1523,12 @@ begin
   Result := PyStrip(Result);
 end;
 
-function FormatCompactCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale): string;
+function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string;
 begin
   Result := FormatCompactCurrency(Number, Currency, Locale, CompactOptions);
 end;
 
-function FormatCompactCurrency(const Number: TNumber; const Currency: string; const Locale: TLocale;
+function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCompactOptions): string;
 var
   Compact, Others: TCLDRValue;
@@ -1540,12 +1570,12 @@ begin
   Result := ParseNumberPattern(Fmt).Apply(Value, Locale, AO);
 end;
 
-function FormatPercent(const Number: TNumber; const Locale: TLocale): string;
+function FormatPercent(const Number: TDecimal; const Locale: TLocale): string;
 begin
   Result := FormatPercent(Number, Locale, NumberOptions);
 end;
 
-function FormatPercent(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string;
+function FormatPercent(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string;
 var
   Fmt: string;
   AO: TApplyOptions;
@@ -1560,12 +1590,12 @@ begin
   Result := ParseNumberPattern(Fmt).Apply(Number, Locale, AO);
 end;
 
-function FormatScientific(const Number: TNumber; const Locale: TLocale): string;
+function FormatScientific(const Number: TDecimal; const Locale: TLocale): string;
 begin
   Result := FormatScientific(Number, Locale, NumberOptions);
 end;
 
-function FormatScientific(const Number: TNumber; const Locale: TLocale; const Options: TNumberOptions): string;
+function FormatScientific(const Number: TDecimal; const Locale: TLocale; const Options: TNumberOptions): string;
 var
   Fmt: string;
   AO: TApplyOptions;
@@ -1613,8 +1643,8 @@ begin
     Result := StringReplace(Result, X, By, [rfReplaceAll]);
 end;
 
-{ int(s): Python's syntax (whitespace, sign, digits with single '_'
-  between them), within Int64. }
+{ An integer: optional whitespace and sign, decimal digits of any script,
+  within Int64. }
 function PyIntOf(const S: string; out V: Int64): Boolean;
 var
   T: string;
@@ -1640,13 +1670,6 @@ begin
   Q := 0;
   while I <= Length(T) do
   begin
-    if T[I] = '_' then
-    begin
-      if not (T[I + 1] in ['0'..'9']) then
-        Exit;
-      Inc(I);
-      Continue;
-    end;
     if not (T[I] in ['0'..'9']) then
       Exit;
     D := Ord(T[I]) - 48;

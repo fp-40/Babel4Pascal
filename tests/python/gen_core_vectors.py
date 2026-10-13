@@ -6,6 +6,12 @@ object per line, for tests/core/test_core.pas.
 The oracle sees only the locales that the Pascal test program links (the
 units in src/data), so that Locale.parse chooses among the same locales.
 
+Where babel.decimal departs from Python's decimal on purpose, the
+expected values follow babel.decimal (see OURS below): exact arithmetic
+(a context of 10 000 digits stands for it, also in Babel's plural
+operands), no '_', sNaN or NaN payloads in Decimal syntax, an integral
+float written without '.0', 10 ** n as 1E+n.
+
 Usage: gen_core_vectors.py OUT.jsonl
 """
 import decimal
@@ -22,6 +28,9 @@ LINKED = oracle_linked.setup()
 from babel import Locale, localedata  # noqa: E402
 from babel import core  # noqa: E402
 from babel.plural import PluralRule, RuleError, extract_operands, to_gettext, to_javascript  # noqa: E402
+
+# OURS: babel.decimal's exact arithmetic, approximated by a huge context.
+decimal.setcontext(decimal.Context(prec=10000, Emax=decimal.MAX_EMAX, Emin=decimal.MIN_EMIN))
 
 out = []
 
@@ -175,6 +184,8 @@ case('plural_rule', [[['one', 'n is 1'], ['one', 'n is 2']]],
 
 
 def ops(x):
+    if isinstance(x, float) and (x != x or x in (float('inf'), float('-inf'))):
+        raise ValueError('no plural operands for NaN or infinity')
     n, i, v, w, f, t, c, e = extract_operands(x)
     return [str(n), str(i), v, w, str(f), str(t), c, e]
 
@@ -194,8 +205,19 @@ DEC_STRS = ['1_000', '_1', '1__0', '1_', '1.5_0', ' 12 ', '\t-0.00\n', '+.5', '5
             '١٢٣', '\u00a012\u2003', '۱۲.۵', '1\u00b2']
 
 
+def our_parse(s):
+    """Decimal(s), with babel.decimal's stricter syntax."""
+    t = s.strip().lower()
+    if '_' in s or 'snan' in t or (t.lstrip('+-').startswith('nan') and t.lstrip('+-') != 'nan'):
+        raise ValueError(s)
+    try:
+        return decimal.Decimal(s)
+    except decimal.InvalidOperation:
+        raise ValueError(s)
+
+
 def dec(s):
-    d = decimal.Decimal(s)
+    d = our_parse(s)
     t = d.as_tuple()
     exp = t.exponent if isinstance(t.exponent, int) else 0
     kind = {'F': 'inf', 'n': 'nan', 'N': 'snan'}.get(t.exponent, 'finite') \
@@ -224,14 +246,21 @@ def rand_dec():
 
 
 def dec_ops(op, a, b):
-    A = decimal.Decimal(a)
+    A = our_parse(a)
     if op == 'abs': r = abs(A)
     elif op == 'normalize': r = A.normalize()
     elif op == 'adjusted': return A.adjusted()
     elif op == 'scaleb': r = A.scaleb(int(b))
-    elif op == 'pow10': r = decimal.Decimal(10) ** int(b)
+    elif op == 'pow10': r = decimal.Decimal((0, (1,), int(b)))
     elif op == 'mul': r = A * decimal.Decimal(b)
-    elif op == 'div': r = A / decimal.Decimal(b)
+    elif op == 'div':
+        B = our_parse(b)
+        if A.is_finite() and B.is_infinite():
+            r = decimal.Decimal((int(A.is_signed()) ^ int(B.is_signed()), (0,), 0))
+        else:
+            with decimal.localcontext(decimal.Context(prec=28, Emax=decimal.MAX_EMAX,
+                                                      Emin=decimal.MIN_EMIN)):
+                r = A / B
     elif op == 'quantize': r = A.quantize(decimal.Decimal('1E' + b))
     elif op == 'round': r = round(A, int(b))
     elif op == 'fixed': return f'{A:f}'
@@ -239,7 +268,6 @@ def dec_ops(op, a, b):
     return dec(str(r)) + [str(r)]
 
 
-decimal.setcontext(decimal.Context())   # the default context
 for _ in range(4000):
     op = drnd.choice(['abs', 'normalize', 'adjusted', 'scaleb', 'pow10', 'mul', 'div',
                       'quantize', 'round', 'fixed', 'compare'])
@@ -271,7 +299,10 @@ floats = []
 for x in doubles:
     if x != x:
         continue
-    floats.append([bits_of(x), repr(x), str(decimal.Decimal(str(x))) if x not in (float('inf'), float('-inf')) else ''])
+    r = repr(x)
+    if r.endswith('.0'):
+        r = r[:-2]   # babel.decimal: an integral double is an integer
+    floats.append([bits_of(x), repr(x), str(decimal.Decimal(r)) if x not in (float('inf'), float('-inf')) else ''])
 out.append({'op': 'float_repr', 'args': [], 'expect': floats})
 
 with open(sys.argv[1], 'w', encoding='utf-8') as f:

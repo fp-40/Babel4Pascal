@@ -11,8 +11,10 @@
 #    oracle's results (tests/python/gen_core_vectors.py +
 #    tests/core/test_core), and DefaultLocale under several environments
 #    (tests/python/check_default_locale.py + tests/core/print_default).
-# 5. babel.numbers against vectors of the oracle's results
-#    (tests/python/gen_numbers_vectors.py + tests/numbers/test_numbers).
+# 5. babel.numbers against its reference cases (tests/numbers/reference.jsonl,
+#    tests/numbers/README.md), and, when node is installed, a report of
+#    the differences from ICU (tests/js/icu_numbers.mjs; informative: it
+#    does not fail the run).
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -55,7 +57,11 @@ for prog in core/test_core core/print_default numbers/test_numbers; do
 done
 check core "$OUT/bin/test_core" "$OUT/vectors/core.jsonl"
 check default_locale python3 -I "$ROOT/tests/python/check_default_locale.py" "$OUT/bin/print_default"
-echo "== babel.numbers vs Babel"
-check numbers_vectors python3 -I "$ROOT/tests/python/gen_numbers_vectors.py" "$OUT/vectors/numbers.jsonl"
-check numbers "$OUT/bin/test_numbers" "$OUT/vectors/numbers.jsonl"
+echo "== babel.numbers vs its reference cases"
+check numbers "$OUT/bin/test_numbers" "$ROOT/tests/numbers/reference.jsonl"
+if command -v node > /dev/null; then
+  echo "== babel.numbers vs ICU (informative)"
+  node tests/js/icu_numbers.mjs "$OUT/vectors/icu.jsonl" > /dev/null
+  "$OUT/bin/test_numbers" "$OUT/vectors/icu.jsonl" | tail -n 6 || true
+fi
 echo "== all passed"
