@@ -18,13 +18,13 @@
     string raises EBabelValueError.
   - from an Int64.
   - from a Double: the shortest decimal text that reads back as the same
-    Double (babel.pyfloatrepr.inc), as ICU reads a double: 2.675
-    is 2.675, not its binary value 2.67499999999999982236...
+    Double (babel.floatrepr.inc): 2.675 is 2.675, not its binary value
+    2.67499999999999982236...
     FromDoubleExact gives the binary value.
 
   Arithmetic: products, scaling, normalization and quantization are exact.
-  Quantize rounds half-even (ROUND_HALF_EVEN, as CLDR and ICU do by
-  default). Division rounds its result to a given number of significant
+  Quantize rounds half-even (ROUND_HALF_EVEN, the default rounding of
+  CLDR's number formatting). Division rounds its result to a given number of significant
   digits. An invalid operation (infinity * 0, 0 / 0) and division by zero
   raise EBabelDecimalError.
 
@@ -131,14 +131,14 @@ type
 
 { The shortest text that reads back as X ('0.1', '1e+16',
   '0.30000000000000004', 'inf', 'nan', '-0.0'). }
-function PyFloatRepr(X: Double): string;
+function ShortestFloatRepr(X: Double): string;
 
 implementation
 
 uses
   Math;
 
-{$I babel.pyfloatrepr.inc}
+{$I babel.floatrepr.inc}
 
 
 procedure NotFinite(const Op: string);
@@ -300,8 +300,8 @@ class function TDecimal.FromDouble(V: Double): TDecimal;
 var
   R: string;
 begin
-  R := PyFloatRepr(V);
-  { an integral double is an integer, as in ICU: 1.0 is 1 }
+  R := ShortestFloatRepr(V);
+  { an integral double is an integer: 1.0 is 1 }
   if (Length(R) > 2) and (Copy(R, Length(R) - 1, 2) = '.0') then
     SetLength(R, Length(R) - 2);
   Result := Parse(R);

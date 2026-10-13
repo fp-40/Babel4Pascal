@@ -51,6 +51,10 @@ begin
     Result := FormatDateTime('yyyy-mm-dd', D);
 end;
 
+const
+  PatternSamples: array[0..6] of string = ('0', '-1234567.891', '0.5', '12.345', '1234567', '0.000123',
+    '-0.05');
+
 function Handle(const Op: string; Args: TJSONArray): TJSONData;
 var
   NO: TNumberOptions;
@@ -59,7 +63,6 @@ var
   TO_: TTerritoryCurrencyOptions;
   PO: TParseOptions;
   A: TJSONArray;
-  P: TNumberPattern;
   Periods: TCurrencyPeriods;
   I: Integer;
 begin
@@ -154,29 +157,13 @@ begin
         Result := TJSONArray.Create(['NumberFormatError', StrArray(E.Suggestions)]);
     end;
   end
-  else if Op = 'parse_pattern' then
+  else if Op = 'pattern_format' then
   begin
-    P := ParseNumberPattern(Args.Strings[0]);
+    { a pattern applied to a series of numbers (prefixes and suffixes,
+      grouping, integer and fraction digits, exponent, percent scale) }
     A := TJSONArray.Create;
-    A.Add(P.PosPrefix);
-    A.Add(P.NegPrefix);
-    A.Add(P.PosSuffix);
-    A.Add(P.NegSuffix);
-    A.Add(P.NumberPattern);
-    A.Add(TJSONArray.Create([P.Grouping.Min, P.Grouping.Max]));
-    A.Add(TJSONArray.Create([P.IntPrec.Min, P.IntPrec.Max]));
-    A.Add(TJSONArray.Create([P.FracPrec.Min, P.FracPrec.Max]));
-    if P.HasExp then
-    begin
-      A.Add(TJSONArray.Create([P.ExpPrec.Min, P.ExpPrec.Max]));
-      A.Add(P.ExpPlus);
-    end
-    else
-    begin
-      A.Add(TJSONNull.Create);
-      A.Add(TJSONNull.Create);
-    end;
-    A.Add(P.Scale);
+    for I := 0 to High(PatternSamples) do
+      A.Add(FormatDecimal(TDecimal.Parse(PatternSamples[I]), 'en', NumberOptions.WithFormat(Args.Strings[0])));
     Result := A;
   end
   { ICU's results (tests/js/icu_numbers.mjs): the locale's default
@@ -193,8 +180,6 @@ begin
   else if Op = 'icu_compact' then
     Result := TJSONString.Create(FormatCompactDecimal(TDecimal.Parse(Args.Strings[0]), Args.Strings[1],
       CompactOptions.WithFormatType(Args.Strings[2]).WithNumberingSystem('default')))
-  else if Op = 'parse_grouping' then
-    Result := TJSONArray.Create([ParseGrouping(Args.Strings[0]).Min, ParseGrouping(Args.Strings[0]).Max])
   else
     raise Exception.Create('unknown op ' + Op);
 end;

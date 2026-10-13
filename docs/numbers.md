@@ -240,6 +240,15 @@ FormatCurrency(1234.5, 'USD', 'fa',
   CurrencyOptions.WithNumberingSystem('default'));                       // ‎$۱٬۲۳۴٫۵۰
 ```
 
+A name that is not `'latn'`, `'default'` or a numeric system of CLDR
+raises `EUnsupportedNumberingSystemError`, as does a system the locale has
+no symbols for:
+
+```pascal
+FormatDecimal(1234.5, 'en', NumberOptions.WithNumberingSystem('zzzz'));
+// EUnsupportedNumberingSystemError: Unknown numbering system zzzz for Locale en.
+```
+
 The symbols of a numbering system:
 
 ```pascal
@@ -270,7 +279,13 @@ NormalizeCurrency('xyz');              // '' (not a currency)
 IsCurrency('EUR');                     // True
 ValidateCurrency('XYZ');
 // EUnknownCurrencyError: Unknown currency 'XYZ'.
+FormatCurrency(1, 'usd', 'en');
+// EUnknownCurrencyError: Unknown currency 'usd'.
 ```
+
+Every function that takes a currency code raises `EUnknownCurrencyError`
+for a code that is not a currency; codes are upper case, and
+`NormalizeCurrency` converts one.
 
 `ListCurrencies` gives the ISO 4217 codes of the global data (307), or
 those a locale names (282 for `'es'`).

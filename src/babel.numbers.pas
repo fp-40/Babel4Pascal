@@ -4,7 +4,7 @@
   FormatDecimal(1234.5, 'es_PE') gives '1,234.5'; FormatCurrency(1234.5,
   'PEN', 'es_PE') gives 'S/ 1,234.50'.
 
-  The results follow CLDR (UTS #35) as ICU applies it:
+  The results follow CLDR (UTS #35):
   - the signs of a pattern are the locale's: '-' is the minus sign ('−'
     in Swedish), '%' the percent sign ('٪؜' in Arabic), and so on, except
     inside quotes;
@@ -12,7 +12,7 @@
     (NumberingSystem 'default' gives ar_EG's '١٬٢٣٤٫٥'; 'latn', the
     default, gives ASCII digits);
   - a plural form depends on the number as shown: FormatCurrency(1, 'USD',
-    'en') with the 'name' format type gives '1.00 US dollars', as ICU;
+    'en') with the 'name' format type gives '1.00 US dollars';
   - NaN is the locale's nan symbol;
   - the arithmetic is exact, for numbers of any number of digits;
   - minimumGroupingDigits: es writes 1234 and 12.345;
@@ -28,9 +28,6 @@
     'short';
   - ParseDecimal and ParseNumber read the locale's minus and plus signs
     (and its separators and digits) as FormatDecimal writes them.
-
-  Node's ICU (78.2, CLDR 48) gives the same results on 18 000 cases,
-  except where the CLDR 47 and 48 data differ (tests/js/README.md).
 
   Numbers are TDecimal (babel.decimal), which converts implicitly from an
   Int64, a Double (its shortest decimal: 2.675 is 2.675) and a string.
@@ -144,44 +141,11 @@ type
   end;
   TCurrencyPeriods = array of TCurrencyPeriod;
 
-  TIntPair = record
-    Min, Max: Integer;
-  end;
-
-  { NumberPattern.apply options. }
-  TApplyOptions = record
-    Currency: string;               { '' = none }
-    CurrencyDigits: Boolean;        { True }
-    DecimalQuantization: Boolean;   { True }
-    GroupSeparator: Boolean;        { True }
-    NumberingSystem: string;        { 'latn' }
-    MinGrouping: Integer;           { 0: the locale's minimumGroupingDigits }
-  end;
-
-  { A parsed number pattern. }
-  TNumberPattern = record
-    Pattern: string;
-    PosPrefix, NegPrefix, PosSuffix, NegSuffix: string;
-    NumberPattern: string;           { the number part, without the exponent }
-    Grouping: TIntPair;              { Min = primary, Max = secondary size }
-    IntPrec, FracPrec: TIntPair;
-    HasExp: Boolean;                 { the pattern has an exponent }
-    ExpPrec: TIntPair;
-    ExpPlus: Boolean;
-    Scale: Integer;                  { 0, 2 (percent) or 3 (per mille) }
-    function Apply(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions): string;
-    { Apply, and in Shown the number as shown (rounded, with the fraction
-      digits written), from which plural forms are chosen. }
-    function ApplyShown(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions;
-      out Shown: TDecimal): string;
-  end;
-
 function NumberOptions: TNumberOptions;
 function CurrencyOptions: TCurrencyOptions;
 function CompactOptions: TCompactOptions;
 function ParseOptions: TParseOptions;
 function TerritoryCurrencyOptions: TTerritoryCurrencyOptions;
-function ApplyOptions: TApplyOptions;
 
 { Currencies }
 { The ISO 4217 codes known to the locale, or (no locale) every currency
@@ -257,25 +221,64 @@ function ParseNumber(const S: string; const Locale: TLocale; const Options: TPar
 function ParseDecimal(const S: string; const Locale: TLocale): TDecimal; overload;
 function ParseDecimal(const S: string; const Locale: TLocale; const Options: TParseOptions): TDecimal; overload;
 
-{ Patterns }
-{ ParseGrouping: the primary and secondary group sizes of the integer
-  part of a pattern (1000, 1000 when it has no ','). }
-function ParseGrouping(const P: string): TIntPair;
-{ The parsed pattern. Raises EBabelValueError for a pattern that mixes '@'
-  with '.' and '0'. }
-function ParseNumberPattern(const Pattern: string): TNumberPattern;
-{ The ten digits of a numbering system ('default': the locale's; nil for
-  'latn' or a system without digits). }
+{ Digits. The other units use these to write numbers in a numbering
+  system. }
+{ The ten digits of a numbering system: nil for 'latn' (ASCII digits);
+  'default' is the locale's system. Raises
+  EUnsupportedNumberingSystemError for a system that is not 'latn',
+  'default' or a numeric system of CLDR. }
 function SystemDigits(const Locale: TLocale; const NumberingSystem: string): TCodePoints;
 { S with its ASCII digits written in Digits (unchanged when nil). }
 function LocalizeDigits(const S: string; const Digits: TCodePoints): string;
 
 implementation
 
+type
+  TIntPair = record
+    Min, Max: Integer;
+  end;
+
+  { NumberPattern.apply options. }
+  TApplyOptions = record
+    Currency: string;               { '' = none }
+    CurrencyDigits: Boolean;        { True }
+    DecimalQuantization: Boolean;   { True }
+    GroupSeparator: Boolean;        { True }
+    NumberingSystem: string;        { 'latn' }
+    MinGrouping: Integer;           { 0: the locale's minimumGroupingDigits }
+  end;
+
+  { A parsed number pattern. }
+  TNumberPattern = record
+    Pattern: string;
+    PosPrefix, NegPrefix, PosSuffix, NegSuffix: string;
+    NumberPattern: string;           { the number part, without the exponent }
+    Grouping: TIntPair;              { Min = primary, Max = secondary size }
+    IntPrec, FracPrec: TIntPair;
+    HasExp: Boolean;                 { the pattern has an exponent }
+    ExpPrec: TIntPair;
+    ExpPlus: Boolean;
+    Scale: Integer;                  { 0, 2 (percent) or 3 (per mille) }
+    function Apply(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions): string;
+    { Apply, and in Shown the number as shown (rounded, with the fraction
+      digits written), from which plural forms are chosen. }
+    function ApplyShown(const Value: TDecimal; const Locale: TLocale; const Options: TApplyOptions;
+      out Shown: TDecimal): string;
+  end;
+
+
+function ApplyOptions: TApplyOptions; forward;
+{ The primary and secondary group sizes of the integer part of a pattern
+  (1000, 1000 when it has no ','). }
+function ParseGrouping(const P: string): TIntPair; forward;
+{ The parsed pattern. Raises EBabelValueError for a pattern that mixes '@'
+  with '.' and '0'. }
+function ParseNumberPattern(const Pattern: string): TNumberPattern; forward;
+
 { ---- small string helpers (code points) ---- }
 
-{ s[-n:] (all of s when n = 0) }
-function PyTail(const S: string; N: Integer): string;
+{ The last N characters of S (all of S when N = 0). }
+function TailOf(const S: string; N: Integer): string;
 begin
   if (N <= 0) or (N >= Length(S)) then
     Result := S
@@ -283,8 +286,8 @@ begin
     Result := Copy(S, Length(S) - N + 1, N);
 end;
 
-{ s[:-n] ('' when n = 0) }
-function PyDropTail(const S: string; N: Integer): string;
+{ S without its last N characters ('' when N = 0). }
+function DropTail(const S: string; N: Integer): string;
 begin
   if (N <= 0) or (N >= Length(S)) then
     Result := ''
@@ -292,7 +295,7 @@ begin
     Result := Copy(S, 1, Length(S) - N);
 end;
 
-{ s.rstrip(ch) }
+{ S without the characters C at its end. }
 function RStripChar(const S: string; C: Char): string;
 var
   N: Integer;
@@ -303,9 +306,9 @@ begin
   Result := Copy(S, 1, N);
 end;
 
-(* str.format for a pattern with positional fields '{0}', '{1}' and the
-  escapes '{{' and '}}' (the CLDR patterns use nothing else). *)
-function PyFormat2(const Pattern, A0, A1: string): string;
+(* A pattern with the fields '{0}' and '{1}' replaced by A0 and A1, and
+  the escapes '{{' and '}}' (the CLDR patterns use nothing else). *)
+function FormatTwo(const Pattern, A0, A1: string): string;
 var
   I: Integer;
 begin
@@ -596,6 +599,7 @@ end;
 
 function GetCurrencyName(const Currency: string; const Locale: TLocale): string;
 begin
+  ValidateCurrency(Currency);
   Result := Locale.Currencies.Str(Currency, Currency);
 end;
 
@@ -613,6 +617,7 @@ var
   Form: string;
   Names, ForCurrency: TCLDRValue;
 begin
+  ValidateCurrency(Currency);
   Form := PluralOf(Count, Locale);
   Names := Locale.Data.Get('currency_names_plural');
   if Names = nil then
@@ -630,6 +635,7 @@ end;
 
 function GetCurrencySymbol(const Currency: string; const Locale: TLocale): string;
 begin
+  ValidateCurrency(Currency);
   Result := Locale.CurrencySymbols.Str(Currency, Currency);
 end;
 
@@ -637,6 +643,7 @@ function GetCurrencyPrecision(const Currency: string): Integer;
 var
   F, V: TCLDRValue;
 begin
+  ValidateCurrency(Currency);
   F := GetGlobal('currency_fractions');
   V := F.Get(Currency);
   if V = nil then
@@ -655,6 +662,7 @@ function GetCurrencyUnitPattern(const Currency: string; const Locale: TLocale): 
 var
   P: TCLDRValue;
 begin
+  ValidateCurrency(Currency);
   P := UnitPatterns(Locale);
   if not P.Has('other') then
     raise EBabelKeyError.Create('other');
@@ -666,6 +674,7 @@ var
   P: TCLDRValue;
   Form: string;
 begin
+  ValidateCurrency(Currency);
   Form := PluralOf(Count, Locale);
   P := UnitPatterns(Locale);
   if P.Has(Form) then
@@ -976,8 +985,6 @@ end;
 
 { ---- NumberPattern.apply ---- }
 
-{ The ten digits of a numbering system ('' for 'latn' or a system without
-  digits in the data: ASCII digits are kept). }
 function SystemDigits(const Locale: TLocale; const NumberingSystem: string): TCodePoints;
 var
   NS: string;
@@ -990,12 +997,11 @@ begin
   if NS = 'latn' then
     Exit;
   V := GetGlobal('numbering_system_digits').Get(NS);
-  if (V <> nil) and (V.Kind = ckString) then
-  begin
-    Result := CodePoints(V.AsString);
-    if Length(Result) <> 10 then
-      Result := nil;
-  end;
+  if (V = nil) or (V.Kind <> ckString) then
+    raise EUnsupportedNumberingSystemError.CreateFmt('Unknown numbering system %s.', [NumberingSystem]);
+  Result := CodePoints(V.AsString);
+  if Length(Result) <> 10 then
+    Result := nil;
 end;
 
 { S with its ASCII digits written in Digits (unchanged when Digits is
@@ -1038,8 +1044,8 @@ begin
   Symbol := GetGroupSymbol(Locale, NumberingSystem);
   while Length(V) > GSize do
   begin
-    Result := Symbol + PyTail(V, GSize) + Result;
-    V := PyDropTail(V, GSize);
+    Result := Symbol + TailOf(V, GSize) + Result;
+    V := DropTail(V, GSize);
     GSize := Pat.Grouping.Max;
   end;
   Result := V + Result;
@@ -1116,7 +1122,7 @@ begin
     Result := Digits + StringOfChar('0', -Scale)
   else
   begin
-    IntPart := PyDropTail(Digits, Scale);
+    IntPart := DropTail(Digits, Scale);
     I := Length(IntPart);
     J := I;
     if Minimum - I > 0 then
@@ -1486,8 +1492,8 @@ end;
   no abbreviation applies: the number is then shown whole, rounded).
 
   The pattern is chosen from CompactFormat: the largest magnitude not
-  above the number, the plural form of the number shown. As in ICU, the
-  number is rounded in every case, and when rounding
+  above the number, the plural form of the number shown. The number is
+  rounded in every case, and when rounding
   reaches the next magnitude, that magnitude is used (999999 is 1M, not
   1000K). }
 procedure GetCompactFormat(const Number: TDecimal; CompactFormat: TCLDRValue; const Locale: TLocale;
@@ -1618,7 +1624,7 @@ begin
 end;
 
 { The minimum grouping for compact numbers: two digits before the first
-  separator at least, as ICU (de: 1234, 12.346). }
+  separator at least (de: 1234, 12.346). }
 function CompactMinGrouping(const Locale: TLocale): Integer;
 var
   MG: TCLDRValue;
@@ -1656,7 +1662,7 @@ var
   AO: TApplyOptions;
 begin
   Compact := Locale.CompactDecimalFormats.Get(Options.FormatType);
-  { as ICU, a locale without long forms uses the short ones }
+  { a locale without long forms uses the short ones }
   if (Compact = nil) and (Options.FormatType = 'long') then
     Compact := Locale.CompactDecimalFormats.Get('short');
   if Compact = nil then
@@ -1689,7 +1695,7 @@ begin
   { the plural forms of the number as shown ('1.00' is not 'one' in en) }
   UnitPattern := GetCurrencyUnitPattern(Currency, Shown.Abs, Locale);
   DisplayName := GetCurrencyName(Currency, Shown.Abs, Locale);
-  Result := PyFormat2(UnitPattern, NumberPart, DisplayName);
+  Result := FormatTwo(UnitPattern, NumberPart, DisplayName);
 end;
 
 function FormatCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string;
@@ -1704,6 +1710,7 @@ var
   V: TCLDRValue;
   AO: TApplyOptions;
 begin
+  ValidateCurrency(Currency);
   if Options.FormatType = 'name' then
     Exit(FormatCurrencyLongName(Number, Currency, Locale, Options));
   if Options.Format <> '' then
@@ -1725,7 +1732,8 @@ begin
   Result := ParseNumberPattern(Fmt).Apply(Number, Locale, AO);
 end;
 
-{ re.sub(r'[^0\s\¤]', '', s), re.sub(r'(\s)\s+', r'\1', s), .strip() }
+{ The digits '0', the currency signs and the white space of a pattern,
+  runs of white space reduced to their first character, stripped. }
 function CompactCurrencySkeleton(const S: string): string;
 var
   I, L: Integer;
@@ -1779,6 +1787,7 @@ var
   AO: TApplyOptions;
   Found: Boolean;
 begin
+  ValidateCurrency(Currency);
   Compact := Locale.CompactCurrencyFormats.Get(Options.FormatType);
   if Compact = nil then
     raise EUnknownCurrencyFormatError.CreateFmt('''%s'' is not a known compact currency format type',
@@ -1887,7 +1896,7 @@ end;
 
 { An integer: optional whitespace and sign, decimal digits of any script,
   within Int64. }
-function PyIntOf(const S: string; out V: Int64): Boolean;
+function TryIntOf(const S: string; out V: Int64): Boolean;
 var
   T: string;
   I: Integer;
@@ -1935,7 +1944,7 @@ begin
   Result := True;
 end;
 
-function PyRepr(const S: string): string;
+function QuotedText(const S: string): string;
 begin
   Result := '''' + S + '''';
 end;
@@ -1977,8 +1986,8 @@ begin
   T := NormalizeSigns(S, Locale, Options.NumberingSystem);
   if IsSpaceChar(Group) and (Pos(Group, T) = 0) and HasSpaceChar(T) then
     T := ReplaceSpaceChars(T, Group);
-  if not PyIntOf(StringReplace(T, Group, '', [rfReplaceAll]), Result) then
-    raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a valid number', nil);
+  if not TryIntOf(StringReplace(T, Group, '', [rfReplaceAll]), Result) then
+    raise ENumberFormatError.CreateWith(QuotedText(S) + ' is not a valid number', nil);
 end;
 
 function RemoveTrailingZerosAfterDecimal(const S, DecimalSymbol: string): string;
@@ -2018,7 +2027,7 @@ begin
     T := ReplaceSpaceChars(T, Group);
   if not TDecimal.TryParse(StringReplace(StringReplace(T, Group, '', [rfReplaceAll]), Dec, '.',
     [rfReplaceAll]), Result) then
-    raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a valid decimal number', nil);
+    raise ENumberFormatError.CreateWith(QuotedText(S) + ' is not a valid decimal number', nil);
   if Options.StrictMode and (Pos(Group, T) > 0) then
   begin
     NO := NumberOptions.WithDecimalQuantization(False).WithNumberingSystem(Options.NumberingSystem);
@@ -2029,15 +2038,15 @@ begin
     begin
       if not TDecimal.TryParse(StringReplace(StringReplace(T, Dec, '', [rfReplaceAll]), Group, '.',
         [rfReplaceAll]), Alt) then
-        raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Suggested) + '?', [Suggested]);
+        raise ENumberFormatError.CreateWith(QuotedText(S) + ' is not a properly formatted decimal number. ' +
+          'Did you mean ' + QuotedText(Suggested) + '?', [Suggested]);
       SuggestedAlt := FormatDecimal(Alt, Locale, NO);
       if SuggestedAlt = Suggested then
-        raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Suggested) + '?', [Suggested])
+        raise ENumberFormatError.CreateWith(QuotedText(S) + ' is not a properly formatted decimal number. ' +
+          'Did you mean ' + QuotedText(Suggested) + '?', [Suggested])
       else
-        raise ENumberFormatError.CreateWith(PyRepr(S) + ' is not a properly formatted decimal number. ' +
-          'Did you mean ' + PyRepr(Suggested) + '? Or maybe ' + PyRepr(SuggestedAlt) + '?', [Suggested, SuggestedAlt]);
+        raise ENumberFormatError.CreateWith(QuotedText(S) + ' is not a properly formatted decimal number. ' +
+          'Did you mean ' + QuotedText(Suggested) + '? Or maybe ' + QuotedText(SuggestedAlt) + '?', [Suggested, SuggestedAlt]);
     end;
   end;
 end;

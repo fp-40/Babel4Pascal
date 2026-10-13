@@ -74,7 +74,7 @@ begin
     P.Options.Add('-O2');
     P.SourcePath.Add('src');
     P.SourcePath.Add('src/data');
-    P.IncludePath.Add('src');    { babel.pyfloatrepr.inc }
+    P.IncludePath.Add('src');    { babel.floatrepr.inc }
     P.Targets.AddUnit('babel.errors.pas');
     P.Targets.AddUnit('babel.pystr.pas');
     P.Targets.AddUnit('babel.decimal.pas');

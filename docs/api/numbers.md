@@ -16,12 +16,16 @@ reads shared data and can be called from several threads.
 ### Exceptions
 
 `EUnknownCurrencyError = class(EBabelError)`
-: A currency code that is not in the data. Field `Identifier: string` holds
-  the code. Raised by `ValidateCurrency`. The formatting functions and
-  `GetCurrencyName` write an unknown code as it is (`'XYZ 1.00'`).
+: A currency code that is not in the data (codes are upper case: `'usd'`
+  is not one). Field `Identifier: string` holds the code. Raised by
+  `ValidateCurrency` and by every function that takes a currency code:
+  `GetCurrencyName`, `GetCurrencySymbol`, `GetCurrencyPrecision`,
+  `GetCurrencyUnitPattern`, `FormatCurrency`, `FormatCompactCurrency`.
 
 `EUnsupportedNumberingSystemError = class(EBabelError)`
-: A numbering system the locale does not have.
+: A numbering system that is not `'latn'`, `'default'` or a numeric
+  system of CLDR (`'zzzz'`, the algorithmic `'roman'`), or one the locale
+  has no symbols for.
 
 `EUnknownCurrencyFormatError = class(EBabelKeyError)`
 : A currency format type other than `'standard'`, `'accounting'` and
@@ -119,27 +123,6 @@ Methods: `WithStartDate`, `WithEndDate`, `WithTender`, `WithNonTender`.
   TDateTime` (0 means none), `Tender: Boolean`. `TCurrencyPeriods` is an
   array of them.
 
-`TIntPair = record Min, Max: Integer end`
-: A pair of sizes or precisions.
-
-`TApplyOptions = record`
-: Options of `TNumberPattern.Apply` (defaults: `ApplyOptions`):
-  `Currency` (`''` = none), `CurrencyDigits` (`True`),
-  `DecimalQuantization` (`True`), `GroupSeparator` (`True`),
-  `NumberingSystem` (`'latn'`), `MinGrouping` (`0` = the locale's minimum
-  grouping digits).
-
-`TNumberPattern = record`
-: A parsed number pattern (`ParseNumberPattern`). Fields: `Pattern`,
-  `PosPrefix`, `NegPrefix`, `PosSuffix`, `NegSuffix`, `NumberPattern` (the
-  number part without the exponent), `Grouping` (primary and secondary
-  group sizes), `IntPrec` and `FracPrec` (minimum and maximum digits),
-  `HasExp`, `ExpPrec`, `ExpPlus`, `Scale` (0, 2 for percent, 3 for per
-  mille).
-  - `function Apply(const Value: TDecimal; const Locale: TLocale; const
-    Options: TApplyOptions): string` formats a number with the pattern.
-  - `function ApplyShown(...; out Shown: TDecimal): string` does the same
-    and returns the number as shown (rounded, with its fraction digits).
 
 ### Option defaults
 
@@ -149,7 +132,6 @@ function CurrencyOptions: TCurrencyOptions;
 function CompactOptions: TCompactOptions;
 function ParseOptions: TParseOptions;
 function TerritoryCurrencyOptions: TTerritoryCurrencyOptions;
-function ApplyOptions: TApplyOptions;
 ```
 
 ### Currencies
@@ -185,24 +167,27 @@ function GetCurrencyName(const Currency: string; const Count: TDecimal; const Lo
 ```
 The currency's name (`'US Dollar'`); with `Count`, the plural form for
 that count (`'US dollars'`). The code when the locale has no name.
+Raises `EUnknownCurrencyError` for a code that is not a currency.
 
 ```pascal
 function GetCurrencySymbol(const Currency: string; const Locale: TLocale): string;
 ```
 The symbol (`'$'` in `en`, `'US$'` in `es`); the code when the locale has
-none.
+none. Raises `EUnknownCurrencyError` for a code that is not a currency.
 
 ```pascal
 function GetCurrencyPrecision(const Currency: string): Integer;
 ```
-The currency's number of fraction digits; 2 when not listed.
+The currency's number of fraction digits; 2 when CLDR gives none for the
+currency. Raises `EUnknownCurrencyError` for a code that is not a
+currency.
 
 ```pascal
 function GetCurrencyUnitPattern(const Currency: string; const Locale: TLocale): string;
 function GetCurrencyUnitPattern(const Currency: string; const Count: TDecimal; const Locale: TLocale): string;
 ```
 The pattern that joins a number and a currency name (`'{0} {1}'`), for a
-count.
+count. Raises `EUnknownCurrencyError` for a code that is not a currency.
 
 ```pascal
 function GetTerritoryCurrencies(const Territory: string): TStringArray;
@@ -267,15 +252,17 @@ function FormatCurrency(const Number: TDecimal; const Currency: string; const Lo
   const Options: TCurrencyOptions): string;
 ```
 The amount in the locale's currency pattern (`1099.98`, `'USD'`, `en`:
-`$1,099.98`). Raises `EUnknownCurrencyFormatError` for an unknown format
-type.
+`$1,099.98`). Raises `EUnknownCurrencyError` for a code that is not a
+currency (`'XYZ'`, `'usd'`) and `EUnknownCurrencyFormatError` for an
+unknown format type.
 
 ```pascal
 function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string;
 function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale;
   const Options: TCompactOptions): string;
 ```
-The amount abbreviated (`1234567`, `'USD'`, `en`: `$1M`).
+The amount abbreviated (`1234567`, `'USD'`, `en`: `$1M`). Raises
+`EUnknownCurrencyError` for a code that is not a currency.
 
 ```pascal
 function FormatPercent(const Number: TDecimal; const Locale: TLocale): string;
@@ -310,26 +297,16 @@ symbols, its minus and plus signs, digits of any script. Raises
 `ENumberFormatError`. With `StrictMode`, a misplaced group symbol raises
 `ENumberFormatError` with suggestions.
 
-### Patterns
-
-```pascal
-function ParseGrouping(const P: string): TIntPair;
-```
-The primary and secondary group sizes of the integer part of a pattern
-(`'#,##,##0'` gives 3 and 2); 1000 and 1000 when the pattern has no `,`.
-
-```pascal
-function ParseNumberPattern(const Pattern: string): TNumberPattern;
-```
-The parsed pattern. Raises `EBabelValueError` for a pattern that mixes
-`@` with `.` and `0`.
+### Digits
 
 ```pascal
 function SystemDigits(const Locale: TLocale; const NumberingSystem: string): TCodePoints;
 function LocalizeDigits(const S: string; const Digits: TCodePoints): string;
 ```
 `SystemDigits`: the ten digits of a numbering system (`'default'` is the
-locale's), as code points; `nil` for `'latn'` or a system without digits.
+locale's), as code points; `nil` for `'latn'`. Raises
+`EUnsupportedNumberingSystemError` for a system that is not `'latn'`,
+`'default'` or a numeric system of CLDR.
 `LocalizeDigits`: `S` with its ASCII digits written in `Digits`
 (unchanged when `Digits` is `nil`).
 
@@ -427,10 +404,10 @@ TDecimal('1.2E+3').FormatFixed;            // 1200
 An invalid operation (Infinity × 0, 0 ÷ 0) and a division by zero raise
 `EBabelDecimalError`.
 
-### PyFloatRepr
+### ShortestFloatRepr
 
 ```pascal
-function PyFloatRepr(X: Double): string;
+function ShortestFloatRepr(X: Double): string;
 ```
 The shortest text that converts back to `X`: `'0.1'`, `'1e+16'`,
 `'0.30000000000000004'`, `'inf'`, `'nan'`, `'-0.0'`.

@@ -1,4 +1,4 @@
-(* PyFloatRepr: the shortest decimal text of a Double that reads back as
+(* ShortestFloatRepr: the shortest decimal text of a Double that reads back as
   the same Double.
 
   Why not FloatToStrF: trying precisions 1..17 with FloatToStrF and keeping
@@ -49,7 +49,7 @@ begin
   end;
   if C <> 0 then
   begin
-    Assert(A.N < PFR_LIMBS, 'PyFloatRepr bignum overflow');
+    Assert(A.N < PFR_LIMBS, 'ShortestFloatRepr bignum overflow');
     A.L[A.N] := LongWord(C);
     Inc(A.N);
   end;
@@ -72,14 +72,14 @@ begin
     end;
     if Carry <> 0 then
     begin
-      Assert(A.N < PFR_LIMBS, 'PyFloatRepr bignum overflow');
+      Assert(A.N < PFR_LIMBS, 'ShortestFloatRepr bignum overflow');
       A.L[A.N] := Carry;
       Inc(A.N);
     end;
   end;
   if Words > 0 then
   begin
-    Assert(A.N + Words <= PFR_LIMBS, 'PyFloatRepr bignum overflow');
+    Assert(A.N + Words <= PFR_LIMBS, 'ShortestFloatRepr bignum overflow');
     for I := A.N - 1 downto 0 do
       A.L[I + Words] := A.L[I];
     for I := 0 to Words - 1 do
@@ -129,7 +129,7 @@ begin
   C.N := N;
   if S <> 0 then
   begin
-    Assert(N < PFR_LIMBS, 'PyFloatRepr bignum overflow');
+    Assert(N < PFR_LIMBS, 'ShortestFloatRepr bignum overflow');
     C.L[N] := LongWord(S);
     C.N := N + 1;
   end;
@@ -248,12 +248,12 @@ begin
     end
     else if High then
       Inc(D);
-    Assert(D <= 9, 'PyFloatRepr digit overflow');
+    Assert(D <= 9, 'ShortestFloatRepr digit overflow');
     Digits := Digits + Chr(Ord('0') + D);
   until Low or High;
 end;
 
-function PyFloatRepr(X: Double): string;
+function ShortestFloatRepr(X: Double): string;
 var Digits, M: string; DecPt, N, E: Integer; Neg: Boolean;
 begin
   if IsNan(X) then Exit('nan');

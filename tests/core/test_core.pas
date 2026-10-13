@@ -279,7 +279,7 @@ begin
   begin
     C := Cases.Arrays[I];
     X := DoubleOfHex(C.Strings[0]);
-    Got := PyFloatRepr(X);
+    Got := ShortestFloatRepr(X);
     Check('float_repr', Got = C.Strings[1], Format('%s: got %s want %s', [C.Strings[0], Got, C.Strings[1]]));
     if C.Strings[2] <> '' then
     begin
