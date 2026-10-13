@@ -17,9 +17,7 @@
 
   The CLDR data units (src/data/babel.cldr_*.pas, from tools/gencldr.py)
   are all compiled and installed; a program links only the ones it uses.
-  They are found by listing src/data, root and global first (every
-  locale unit depends on root's chain and fpmake compiles in list order;
-  the compiler also finds a used unit through the source path). }
+  They are found by listing src/data. }
 program fpmake;
 
 {$mode objfpc}{$H+}
@@ -45,13 +43,15 @@ begin
     if Names.Count = 0 then
       raise Exception.Create('no data units in src/data: run tools/gencldr.py generate');
     Names.Sort;
+    { babel.cldr_all first: compiling it compiles every locale unit in one
+      compiler run (about 3 s); the other targets are then up to date.
+      Listing them still makes fpmake install their .ppu and .o files.
+      Compiling each target in its own run takes about 50 s. }
     P.Targets.AddUnit('babel.cldr_global.pas');
-    P.Targets.AddUnit('babel.cldr_root.pas');
-    for N in Names do
-      if (N <> 'babel.cldr_global.pas') and (N <> 'babel.cldr_root.pas') and
-         (N <> 'babel.cldr_all.pas') then
-        P.Targets.AddUnit(N);
     P.Targets.AddUnit('babel.cldr_all.pas');
+    for N in Names do
+      if (N <> 'babel.cldr_global.pas') and (N <> 'babel.cldr_all.pas') then
+        P.Targets.AddUnit(N);
   finally
     Names.Free;
   end;
