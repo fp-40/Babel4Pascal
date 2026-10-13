@@ -13,10 +13,17 @@
   Babel's format_date takes a date). Precision: milliseconds (TDateTime
   is decoded to milliseconds; the 'S' field shows microseconds as 0).
 
-  The results are Babel's, including its formulas: the week numbers of
-  the locale's first day and minimal days, fractional seconds through
-  Python's round(), offsets split with floor division, format_timedelta's
-  months of 30 days.
+  The API is Babel's; the results follow CLDR as ICU applies it where
+  Babel departs from it (tests/icu compares them with ICU4C): time zone
+  names (localized GMT from the locale's hourFormat, zone aliases,
+  generic names with partial locations, rearguard daylight time), day
+  periods (noon only at 12:00 exactly, no midnight), skeleton field
+  lengths adjusted to the request, the atTime date-time patterns, the
+  week data of the locale's likely region, relative-time field aliases.
+  format_timedelta keeps Babel's choice of unit (months of 30 days).
+  NumberingSystem (options): the digits of the numeric fields and of the
+  localized GMT ('latn' by default, as Babel; 'default' for the
+  locale's, as ICU).
 
   Babel's format_datetime is FormatDateAndTime here: FormatDateTime is
   taken by SysUtils.
@@ -38,15 +45,20 @@ type
   TDateTimeOptions = record
     Format: string;     { 'full', 'long', 'medium' (default), 'short' or a pattern }
     TimeZone: string;   { '' = UTC }
+    NumberingSystem: string;  { digits of the numeric fields: 'latn' (default),
+                                'default' (the locale's) or a system ('arab') }
     function WithFormat(const Value: string): TDateTimeOptions;
     function WithTimeZone(const Value: string): TDateTimeOptions;
+    function WithNumberingSystem(const Value: string): TDateTimeOptions;
   end;
 
   TSkeletonOptions = record
     TimeZone: string;
     Fuzzy: Boolean;     { True: the closest skeleton when the locale lacks it }
+    NumberingSystem: string;
     function WithTimeZone(const Value: string): TSkeletonOptions;
     function WithFuzzy(Value: Boolean): TSkeletonOptions;
+    function WithNumberingSystem(const Value: string): TSkeletonOptions;
   end;
 
   TIntervalKind = (ikDateTime, ikDate, ikTime);
@@ -55,12 +67,14 @@ type
     Skeleton: string;   { '' = none }
     TimeZone: string;
     Fuzzy: Boolean;
-      Kind: TIntervalKind; { what the values are (Babel tells by their Python
+    Kind: TIntervalKind; { what the values are (Babel tells by their Python
                            type); ikDate uses only their dates }
+    NumberingSystem: string;
     function WithSkeleton(const Value: string): TIntervalOptions;
     function WithTimeZone(const Value: string): TIntervalOptions;
     function WithFuzzy(Value: Boolean): TIntervalOptions;
     function WithKind(Value: TIntervalKind): TIntervalOptions;
+    function WithNumberingSystem(const Value: string): TIntervalOptions;
   end;
 
   TTimedeltaOptions = record
@@ -68,10 +82,12 @@ type
     Threshold: Double;      { 0.85 }
     AddDirection: Boolean;  { False }
     Format: string;         { 'narrow', 'short', 'long' (default); 'medium' = 'long' }
+    NumberingSystem: string;  { 'latn' (default), 'default' or a system }
     function WithGranularity(const Value: string): TTimedeltaOptions;
     function WithThreshold(Value: Double): TTimedeltaOptions;
     function WithAddDirection(Value: Boolean): TTimedeltaOptions;
     function WithFormat(const Value: string): TTimedeltaOptions;
+    function WithNumberingSystem(const Value: string): TTimedeltaOptions;
   end;
 
   TTimeZoneNameOptions = record
@@ -138,7 +154,9 @@ function GetTimezoneName(UTC: TDateTime; const TimeZone: string; const Locale: T
   const Options: TTimeZoneNameOptions): string; overload;
 
 { Formatting }
-function FormatDate(Date: TDateTime; const Locale: TLocale; const Format: string = 'medium'): string;
+function FormatDate(Date: TDateTime; const Locale: TLocale; const Format: string = 'medium'): string; overload;
+{ Options: Format and NumberingSystem (the date is not converted to a zone). }
+function FormatDate(Date: TDateTime; const Locale: TLocale; const Options: TDateTimeOptions): string; overload;
 function FormatTime(UTC: TDateTime; const Locale: TLocale): string; overload;
 function FormatTime(UTC: TDateTime; const Locale: TLocale; const Options: TDateTimeOptions): string; overload;
 function FormatDateAndTime(UTC: TDateTime; const Locale: TLocale): string; overload;
@@ -176,7 +194,7 @@ function MatchSkeleton(const Skeleton: string; const Options: array of string;
 implementation
 
 uses
-  Math, DateUtils, babel.decimal, babel.plural, babel.pystr;
+  Classes, Math, DateUtils, babel.decimal, babel.plural, babel.pystr, babel.numbers;
 
 const
   NoInheritanceMarker = #$E2#$88#$85#$E2#$88#$85#$E2#$88#$85;   { ∅∅∅ }
@@ -189,6 +207,13 @@ function DateTimeOptions: TDateTimeOptions;
 begin
   Result := Default(TDateTimeOptions);
   Result.Format := 'medium';
+  Result.NumberingSystem := 'latn';
+end;
+
+function TDateTimeOptions.WithNumberingSystem(const Value: string): TDateTimeOptions;
+begin
+  Result := Self;
+  Result.NumberingSystem := Value;
 end;
 
 function TDateTimeOptions.WithFormat(const Value: string): TDateTimeOptions;
@@ -207,6 +232,13 @@ function SkeletonOptions: TSkeletonOptions;
 begin
   Result := Default(TSkeletonOptions);
   Result.Fuzzy := True;
+  Result.NumberingSystem := 'latn';
+end;
+
+function TSkeletonOptions.WithNumberingSystem(const Value: string): TSkeletonOptions;
+begin
+  Result := Self;
+  Result.NumberingSystem := Value;
 end;
 
 function TSkeletonOptions.WithTimeZone(const Value: string): TSkeletonOptions;
@@ -226,6 +258,13 @@ begin
   Result := Default(TIntervalOptions);
   Result.Fuzzy := True;
   Result.Kind := ikDateTime;
+  Result.NumberingSystem := 'latn';
+end;
+
+function TIntervalOptions.WithNumberingSystem(const Value: string): TIntervalOptions;
+begin
+  Result := Self;
+  Result.NumberingSystem := Value;
 end;
 
 function TIntervalOptions.WithSkeleton(const Value: string): TIntervalOptions;
@@ -258,6 +297,13 @@ begin
   Result.Granularity := 'second';
   Result.Threshold := 0.85;
   Result.Format := 'long';
+  Result.NumberingSystem := 'latn';
+end;
+
+function TTimedeltaOptions.WithNumberingSystem(const Value: string): TTimedeltaOptions;
+begin
+  Result := Self;
+  Result.NumberingSystem := Value;
 end;
 
 function TTimedeltaOptions.WithGranularity(const Value: string): TTimedeltaOptions;
@@ -732,6 +778,8 @@ type
     Fold: Integer;
     HasRef: Boolean;            { a time with a reference date }
     RefY, RefM, RefD: Integer;
+    Digits: TCodePoints;        { of the numeric fields; nil: ASCII }
+    HasMinute, HasSecond: Boolean;  { the pattern shows them (for noon) }
   end;
 
 procedure DecodeFields(DT: TDateTime; var V: TValue);
@@ -808,24 +856,74 @@ end;
 
 { ---- time zone names ---- }
 
-function GmtText(OffsetSeconds: Integer; const Width: string; const Locale: TLocale;
-  ReturnZ: Boolean): string;
+{ CLDR's localized GMT format: gmtFormat around hourFormat
+  ('+HH:mm;-HH:mm', the locale's signs), in the given digits. Short (the
+  'O' field and the short fallback of 'z'): hours without a leading zero
+  and minutes only when not zero ('GMT-5', 'GMT-3:30'). }
+function LocalizedGmt(OffsetSeconds: Integer; const Locale: TLocale; Short: Boolean;
+  const Digits: TCodePoints): string;
 var
-  Hours, Secs: Int64;
-  Pattern: string;
+  HourFormat, Part, Hour: string;
+  P, H, M, Hours, Minutes, Secs: Integer;
 begin
-  Hours := FloorDiv(OffsetSeconds, 3600);
-  Secs := OffsetSeconds - Hours * 3600;
-  if ReturnZ and (Hours = 0) and (Secs = 0) then
+  { as ICU: a zero offset is written with the positive pattern ('GMT+0',
+    'GMT+00:00'); CLDR's gmtZeroFormat is not used }
+  HourFormat := Locale.Data.Path(['gmt_formats']).Str('hour', '+HH:mm;-HH:mm');
+  P := Pos(';', HourFormat);
+  if OffsetSeconds >= 0 then
+    Part := Copy(HourFormat, 1, P - 1)
+  else
+    Part := Copy(HourFormat, P + 1, MaxInt);
+  Secs := System.Abs(OffsetSeconds);
+  Hours := Secs div 3600;
+  Minutes := (Secs mod 3600) div 60;
+  M := Pos('mm', Part);
+  H := Pos('H', Part);
+  if (H = 0) or (M = 0) then
+    raise EBabelValueError.CreateFmt('Invalid hour format %s', [HourFormat]);
+  { short without minutes: the pattern up to the hours (ICU's
+    truncateOffsetPattern drops what follows them) }
+  if Short and (Minutes = 0) then
+    Part := Copy(Part, 1, H + Ord(Copy(Part, H, 2) = 'HH'));
+  { the hours have one digit or more in the short form, two in the long
+    one, whatever the pattern has ('GMT+00:00' from cs's '+H:mm') }
+  if Short then
+    Hour := LocalizeDigits(IntToStr(Hours), Digits)
+  else
+    Hour := LocalizeDigits(Pad(Hours, 2), Digits);
+  if Copy(Part, H, 2) = 'HH' then
+    Part := Copy(Part, 1, H - 1) + Hour + Copy(Part, H + 2, MaxInt)
+  else
+    Part := Copy(Part, 1, H - 1) + Hour + Copy(Part, H + 1, MaxInt);
+  Part := StringReplace(Part, 'mm', LocalizeDigits(Pad(Minutes, 2), Digits), []);
+  Result := PercentS(Need(Locale.Data, 'zone_formats').Str('gmt'), Part);
+end;
+
+{ get_timezone_gmt: Width 'long' is CLDR's localized GMT ('GMT-05:00',
+  'GMT' for UTC); 'short' ('-0500'), 'iso8601' ('-05:00') and
+  'iso8601_short' ('-05') are ISO 8601 forms. Babel split negative
+  offsets with floor division (-3:30 gave -04:30) and wrote the
+  localized form with a fixed '+00:00'. }
+function GmtText(OffsetSeconds: Integer; const Width: string; const Locale: TLocale;
+  ReturnZ: Boolean; const Digits: TCodePoints = nil): string;
+var
+  Sign: string;
+  Hours, Minutes: Integer;
+begin
+  if ReturnZ and (OffsetSeconds = 0) then
     Exit('Z');
-  if (Secs = 0) and (Width = 'iso8601_short') then
-    Exit(SignedPad2(Hours));
+  if Width = 'long' then
+    Exit(LocalizedGmt(OffsetSeconds, Locale, False, Digits));
+  if Width = 'localized_short' then
+    Exit(LocalizedGmt(OffsetSeconds, Locale, True, Digits));
+  if OffsetSeconds < 0 then Sign := '-' else Sign := '+';
+  Hours := System.Abs(OffsetSeconds) div 3600;
+  Minutes := (System.Abs(OffsetSeconds) mod 3600) div 60;
+  if (Minutes = 0) and (Width = 'iso8601_short') then
+    Exit(Sign + Pad(Hours, 2));
   if (Width = 'short') or (Width = 'iso8601_short') then
-    Exit(SignedPad2(Hours) + Pad(Secs div 60, 2));
-  if Width = 'iso8601' then
-    Exit(SignedPad2(Hours) + ':' + Pad(Secs div 60, 2));
-  Pattern := Need(Locale.Data, 'zone_formats').Str('gmt');
-  Result := PercentS(Pattern, SignedPad2(Hours) + ':' + Pad(Secs div 60, 2));
+    Exit(Sign + Pad(Hours, 2) + Pad(Minutes, 2));
+  Result := Sign + Pad(Hours, 2) + ':' + Pad(Minutes, 2);
 end;
 
 function GetTimezoneGmt(UTC: TDateTime; const TimeZone: string; const Locale: TLocale;
@@ -839,51 +937,309 @@ begin
   Result := GetGlobal('zone_aliases').Str(Zone, Zone);
 end;
 
+{ The ids a zone may be found under in CLDR's tables: the name given,
+  its canonical IANA name, and the other names that are aliases of it
+  (CLDR keeps names and metazones under older ids such as Asia/Calcutta,
+  which Babel 2.18 no longer found from Asia/Kolkata). }
+function ZoneIds(const Zone: string): TStringArray;
+var
+  Canon: string;
+  Aliases: TCLDRValue;
+  I: Integer;
+
+  procedure Add(const S: string);
+  var
+    X: string;
+  begin
+    for X in Result do
+      if X = S then
+        Exit;
+    SetLength(Result, Length(Result) + 1);
+    Result[High(Result)] := S;
+  end;
+
+begin
+  Result := nil;
+  Add(Zone);
+  Canon := CanonicalZone(Zone);
+  Add(Canon);
+  Aliases := GetGlobal('zone_aliases');
+  for I := 0 to Aliases.Count - 1 do
+    if Aliases.Items(I).AsString = Canon then
+      Add(Aliases.Keys(I).AsString);
+end;
+
+{ The first entry of Map under one of the zone's ids; nil if none. }
+function ByZone(Map: TCLDRValue; const Zone: string): TCLDRValue;
+var
+  Id: string;
+begin
+  Result := nil;
+  if Map = nil then
+    Exit;
+  for Id in ZoneIds(Zone) do
+  begin
+    Result := Map.Get(Id);
+    if Result <> nil then
+      Exit;
+  end;
+end;
+
+function MetazoneOf(const Zone: string): string;
+var
+  V: TCLDRValue;
+begin
+  V := ByZone(GetGlobal('meta_zones'), Zone);
+  if V = nil then
+    Result := ''
+  else
+    Result := V.AsString;
+end;
+
+function TerritoryOf(const Zone: string): string;
+var
+  V: TCLDRValue;
+begin
+  V := ByZone(GetGlobal('zone_territories'), Zone);
+  if V = nil then
+    Result := ''
+  else
+    Result := V.AsString;
+end;
+
+{ A name of the zone's tables (width 'long' or 'short', variant
+  'generic', 'standard' or 'daylight'); '' when absent or ∅∅∅ (CLDR's
+  "no value": Babel fell back to the long name). }
+function NameIn(Info: TCLDRValue; const Width, Variant: string): string;
+begin
+  Result := '';
+  if Info <> nil then
+    Result := Info.Path([Width]).Str(Variant, '');
+  if Result = NoInheritanceMarker then
+    Result := '';
+end;
+
+{ The zone's exemplar city: the locale's, else the last part of the id
+  ('Los Angeles'). Unknown (the VVV field, as ICU): for an id that names
+  no place (Etc/UTC, Etc/GMT+5, EST5EDT), the name of the unknown city
+  ('Unknown Location') instead of the id's last part. }
+function ExemplarCity(const Zone: string; const Locale: TLocale; Unknown: Boolean = False): string;
+var
+  Info, MetaInfo: TCLDRValue;
+  Canon: string;
+begin
+  Info := ByZone(Locale.TimeZones, Zone);
+  if (Info <> nil) and Info.Has('city') then
+    Exit(Info.Str('city'));
+  MetaInfo := Locale.MetaZones.Get(MetazoneOf(Zone));
+  if (MetaInfo <> nil) and MetaInfo.Has('city') then
+    Exit(MetaInfo.Str('city'));
+  Canon := CanonicalZone(Zone);
+  if Unknown and ((Pos('/', Canon) = 0) or (Copy(Canon, 1, 4) = 'Etc/') or (Copy(Canon, 1, 8) = 'SystemV/')) then
+  begin
+    Info := Locale.TimeZones.Get('Etc/Unknown');
+    if (Info <> nil) and Info.Has('city') then
+      Exit(Info.Str('city'));
+    Exit('Unknown');
+  end;
+  if Pos('/', Canon) > 0 then
+    Result := StringReplace(Copy(Canon, LastDelimiter('/', Canon) + 1, MaxInt), '_', ' ', [rfReplaceAll])
+  else
+    Result := StringReplace(Canon, '_', ' ', [rfReplaceAll]);
+end;
+
+{ The country of a zone when it stands for the whole country: the only
+  zone of its country, or the country's primary zone (Europe/Madrid for
+  Spain); '' otherwise. }
+function CountryNameFor(const Zone: string; const Locale: TLocale; out Territory: string): string;
+var
+  Zones: TCLDRValue;
+begin
+  Result := '';
+  Territory := TerritoryOf(Zone);
+  if (Territory = '') or (Territory = '001') or (Territory = 'ZZ') then
+    Exit;
+  Zones := GetGlobal('territory_zones').Get(Territory);
+  if ((Zones <> nil) and (Zones.Count = 1)) or
+     (GetGlobal('primary_zones').Str(Territory, '') = CanonicalZone(Zone)) then
+    Result := Locale.Territories.Str(Territory, '');
+end;
+
+{ CLDR's generic location format ('Spain Time', 'Los Angeles Time'); ''
+  for a zone of no country (UTC, Etc/GMT+5). }
+function GenericLocation(const Zone: string; const Locale: TLocale): string;
+var
+  Territory, Country: string;
+begin
+  Country := CountryNameFor(Zone, Locale, Territory);
+  if (Territory = '') or (Territory = '001') or (Territory = 'ZZ') then
+    Exit('');
+  if Country <> '' then
+    Result := PercentS(Need(Locale.Data, 'zone_formats').Str('region'), Country)
+  else
+    Result := PercentS(Need(Locale.Data, 'zone_formats').Str('region'), ExemplarCity(Zone, Locale));
+end;
+
+{ The zone's offsets at an instant in tzdata's rearguard form, which ICU
+  and CLDR's names follow: the system's (vanguard) data gives
+  Europe/Dublin a negative daylight saving time in winter (Irish Standard
+  Time is then the summer's standard time) and Africa/Casablanca one
+  during Ramadan; in the rearguard form those periods are standard time
+  and the rest of the year is daylight time. }
+function NameInfoAt(const Zone: string; UTCSeconds: Int64): TZoneInfo;
+var
+  Z: TTimeZone;
+  Other: TZoneInfo;
+  K: Integer;
+begin
+  Z := GetTimeZone(Zone);
+  Result := Z.InfoAt(UTCSeconds);
+  if Result.DSTOffset < 0 then
+    Result.DSTOffset := 0
+  else if Result.DSTOffset = 0 then
+    for K := -53 to 53 do
+    begin
+      Other := Z.InfoAt(UTCSeconds + Int64(K) * 7 * 86400);
+      if Other.DSTOffset < 0 then
+      begin
+        Result.DSTOffset := -Other.DSTOffset;
+        Break;
+      end;
+    end;
+end;
+
+{ Whether the zone has daylight saving time within 184 days of an
+  instant (ICU's check before it uses the standard name as the generic
+  one), sampled daily. }
+function DstNear(const Zone: string; UTCSeconds: Int64): Boolean;
+var
+  Z: TTimeZone;
+  K: Integer;
+begin
+  Z := GetTimeZone(Zone);
+  for K := -184 to 184 do
+    if Z.InfoAt(UTCSeconds + Int64(K) * 86400).DSTOffset <> 0 then
+      Exit(True);
+  Result := False;
+end;
+
+{ CLDR's specific non-location format ('Pacific Daylight Time', 'PDT');
+  '' when there is none. }
+function SpecificName(const Zone, Width, Variant: string; const Locale: TLocale): string;
+begin
+  Result := NameIn(ByZone(Locale.TimeZones, Zone), Width, Variant);
+  if Result = '' then
+    Result := NameIn(Locale.MetaZones.Get(MetazoneOf(Zone)), Width, Variant);
+end;
+
+{ The region of a locale: its own, else its likely one ('en': US,
+  'zh_Hant': TW); '001' when none is known. }
+function LocaleRegion(const Locale: TLocale): string;
+var
+  Likely: string;
+  Parts: TStringArray;
+begin
+  Result := Locale.Territory;
+  if Result <> '' then
+    Exit;
+  Likely := '';
+  if Locale.Script <> '' then
+    Likely := GetGlobal('likely_subtags').Str(Locale.Language + '_' + Locale.Script, '');
+  if Likely = '' then
+    Likely := GetGlobal('likely_subtags').Str(Locale.Language, '');
+  Parts := Likely.Split(['_']);
+  if Length(Parts) >= 2 then
+    Result := Parts[High(Parts)]
+  else
+    Result := '001';
+end;
+
+{ The reference zone of a metazone for a region (CLDR's mapZone), else
+  for 001. }
+function GoldenZone(const Metazone, Region: string): string;
+var
+  Golden: TCLDRValue;
+begin
+  Result := '';
+  Golden := GetGlobal('metazone_golden_zones').Get(Metazone);
+  if Golden <> nil then
+  begin
+    Result := Golden.Str(Region, '');
+    if Result = '' then
+      Result := Golden.Str('001', '');
+  end;
+end;
+
+{ CLDR's generic non-location format ('Pacific Time'), as ICU builds it
+  for an instant (TimeZoneGenericNames::formatGenericNonLocationName):
+  the zone's own generic name; else, from its metazone, the standard name
+  when the zone has no daylight time within 184 days ('India Standard
+  Time') and that name differs from the generic one; else the metazone's
+  generic name, with the location ('Pacific Time (Vancouver)': the
+  country when the zone is its country's reference zone, else the city)
+  when the zone's offsets differ from those of the metazone's reference
+  zone for the locale's region. '' when there is no name. }
+function GenericName(const Zone, Width: string; HasDate: Boolean; UTCSeconds: Int64;
+  const Locale: TLocale): string;
+var
+  MetaInfo: TCLDRValue;
+  Metazone, Standard, Golden, Territory, Location: string;
+  ZI, GI: TZoneInfo;
+begin
+  Result := NameIn(ByZone(Locale.TimeZones, Zone), Width, 'generic');
+  if Result <> '' then
+    Exit;
+  Metazone := MetazoneOf(Zone);
+  if Metazone = '' then
+    Exit;
+  MetaInfo := Locale.MetaZones.Get(Metazone);
+  if HasDate then
+    ZI := NameInfoAt(Zone, UTCSeconds);
+  if HasDate and (ZI.DSTOffset = 0) and not DstNear(Zone, UTCSeconds) then
+  begin
+    Standard := SpecificName(Zone, Width, 'standard', Locale);
+    { ICU compares ignoring case; the names that match are identical }
+    if (Standard <> '') and (Standard <> NameIn(MetaInfo, Width, 'generic')) then
+      Exit(Standard);
+  end;
+  Result := NameIn(MetaInfo, Width, 'generic');
+  if (Result = '') or not HasDate then
+    Exit;
+  Golden := GoldenZone(Metazone, LocaleRegion(Locale));
+  if (Golden = '') or (CanonicalZone(Golden) = CanonicalZone(Zone)) then
+    Exit;
+  GI := NameInfoAt(Golden, UTCSeconds);
+  if (ZI.UTCOffset = GI.UTCOffset) and (ZI.DSTOffset = GI.DSTOffset) then
+    Exit;
+  Territory := TerritoryOf(Zone);
+  if (Territory <> '') and (Territory <> '001') and (Territory <> 'ZZ') and
+     (CanonicalZone(GetGlobal('metazone_golden_zones').Path([Metazone]).Str(Territory, '')) = CanonicalZone(Zone)) then
+    Location := Locale.Territories.Str(Territory, Territory)
+  else
+    Location := ExemplarCity(Zone, Locale);
+  Result := PercentNamed(Need(Locale.Data, 'zone_formats').Str('fallback'), Location, Result);
+end;
+
 function GetTimezoneLocation(const TimeZone: string; const Locale: TLocale; ReturnCity: Boolean): string;
 var
-  Zone, RegionFormat, Territory, TerritoryName, FallbackFormat, City, Metazone: string;
-  Info, MetaInfo, Zones: TCLDRValue;
+  Zone: string;
 begin
   Zone := TimeZone;
   if Zone = '' then
     Zone := 'UTC';
-  Zone := CanonicalZone(Zone);
-  Info := Locale.TimeZones.Get(Zone);
-  RegionFormat := Need(Locale.Data, 'zone_formats').Str('region');
-  Territory := GetGlobal('zone_territories').Str(Zone, '');
-  if (Territory = '') or not Locale.Territories.Has(Territory) then
-    Territory := 'ZZ';
-  if not Locale.Territories.Has(Territory) then
-    raise EBabelKeyError.Create(Territory);
-  TerritoryName := Locale.Territories.Str(Territory);
-  Zones := GetGlobal('territory_zones').Get(Territory);
-  if not ReturnCity and (Zones <> nil) and (Zones.Count = 1) then
-    Exit(PercentS(RegionFormat, TerritoryName));
-  FallbackFormat := Need(Locale.Data, 'zone_formats').Str('fallback');
-  if (Info <> nil) and Info.Has('city') then
-    City := Info.Str('city')
-  else
-  begin
-    Metazone := GetGlobal('meta_zones').Str(Zone, '');
-    MetaInfo := Locale.MetaZones.Get(Metazone);
-    if (MetaInfo <> nil) and MetaInfo.Has('city') then
-      City := MetaInfo.Str('city')
-    else if Pos('/', Zone) > 0 then
-      City := StringReplace(Copy(Zone, Pos('/', Zone) + 1, MaxInt), '_', ' ', [rfReplaceAll])
-    else
-      City := StringReplace(Zone, '_', ' ', [rfReplaceAll]);
-  end;
   if ReturnCity then
-    Exit(City);
-  Result := PercentS(RegionFormat, PercentNamed(FallbackFormat, City, TerritoryName));
+    Exit(ExemplarCity(Zone, Locale));
+  Result := GenericLocation(Zone, Locale);
+  if Result = '' then
+    Result := LocalizedGmt(0, Locale, False, nil);
 end;
 
 { get_timezone_name; HasDate: a datetime was given (its DST and offset). }
 function TimezoneNameOf(const TimeZone: string; HasDate: Boolean; DSTOffset, UTCOffset: Integer;
-  const Locale: TLocale; const Options: TTimeZoneNameOptions): string;
+  UTCSeconds: Int64; const Locale: TLocale; const Options: TTimeZoneNameOptions;
+  const Digits: TCodePoints = nil): string;
 var
-  Zone, Variant, Width, Metazone, Name: string;
-  Info, MetaInfo, V: TCLDRValue;
+  Zone, Variant, Width: string;
 begin
   Variant := Options.ZoneVariant;
   Width := Options.Width;
@@ -901,29 +1257,20 @@ begin
   Zone := TimeZone;
   if Zone = '' then
     Zone := 'UTC';
-  Zone := CanonicalZone(Zone);
   if Options.ReturnZone then
-    Exit(Zone);
-  Info := Locale.TimeZones.Get(Zone);
-  V := Info.Path([Width, Variant]);
-  if (V <> nil) and (V.AsString <> NoInheritanceMarker) then
-    Exit(V.AsString);
-  Metazone := GetGlobal('meta_zones').Str(Zone, '');
-  if Metazone <> '' then
-  begin
-    MetaInfo := Locale.MetaZones.Get(Metazone);
-    if (MetaInfo <> nil) and MetaInfo.Has(Width) then
-    begin
-      Name := MetaInfo.Get(Width).Str(Variant, '');
-      if (Width = 'short') and (Name = NoInheritanceMarker) then
-        Name := MetaInfo.Path(['long']).Str(Variant, '');
-      if (Name <> '') and (Name <> NoInheritanceMarker) then
-        Exit(Name);
-    end;
-  end;
-  if HasDate then
-    Exit(GmtText(UTCOffset, Width, Locale, False));
-  Result := GetTimezoneLocation(TimeZone, Locale);
+    Exit(CanonicalZone(Zone));
+  { the fallbacks, as ICU: a generic name falls back to the generic
+    location ('Spain Time'), a specific one to the localized GMT }
+  if Variant = 'generic' then
+    Result := GenericName(Zone, Width, HasDate, UTCSeconds, Locale)
+  else
+    Result := SpecificName(Zone, Width, Variant, Locale);
+  if Result <> '' then
+    Exit;
+  if (Variant = 'generic') or not HasDate then
+    Result := GenericLocation(Zone, Locale);
+  if Result = '' then
+    Result := LocalizedGmt(UTCOffset, Locale, Width = 'short', Digits);
 end;
 
 function GetTimezoneName(const TimeZone: string; const Locale: TLocale): string;
@@ -933,9 +1280,15 @@ end;
 
 function GetTimezoneName(const TimeZone: string; const Locale: TLocale;
   const Options: TTimeZoneNameOptions): string;
+var
+  Info: TZoneInfo;
+  Secs: Int64;
 begin
-  GetTimeZone(TimeZone);    { an unknown zone raises, as in Babel }
-  Result := TimezoneNameOf(TimeZone, False, 0, 0, Locale, Options);
+  { an unknown zone raises, as in Babel; the offset of the localized GMT
+    fallback is the current one }
+  Secs := UnixSeconds(LocalTimeToUniversal(Now));
+  Info := NameInfoAt(TimeZone, Secs);
+  Result := TimezoneNameOf(TimeZone, False, Info.DSTOffset, Info.UTCOffset, Secs, Locale, Options);
 end;
 
 function GetTimezoneName(UTC: TDateTime; const TimeZone: string; const Locale: TLocale;
@@ -943,13 +1296,14 @@ function GetTimezoneName(UTC: TDateTime; const TimeZone: string; const Locale: T
 var
   Info: TZoneInfo;
 begin
-  Info := GetTimeZone(TimeZone).InfoAt(UTC);
-  Result := TimezoneNameOf(TimeZone, True, Info.DSTOffset, Info.UTCOffset, Locale, Options);
+  Info := NameInfoAt(TimeZone, UnixSeconds(UTC));
+  Result := TimezoneNameOf(TimeZone, True, Info.DSTOffset, Info.UTCOffset, UnixSeconds(UTC), Locale, Options);
 end;
 
 { ---- periods of the day (get_period_id) ---- }
 
-function PeriodIdAt(SecondsPastMidnight: Integer; const Locale: TLocale; const RuleType: string): string;
+function PeriodIdAt(SecondsPastMidnight: Integer; const Locale: TLocale; const RuleType: string;
+  UseAt: Boolean = True): string;
 var
   Rulesets, Rules, Rule: TCLDRValue;
   I, J: Integer;
@@ -975,7 +1329,7 @@ begin
       for J := 0 to Rules.Count - 1 do
       begin
         Rule := Rules.Items(J);
-        if Rule.Has('at') and (Field(Rule, 'at') = T) then
+        if UseAt and Rule.Has('at') and (Field(Rule, 'at') = T) then
           Exit(Rulesets.Keys(I).AsString);
       end;
     end;
@@ -1061,31 +1415,6 @@ begin
   end;
 end;
 
-{ Python's round(x, n) for a float: the decimal rounding of its exact
-  value, half to even. }
-function PyRound(X: Double; N: Integer): Double;
-var
-  Code: Integer;
-begin
-  Val(TDecimal.FromDoubleExact(X).Quantize(-N).ToString, Result, Code);
-end;
-
-{ Babel's int(round(microsecond / 1000000, num) * 10 ** num), in Double
-  arithmetic as Python does it (FPC would compute the product in Extended
-  precision: 0.123 * 1000 would truncate to 122). }
-function FracSeconds(Micro, Num: Integer): Int64;
-var
-  R, P, Prod: Double;
-  I: Integer;
-begin
-  R := PyRound(Micro / 1000000, Num);
-  P := 1;
-  for I := 1 to Num do
-    P := P * 10;
-  Prod := R * P;
-  Result := Trunc(Prod);
-end;
-
 function WidthName(Num: Integer; const Six: string = ''): string;
 begin
   case Num of
@@ -1098,38 +1427,65 @@ begin
   end;
 end;
 
+{ The zone fields, as ICU formats them: z the specific name ('PDT',
+  'Pacific Daylight Time'), v the generic one ('PT', 'Pacific Time'), both
+  falling back to the localized GMT; O the localized GMT; V the BCP 47 id
+  ('usnyc'), the IANA id, the exemplar city or the generic location;
+  Z, x and X the ISO offsets (ZZZZ: the localized GMT). }
 function FormatTimezoneField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
 var
   Width: string;
   Info: TZoneInfo;
   O: TTimeZoneNameOptions;
+  UTCSeconds: Int64;
+  Bcp: TCLDRValue;
 begin
   NeedTime(V, F);
   if Num <= 3 then Width := 'short'
   else if Num = 4 then Width := 'long'
   else Width := 'iso8601';
   Info := ZoneInfoOf(V);
+  UTCSeconds := LocalSeconds(V) - Info.UTCOffset;
+  Info := NameInfoAt(V.ZoneName, UTCSeconds);
   O := TimeZoneNameOptions.WithWidth(Width);
   case F of
-    'z': Result := TimezoneNameOf(V.ZoneName, True, Info.DSTOffset, Info.UTCOffset, Locale, O);
+    'z':
+      begin
+        if Num > 4 then
+          O := O.WithWidth('long');
+        Result := TimezoneNameOf(V.ZoneName, True, Info.DSTOffset, Info.UTCOffset, UTCSeconds,
+          Locale, O, V.Digits);
+      end;
     'Z':
       if Num = 5 then
         Result := GmtText(Info.UTCOffset, Width, Locale, True)
       else
-        Result := GmtText(Info.UTCOffset, Width, Locale, False);
+        Result := GmtText(Info.UTCOffset, Width, Locale, False, V.Digits);
     'O':
-      if Num = 4 then
-        Result := GmtText(Info.UTCOffset, Width, Locale, False)
-      else
-        Result := 'None';     { Babel returns None, formatted as 'None' }
-    'v': Result := TimezoneNameOf(V.ZoneName, False, 0, 0, Locale, O);
+      Result := LocalizedGmt(Info.UTCOffset, Locale, Num < 4, V.Digits);
+    'v':
+      begin
+        if Num <> 4 then
+          O := O.WithWidth('short');
+        Result := TimezoneNameOf(V.ZoneName, True, Info.DSTOffset, Info.UTCOffset, UTCSeconds,
+          Locale, O.WithZoneVariant('generic'), V.Digits);
+      end;
     'V':
       case Num of
-        1: Result := TimezoneNameOf(V.ZoneName, False, 0, 0, Locale, O);
-        2: Result := TimezoneNameOf(V.ZoneName, False, 0, 0, Locale, O.WithReturnZone(True).WithWidth('long'));
-        3: Result := GetTimezoneLocation(V.ZoneName, Locale, True);
+        1:
+          begin
+            Bcp := ByZone(GetGlobal('zone_bcp47'), V.ZoneName);
+            if Bcp = nil then
+              Result := 'unk'
+            else
+              Result := Bcp.AsString;
+          end;
+        2: Result := V.ZoneName;          { the id as given, as ICU }
+        3: Result := ExemplarCity(V.ZoneName, Locale, True);
       else
-        Result := GetTimezoneLocation(V.ZoneName, Locale);
+        Result := GenericLocation(V.ZoneName, Locale);
+        if Result = '' then
+          Result := LocalizedGmt(Info.UTCOffset, Locale, False, V.Digits);
       end;
   else
     { X and x }
@@ -1143,34 +1499,48 @@ begin
   end;
 end;
 
-function FormatPeriodField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
+{ The name of a day period in the format context: the width asked for,
+  else the abbreviated one, which CLDR's root aliases the narrow and wide
+  names to ('nachm.' for BBBBB in de, 'po południu' for BBBB in pl;
+  Babel loses those aliases and tried wide, then narrow). '' when
+  absent. }
+function PeriodName(const Locale: TLocale; const Width, Period: string): string;
 var
-  Widths: array[0..3] of string;
-  Period, Context, W: string;
   Names: TCLDRValue;
 begin
+  Names := GetPeriodNames(Locale, Width, 'format');
+  if Names.Has(Period) then
+    Exit(Names.Str(Period));
+  Names := GetPeriodNames(Locale, 'abbreviated', 'format');
+  if Names.Has(Period) then
+    Exit(Names.Str(Period));
+  Result := '';
+end;
+
+{ a, b and B as ICU formats them. b and B: noon only when the time shown
+  is 12:00 exactly (the minutes and seconds the pattern shows are zero)
+  and the locale has it; midnight is not used (ICU suppresses it: it
+  could be the start or the end of the day); B is otherwise the day
+  period of the time. A missing name falls back to the day period, then
+  to AM/PM. (Babel used noon and midnight at the exact second, the day
+  periods for b too, and the stand-alone names for b.) }
+function FormatPeriodField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
+var
+  Width, AmPm: string;
+begin
   NeedTime(V, F);
-  if Num < 3 then Widths[0] := WidthName(3) else Widths[0] := WidthName(Num);
-  Widths[1] := 'wide';
-  Widths[2] := 'narrow';
-  Widths[3] := 'abbreviated';
-  if F = 'a' then
-  begin
-    if V.H >= 12 then Period := 'pm' else Period := 'am';
-    Context := 'format';
-  end
-  else
-  begin
-    Period := PeriodIdAt(V.H * 3600 + V.N * 60 + V.S, Locale, '');
-    if F = 'B' then Context := 'format' else Context := 'stand-alone';
-  end;
-  for W in Widths do
-  begin
-    Names := GetPeriodNames(Locale, W, Context);
-    if Names.Has(Period) then
-      Exit(Names.Str(Period));
-  end;
-  raise EBabelValueError.CreateFmt('Could not format period %s in %s', [Period, Locale.ToString]);
+  if Num < 3 then Width := WidthName(3) else Width := WidthName(Num);
+  if V.H >= 12 then AmPm := 'pm' else AmPm := 'am';
+  Result := '';
+  if (F <> 'a') and (V.H = 12) and (not V.HasMinute or (V.N = 0)) and (not V.HasSecond or (V.S = 0)) and
+     (PeriodIdAt(12 * 3600, Locale, '') = 'noon') then
+    Result := PeriodName(Locale, Width, 'noon');
+  if (Result = '') and (F = 'B') then
+    Result := PeriodName(Locale, Width, PeriodIdAt(V.H * 3600 + V.N * 60 + V.S, Locale, '', False));
+  if Result = '' then
+    Result := PeriodName(Locale, Width, AmPm);
+  if Result = '' then
+    raise EBabelValueError.CreateFmt('Could not format period %s in %s', [AmPm, Locale.ToString]);
 end;
 
 function FormatField(const V: TValue; F: Char; Num: Integer; const Locale: TLocale): string;
@@ -1264,8 +1634,10 @@ begin
     's': begin NeedTime(V, F); Result := Pad(V.S, Num); end;
     'S':
       begin
+        { the first Num digits of the fraction, truncated (CLDR; Babel
+          rounded through a float: 290 ms gave '28' for SS) }
         NeedTime(V, F);
-        Result := Pad(FracSeconds(V.Micro, Num), Num);
+        Result := Copy(Pad(V.Micro, 6) + StringOfChar('0', Max(0, Num - 6)), 1, Num);
       end;
     'A':
       begin
@@ -1278,16 +1650,29 @@ begin
   end;
 end;
 
-function ApplyPattern(const P: TDateTimePattern; const V: TValue; const Locale: TLocale): string;
+function ApplyPattern(const P: TDateTimePattern; const Value: TValue; const Locale: TLocale): string;
 var
   T: TPatternToken;
+  V: TValue;
 begin
+  V := Value;
+  V.HasMinute := False;
+  V.HasSecond := False;
+  for T in P.Tokens do
+    if T.Kind = ptField then
+    begin
+      if T.Field = 'm' then V.HasMinute := True;
+      if T.Field = 's' then V.HasSecond := True;
+    end;
   Result := '';
   for T in P.Tokens do
     if T.Kind = ptChars then
       Result := Result + T.Text
+    else if (V.Digits = nil) or (T.Field in ['z', 'Z', 'v', 'V', 'x', 'X', 'O']) then
+      Result := Result + FormatField(V, T.Field, T.Count, Locale)
     else
-      Result := Result + FormatField(V, T.Field, T.Count, Locale);
+      { the names have no ASCII digits: only the numbers change }
+      Result := Result + LocalizeDigits(FormatField(V, T.Field, T.Count, Locale), V.Digits);
 end;
 
 { ---- formatting ---- }
@@ -1328,6 +1713,15 @@ begin
   Result := FormatDateValue(DateValue(Date), Locale, Format);
 end;
 
+function FormatDate(Date: TDateTime; const Locale: TLocale; const Options: TDateTimeOptions): string;
+var
+  V: TValue;
+begin
+  V := DateValue(Date);
+  V.Digits := SystemDigits(Locale, Options.NumberingSystem);
+  Result := FormatDateValue(V, Locale, Options.Format);
+end;
+
 function FormatTime(UTC: TDateTime; const Locale: TLocale): string;
 begin
   Result := FormatTime(UTC, Locale, DateTimeOptions);
@@ -1335,22 +1729,76 @@ end;
 
 function FormatTime(UTC: TDateTime; const Locale: TLocale; const Options: TDateTimeOptions): string;
 var
-  Y, M, D, H, N, S, MS: Word;
+  V: TValue;
 begin
-  { the reference date is the date of the value before conversion (as
-    Babel's format_time) }
-  DecodeDateTimeMs(UTC, Y, M, D, H, N, S, MS);
-  Result := FormatTimeValue(DateTimeValue(UTC, Options.TimeZone), Locale, Options.Format, Y, M, D);
+  { the zone fields use the local date of the time (Babel used the date
+    before conversion: near midnight, another day's offset or name) }
+  V := DateTimeValue(UTC, Options.TimeZone);
+  V.Digits := SystemDigits(Locale, Options.NumberingSystem);
+  Result := FormatTimeValue(V, Locale, Options.Format, V.Y, V.M, V.D);
+end;
+
+(* The date-time combination pattern ('{1}, {0}', "{1} 'at' {0}") with
+  the time and the date put in: quoted text is literal ('' is a quote). *)
+function CombineDateTime(const Pattern, Time, Date: string): string;
+var
+  I: Integer;
+  Quoted: Boolean;
+begin
+  Result := '';
+  Quoted := False;
+  I := 1;
+  while I <= Length(Pattern) do
+  begin
+    if Pattern[I] = '''' then
+    begin
+      if (I < Length(Pattern)) and (Pattern[I + 1] = '''') then
+      begin
+        Result := Result + '''';
+        Inc(I, 2);
+        Continue;
+      end;
+      Quoted := not Quoted;
+      Inc(I);
+      Continue;
+    end;
+    if not Quoted and (Copy(Pattern, I, 3) = '{0}') then
+    begin
+      Result := Result + Time;
+      Inc(I, 3);
+    end
+    else if not Quoted and (Copy(Pattern, I, 3) = '{1}') then
+    begin
+      Result := Result + Date;
+      Inc(I, 3);
+    end
+    else
+    begin
+      Result := Result + Pattern[I];
+      Inc(I);
+    end;
+  end;
+end;
+
+{ The pattern that combines a date of length Format with a time: CLDR's
+  atTime variant when the locale has one, as ICU uses it ('Tuesday,
+  October 13, 2026 at 9:30 AM'; '13/10/2026, 09:30' in pt_BR), else the
+  standard one. }
+function DateTimeCombination(const Locale: TLocale; const Format: string): string;
+var
+  AtTime: TCLDRValue;
+begin
+  AtTime := Locale.Data.Path(['datetime_formats_at_time', Format]);
+  if AtTime <> nil then
+    Exit(AtTime.AsString);
+  Result := GetDatetimeFormat(Locale, Format);
 end;
 
 function FormatDateTimeValue(const V: TValue; const Locale: TLocale; const Format: string): string;
 begin
   if IsPredefined(Format) then
-  begin
-    Result := StringReplace(GetDatetimeFormat(Locale, Format), '''', '', [rfReplaceAll]);
-    Result := StringReplace(Result, '{0}', FormatTimeValue(V, Locale, Format, V.Y, V.M, V.D), [rfReplaceAll]);
-    Result := StringReplace(Result, '{1}', FormatDateValue(V, Locale, Format), [rfReplaceAll]);
-  end
+    Result := CombineDateTime(DateTimeCombination(Locale, Format),
+      FormatTimeValue(V, Locale, Format, V.Y, V.M, V.D), FormatDateValue(V, Locale, Format))
   else
     Result := ApplyPattern(ParseDatePattern(Format), V, Locale);
 end;
@@ -1361,8 +1809,12 @@ begin
 end;
 
 function FormatDateAndTime(UTC: TDateTime; const Locale: TLocale; const Options: TDateTimeOptions): string;
+var
+  V: TValue;
 begin
-  Result := FormatDateTimeValue(DateTimeValue(UTC, Options.TimeZone), Locale, Options.Format);
+  V := DateTimeValue(UTC, Options.TimeZone);
+  V.Digits := SystemDigits(Locale, Options.NumberingSystem);
+  Result := FormatDateTimeValue(V, Locale, Options.Format);
 end;
 
 function SkeletonKeys(M: TCLDRValue): TStringArray;
@@ -1378,6 +1830,249 @@ begin
     end;
 end;
 
+{ The locale's hour cycles from CLDR's timeData: Preferred ('h', 'H')
+  and the first allowed form ('hB', 'h', 'H', ...), looked up by
+  language_REGION, then REGION (the locale's, or its likely one), then
+  001. }
+procedure HourCycle(const Locale: TLocale; out Preferred, Allowed: string);
+var
+  Region: string;
+  Data, Entry: TCLDRValue;
+  Parts: TStringArray;
+begin
+  Region := LocaleRegion(Locale);
+  Data := GetGlobal('time_data');
+  Entry := Data.Get(Locale.Language + '_' + Region);
+  if Entry = nil then
+    Entry := Data.Get(Region);
+  if Entry = nil then
+    Entry := Data.Get('001');
+  Preferred := Entry.Str('preferred', 'H');
+  Allowed := Entry.Str('allowed', Preferred);
+  Parts := Allowed.Split([' ']);
+  Allowed := Parts[0];
+end;
+
+{ A skeleton with CLDR's hour-cycle characters replaced: j (the locale's
+  preferred hour), J (the same without a day period), C (the first
+  allowed hour form, with its flexible day period: hB gives h and B). }
+function ExpandHourChars(const Skeleton: string; const Locale: TLocale): string;
+var
+  I, N: Integer;
+  C: Char;
+  Preferred, Allowed, Hour, Period: string;
+begin
+  if (Pos('j', Skeleton) = 0) and (Pos('J', Skeleton) = 0) and (Pos('C', Skeleton) = 0) then
+    Exit(Skeleton);
+  HourCycle(Locale, Preferred, Allowed);
+  Result := '';
+  I := 1;
+  while I <= Length(Skeleton) do
+  begin
+    C := Skeleton[I];
+    if C in ['j', 'J', 'C'] then
+    begin
+      N := 0;
+      while (I <= Length(Skeleton)) and (Skeleton[I] = C) do
+      begin
+        Inc(N);
+        Inc(I);
+      end;
+      if C = 'C' then
+      begin
+        Hour := Copy(Allowed, 1, 1);
+        Period := Copy(Allowed, 2, 1);
+      end
+      else
+      begin
+        Hour := Preferred;
+        Period := '';
+      end;
+      Result := Result + StringOfChar(Hour[1], Min(N, 2));
+      if Period <> '' then
+      begin
+        if N <= 2 then Result := Result + Period
+        else if N <= 4 then Result := Result + StringOfChar(Period[1], 4)
+        else Result := Result + StringOfChar(Period[1], 5);
+      end;
+    end
+    else
+    begin
+      Result := Result + C;
+      Inc(I);
+    end;
+  end;
+end;
+
+{ The kind of field of a pattern letter (ICU's field types): letters of
+  the same kind are variants of one field (M and L, E e and c). }
+function FieldKind(C: Char): Char;
+begin
+  case C of
+    'y', 'Y', 'u', 'U', 'r': Result := 'y';
+    'Q', 'q': Result := 'Q';
+    'M', 'L': Result := 'M';
+    'E', 'e', 'c': Result := 'E';
+    'd', 'g': Result := 'd';
+    'a', 'b', 'B': Result := 'a';
+    'H', 'h', 'K', 'k': Result := 'H';
+    's', 'A': Result := 's';
+    'z', 'Z', 'O', 'v', 'V', 'X', 'x': Result := 'z';
+  else
+    Result := C;
+  end;
+end;
+
+{ Whether a field of that letter and length is a number (M, MM) rather
+  than text (MMM). }
+function IsNumericField(C: Char; Len: Integer): Boolean;
+begin
+  case C of
+    'Q', 'q', 'M', 'L', 'e', 'c': Result := Len <= 2;
+    'G', 'E', 'a', 'b', 'B', 'U', 'z', 'Z', 'O', 'v', 'V', 'X', 'x': Result := False;
+  else
+    Result := True;
+  end;
+end;
+
+{ The letter and length of the field of Kind in a skeleton; Len 0 when
+  absent. }
+procedure SkeletonField(const Skeleton: string; Kind: Char; out C: Char; out Len: Integer);
+var
+  I: Integer;
+begin
+  Len := 0;
+  C := #0;
+  for I := 1 to Length(Skeleton) do
+    if FieldKind(Skeleton[I]) = Kind then
+    begin
+      if Len = 0 then
+        C := Skeleton[I];
+      if Skeleton[I] = C then
+        Inc(Len);
+    end;
+end;
+
+{ A skeleton as ICU's pattern generator reads it: a 12-hour skeleton
+  without a day period gets 'a' ('hm' is 'ahm': the pattern's B becomes
+  a, as in zh_Hant); a 24-hour one loses its day period. }
+function WithDayPeriod(const Skeleton: string): string;
+var
+  I: Integer;
+  Has12, HasPeriod: Boolean;
+begin
+  Has12 := (Pos('h', Skeleton) > 0) or (Pos('K', Skeleton) > 0);
+  HasPeriod := (Pos('a', Skeleton) > 0) or (Pos('b', Skeleton) > 0) or (Pos('B', Skeleton) > 0);
+  if Has12 then
+  begin
+    if HasPeriod then
+      Result := Skeleton
+    else
+      Result := Skeleton + 'a';
+  end
+  else if (Pos('H', Skeleton) > 0) or (Pos('k', Skeleton) > 0) then
+  begin
+    Result := '';
+    for I := 1 to Length(Skeleton) do
+      if not (Skeleton[I] in ['a', 'b', 'B']) then
+        Result := Result + Skeleton[I];
+  end
+  else
+    Result := Skeleton;
+end;
+
+{ The pattern of the Matched skeleton with its field lengths adjusted to
+  the Requested skeleton, as ICU's DateTimePatternGenerator does
+  (adjustFieldTypes): 'MMM d, y' for yMMMd gives 'MMMM d, y' for yMMMMd.
+  Hours, minutes and seconds keep their length; a field keeps it too when
+  the matched skeleton already has the requested length, or when one of
+  the pattern and the skeleton has it as a number and the other as text.
+  Babel used the matched pattern as it was ('Oct 13, 2026' for yMMMMd). }
+function AdjustFieldLengths(const Pattern, Requested, Matched: string): TDateTimePattern;
+var
+  Req, Mat: string;
+  Tokens: TPatternTokens;
+  I, ReqLen, SkelLen, AdjLen: Integer;
+  Kind, ReqChar, SkelChar, C: Char;
+begin
+  Req := WithDayPeriod(Requested);
+  Mat := WithDayPeriod(Matched);
+  Result := ParseDatePattern(Pattern);
+  Tokens := Result.Tokens;
+  for I := 0 to High(Tokens) do
+  begin
+    if Tokens[I].Kind <> ptField then
+      Continue;
+    Kind := FieldKind(Tokens[I].Field);
+    SkeletonField(Req, Kind, ReqChar, ReqLen);
+    if (ReqLen = 0) or (Kind in ['H', 'm', 's']) then
+      Continue;
+    if (ReqChar = 'E') and (ReqLen < 3) then
+      ReqLen := 3;
+    AdjLen := ReqLen;
+    if not (ReqChar in ['c', 'e']) then
+    begin
+      SkeletonField(Mat, Kind, SkelChar, SkelLen);
+      if (SkelLen = ReqLen) or
+         (IsNumericField(Tokens[I].Field, Tokens[I].Count) <> IsNumericField(SkelChar, SkelLen)) then
+        AdjLen := Tokens[I].Count;
+    end;
+    if (Kind in ['M', 'E']) or ((Kind = 'y') and (ReqChar <> 'Y')) then
+      C := Tokens[I].Field
+    else
+      C := ReqChar;
+    if (C = 'E') and (AdjLen < 3) then
+      C := 'e';
+    Tokens[I].Field := C;
+    Tokens[I].Count := AdjLen;
+  end;
+  { the tokens, not a pattern written back: UntokenizeDatePattern (as
+    Babel's) loses quotes between adjacent quoted texts }
+  Result.Tokens := Tokens;
+end;
+
+{ The fields of a skeleton or pattern, sorted ('E4,M4,d1,y1'). The
+  stand-alone letters (L, c) differ from the format ones, as in ICU. }
+function FieldSet(const S: string): string;
+var
+  T: TPatternToken;
+  L: TStringList;
+begin
+  L := TStringList.Create;
+  try
+    for T in TokenizeDatePattern(S) do
+      if T.Kind = ptField then
+        L.Add(T.Field + IntToStr(T.Count));
+    L.Sort;
+    Result := L.DelimitedText;
+  finally
+    L.Free;
+  end;
+end;
+
+{ The locale's standard date or time pattern with exactly the fields of
+  the skeleton; '' if none. ICU's pattern generator has these patterns
+  besides the available formats ('EEEE 'den' d. MMMM y' for yMMMMEEEEd
+  in da). }
+function StandardPatternFor(const Skeleton: string; const Locale: TLocale): string;
+const
+  Lengths: array[0..3] of string = ('full', 'long', 'medium', 'short');
+var
+  Want, L: string;
+begin
+  Want := FieldSet(Skeleton);
+  for L in Lengths do
+  begin
+    Result := GetDateFormat(Locale, L);
+    if FieldSet(Result) = Want then
+      Exit;
+    Result := GetTimeFormat(Locale, L);
+    if FieldSet(Result) = Want then
+      Exit;
+  end;
+  Result := '';
+end;
+
 function FormatSkeleton(const Skeleton: string; UTC: TDateTime; const Locale: TLocale): string;
 begin
   Result := FormatSkeleton(Skeleton, UTC, Locale, SkeletonOptions);
@@ -1387,15 +2082,25 @@ function FormatSkeleton(const Skeleton: string; UTC: TDateTime; const Locale: TL
   const Options: TSkeletonOptions): string;
 var
   Skeletons: TCLDRValue;
-  S: string;
+  Requested, S, Pattern: string;
+  V: TValue;
 begin
   Skeletons := Locale.DatetimeSkeletons;
-  S := Skeleton;
+  Requested := ExpandHourChars(Skeleton, Locale);
+  V := DateTimeValue(UTC, Options.TimeZone);
+  V.Digits := SystemDigits(Locale, Options.NumberingSystem);
+  if Options.Fuzzy and not Skeletons.Has(Requested) then
+  begin
+    Pattern := StandardPatternFor(Requested, Locale);
+    if Pattern <> '' then
+      Exit(FormatDateTimeValue(V, Locale, Pattern));
+  end;
+  S := Requested;
   if Options.Fuzzy and not Skeletons.Has(S) then
     S := MatchSkeleton(S, SkeletonKeys(Skeletons));
   if (S = '') or not Skeletons.Has(S) then
     raise EBabelKeyError.Create(Skeleton);
-  Result := FormatDateTimeValue(DateTimeValue(UTC, Options.TimeZone), Locale, Skeletons.Str(S));
+  Result := ApplyPattern(AdjustFieldLengths(Skeletons.Str(S), Requested, S), V, Locale);
 end;
 
 { ---- durations ---- }
@@ -1410,8 +2115,8 @@ const
   Units: array[0..6] of string = ('year', 'month', 'week', 'day', 'hour', 'minute', 'second');
   Secs: array[0..6] of Int64 = (3600 * 24 * 365, 3600 * 24 * 30, 3600 * 24 * 7, 3600 * 24, 3600, 60, 1);
 var
-  Fmt, PluralForm, Pattern: string;
-  DateFields, UnitPatterns, Rel, Pats: TCLDRValue;
+  Fmt, PluralForm, Pattern, Direction, Field: string;
+  DateFields, UnitPatterns, Rel, Pats, Aliases: TCLDRValue;
   I, K: Integer;
   Value: Double;
   IValue: Int64;
@@ -1431,6 +2136,7 @@ begin
     Fmt := 'long';
   DateFields := Need(Locale.Data, 'date_fields');
   UnitPatterns := Need(Locale.Data, 'unit_patterns');
+  Aliases := Locale.Data.Get('date_field_aliases');
   for I := 0 to High(Units) do
   begin
     Value := System.Abs(Seconds) / Secs[I];
@@ -1443,14 +2149,26 @@ begin
       Candidates := nil;
       if Options.AddDirection then
       begin
-        Rel := DateFields.Get(Units[I] + '-' + Fmt);
-        if (Rel = nil) or (Rel.Count = 0) then
-          Rel := Need(DateFields, Units[I]);
-        { as Babel: a missing direction is a KeyError }
-        if Seconds >= 0 then
-          AddCandidate(Need(Rel, 'future'))
-        else
-          AddCandidate(Need(Rel, 'past'));
+        if Seconds >= 0 then Direction := 'future' else Direction := 'past';
+        { the field of the width, then the ones CLDR aliases it to
+          ('second-narrow' to 'second-short' to 'second'), for each
+          direction (de 'month-short' has only the past): Babel used the
+          width's field only when it was not empty, and the wide one
+          otherwise ('hace 3 segundos' for the narrow es) }
+        Field := Units[I] + '-' + Fmt;
+        while Field <> '' do
+        begin
+          Rel := DateFields.Get(Field);
+          if Rel <> nil then
+            AddCandidate(Rel.Get(Direction));
+          if Aliases <> nil then
+            Field := Aliases.Str(Field, '')
+          else
+            Field := '';
+        end;
+        Rel := DateFields.Get(Units[I]);
+        if Rel <> nil then
+          AddCandidate(Rel.Get(Direction));
       end;
       Pats := UnitPatterns.Get('duration-' + Units[I]);
       if Pats <> nil then
@@ -1471,7 +2189,8 @@ begin
         end;
       if Pattern = '' then
         Exit('');
-      Exit(StringReplace(Pattern, '{0}', IntToStr(IValue), [rfReplaceAll]));
+      Exit(StringReplace(Pattern, '{0}', LocalizeDigits(IntToStr(IValue),
+        SystemDigits(Locale, Options.NumberingSystem)), [rfReplaceAll]));
     end;
   end;
   Result := '';
@@ -1479,23 +2198,22 @@ end;
 
 { ---- intervals ---- }
 
-function Extract(const V: TValue; F: Char): Integer;
+{ What an interval compares for a field: whether the two ends differ in
+  it (Babel handled y M d H h m a only, and failed on B). }
+function Extract(const V: TValue; F: Char; const Locale: TLocale): string;
 begin
   case F of
-    'y': Result := V.Y;
-    'M': Result := V.M;
-    'd': Result := V.D;
-    'H': Result := V.H;
-    'h':
-      begin
-        Result := V.H mod 12;
-        if Result = 0 then
-          Result := 12;
-      end;
-    'm': Result := V.N;
-    'a': Result := Ord(V.H >= 12);
+    'y': Result := IntToStr(V.Y);
+    'M', 'L': Result := IntToStr(V.M);
+    'd': Result := IntToStr(V.D);
+    'H', 'k': Result := IntToStr(V.H);
+    'h', 'K': Result := IntToStr(V.H mod 12);
+    'm': Result := IntToStr(V.N);
+    'a': Result := IntToStr(Ord(V.H >= 12));
+    'B': Result := PeriodIdAt(V.H * 3600 + V.N * 60 + V.S, Locale, '', False);
+    'b': Result := IntToStr(Ord(V.H >= 12));
   else
-    raise EBabelNotImplementedError.CreateFmt('Not implemented: extracting ''%s''', [F]);
+    Result := FormatField(V, F, 1, Locale);
   end;
 end;
 
@@ -1505,13 +2223,16 @@ function FallbackInterval(StartUTC, EndUTC: TDateTime; const Skeleton: string;
   function Fmt(DT: TDateTime): string;
   begin
     if (Skeleton <> '') and Locale.DatetimeSkeletons.Has(Skeleton) then
-      Result := FormatSkeleton(Skeleton, DT, Locale, SkeletonOptions.WithTimeZone(Options.TimeZone))
+      Result := FormatSkeleton(Skeleton, DT, Locale, SkeletonOptions.WithTimeZone(Options.TimeZone)
+        .WithNumberingSystem(Options.NumberingSystem))
     else if Options.Kind = ikDate then
-      Result := FormatDate(DT, Locale)
+      Result := FormatDate(DT, Locale, DateTimeOptions.WithNumberingSystem(Options.NumberingSystem))
     else if Options.Kind = ikTime then
-      Result := FormatTime(DT, Locale, DateTimeOptions.WithTimeZone(Options.TimeZone))
+      Result := FormatTime(DT, Locale, DateTimeOptions.WithTimeZone(Options.TimeZone)
+        .WithNumberingSystem(Options.NumberingSystem))
     else
-      Result := FormatDateAndTime(DT, Locale, DateTimeOptions.WithTimeZone(Options.TimeZone));
+      Result := FormatDateAndTime(DT, Locale, DateTimeOptions.WithTimeZone(Options.TimeZone)
+        .WithNumberingSystem(Options.NumberingSystem));
   end;
 
 var
@@ -1551,7 +2272,7 @@ begin
     EndUTC := DateOf(EndUTC);
   end;
   Formats := Locale.IntervalFormats;
-  Skeleton := Options.Skeleton;
+  Skeleton := ExpandHourChars(Options.Skeleton, Locale);
   if (Skeleton = '') or not Formats.Has(Skeleton) then
   begin
     if (Skeleton <> '') and Options.Fuzzy then
@@ -1564,11 +2285,14 @@ begin
   Skel := Formats.Get(Skeleton);
   if StartUTC = EndUTC then
     Exit(FormatSkeleton(Skeleton, StartUTC, Locale,
-      SkeletonOptions.WithTimeZone(Options.TimeZone).WithFuzzy(Options.Fuzzy)));
+      SkeletonOptions.WithTimeZone(Options.TimeZone).WithFuzzy(Options.Fuzzy)
+      .WithNumberingSystem(Options.NumberingSystem)));
   SV := DateTimeValue(StartUTC, Options.TimeZone);
   EV := DateTimeValue(EndUTC, Options.TimeZone);
+  SV.Digits := SystemDigits(Locale, Options.NumberingSystem);
+  EV.Digits := SV.Digits;
   for F in PatternCharOrder do
-    if Skel.Has(F) and (Extract(SV, F) <> Extract(EV, F)) then
+    if Skel.Has(F) and (Extract(SV, F, Locale) <> Extract(EV, F, Locale)) then
     begin
       Parts := Skel.Get(F);
       Result := '';

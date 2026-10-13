@@ -1,6 +1,7 @@
-{ test_dates - checks babel.dates against the vectors of
-  tests/python/gen_dates_vectors.py (the results of Python Babel 2.18.0
-  for the same inputs).
+{ test_dates - checks babel.dates against vector files: its reference
+  cases (tests/dates/reference.jsonl), ICU4C's results
+  (tests/icu/icu_dates.c, the icu_* operations) or Python Babel's
+  (tests/python/gen_dates_vectors.py).
 
   Usage: test_dates VECTORS.jsonl   (exit status 1 when a case fails)
          test_dates VECTORS.jsonl --update OUT.jsonl
@@ -12,7 +13,7 @@ program test_dates;
 
 uses
   SysUtils, DateUtils, fpjson, testkit,
-  babel.errors, babel.localedata, babel.core, babel.dates, babel.cldr_all;
+  babel.errors, babel.localedata, babel.core, babel.tz, babel.dates, babel.cldr_all;
 
 function DT(A: TJSONArray): TDateTime;
 begin
@@ -163,6 +164,34 @@ begin
         A.Add(TJSONArray.Create(['field', TJSONArray.Create([string(T.Field), T.Count])]));
     Result := A;
   end
+  { ICU4C's results (tests/icu/icu_dates.c), with the locale's digits }
+  else if Op = 'icu_pattern' then
+    Result := TJSONString.Create(FormatDateAndTime(DT(Args.Arrays[0]), Args.Strings[3],
+      DateTimeOptions.WithFormat(Args.Strings[2]).WithTimeZone(Args.Strings[1])
+      .WithNumberingSystem('default')))
+  else if Op = 'icu_style' then
+  begin
+    if Args.Strings[2] = 'date' then
+      { the date as it is in the zone }
+      Result := TJSONString.Create(FormatDate(GetTimeZone(Args.Strings[1]).ToLocal(DT(Args.Arrays[0])),
+        Args.Strings[4], DateTimeOptions.WithFormat(Args.Strings[3]).WithNumberingSystem('default')))
+    else if Args.Strings[2] = 'time' then
+      Result := TJSONString.Create(FormatTime(DT(Args.Arrays[0]), Args.Strings[4],
+        DateTimeOptions.WithFormat(Args.Strings[3]).WithTimeZone(Args.Strings[1])
+        .WithNumberingSystem('default')))
+    else
+      Result := TJSONString.Create(FormatDateAndTime(DT(Args.Arrays[0]), Args.Strings[4],
+        DateTimeOptions.WithFormat(Args.Strings[3]).WithTimeZone(Args.Strings[1])
+        .WithNumberingSystem('default')));
+  end
+  else if Op = 'icu_skeleton' then
+    Result := TJSONString.Create(FormatSkeleton(Args.Strings[0], DT(Args.Arrays[1]), Args.Strings[3],
+      SkeletonOptions.WithTimeZone(Args.Strings[2]).WithNumberingSystem('default')))
+  else if Op = 'icu_relative' then
+    Result := TJSONString.Create(FormatTimedelta(Args.Int64s[0], Args.Strings[3],
+      { a threshold no value reaches: the unit is the one given }
+      TimedeltaOptions.WithGranularity(Args.Strings[1]).WithThreshold(1e12).WithAddDirection(True)
+      .WithFormat(Args.Strings[2]).WithNumberingSystem('default')))
   else
     raise Exception.Create('unknown op ' + Op);
 end;

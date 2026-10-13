@@ -263,6 +263,11 @@ function ParseGrouping(const P: string): TIntPair;
 { parse_pattern. Raises EBabelValueError for a pattern that mixes '@'
   with '.' and '0'. }
 function ParseNumberPattern(const Pattern: string): TNumberPattern;
+{ The ten digits of a numbering system ('default': the locale's; nil for
+  'latn' or a system without digits). }
+function SystemDigits(const Locale: TLocale; const NumberingSystem: string): TCodePoints;
+{ S with its ASCII digits written in Digits (unchanged when nil). }
+function LocalizeDigits(const S: string; const Digits: TCodePoints): string;
 
 implementation
 

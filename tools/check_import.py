@@ -93,7 +93,9 @@ def main(argv):
         bad += 1
         print('global:', d)
 
-    imp = importer.LocaleImporter(srcdir)
+    # Babel's errors that the importer corrects are reproduced for the
+    # comparison (babel_compat)
+    imp = importer.LocaleImporter(srcdir, babel_compat=True)
     names = argv[2:] or sorted(os.path.splitext(n)[0]
                                for n in os.listdir(os.path.join(babel_dir, 'locale-data'))
                                if n.endswith('.dat'))

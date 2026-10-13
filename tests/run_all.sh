@@ -20,8 +20,14 @@
 # 6. babel.tz against Python's zoneinfo on the system's tz database: every
 #    zone, offsets and DST at UTC instants and local times
 #    (tests/python/gen_tz_vectors.py + tests/tz/test_tz).
-# 7. babel.dates against vectors of the oracle's results
-#    (tests/python/gen_dates_vectors.py + tests/dates/test_dates).
+# 7. babel.dates against its reference cases (tests/dates/reference.jsonl,
+#    tests/dates/README.md), and, when gcc and the ICU development headers
+#    are installed, against ICU4C (tests/icu/README.md): differences other
+#    than the known data differences between CLDR 47 and 48 fail the run.
+#
+# The importer corrects some errors of Babel's data (tools/oracle.py,
+# CORRECTED_KEYS). Check 2 runs it reproducing them (babel_compat); checks
+# 3 and 4 read Babel's data files with the corrections applied.
 #
 # The CLDR release (.cache/cldr) and the oracle's wheel (.cache/oracle)
 # are downloaded once when absent.
@@ -76,7 +82,16 @@ fi
 echo "== babel.tz vs Python zoneinfo (system tz database)"
 check tz_vectors python3 -I "$ROOT/tests/python/gen_tz_vectors.py" "$OUT/vectors/tz.jsonl"
 check tz "$OUT/bin/test_tz" "$OUT/vectors/tz.jsonl"
-echo "== babel.dates vs Babel"
-check dates_vectors python3 -I "$ROOT/tests/python/gen_dates_vectors.py" "$OUT/vectors/dates.jsonl"
-check dates "$OUT/bin/test_dates" "$OUT/vectors/dates.jsonl"
+echo "== babel.dates vs its reference cases"
+check dates "$OUT/bin/test_dates" "$ROOT/tests/dates/reference.jsonl"
+if command -v gcc > /dev/null && gcc -O2 tests/icu/icu_dates.c -o "$OUT/bin/icu_dates" \
+     -licui18n -licuuc > "$OUT/icu_dates.build.log" 2>&1; then
+  echo "== babel.dates vs ICU4C"
+  "$OUT/bin/icu_dates" > "$OUT/vectors/icu_dates.jsonl" 2> /dev/null
+  "$OUT/bin/test_dates" "$OUT/vectors/icu_dates.jsonl" --update "$OUT/vectors/icu_dates-ours.jsonl" > /dev/null
+  check icu_dates python3 -I "$ROOT/tests/icu/check_icu.py" "$OUT/vectors/icu_dates.jsonl" \
+    "$OUT/vectors/icu_dates-ours.jsonl"
+else
+  echo "(babel.dates vs ICU4C skipped: no gcc or ICU headers; see $OUT/icu_dates.build.log)"
+fi
 echo "== all passed"

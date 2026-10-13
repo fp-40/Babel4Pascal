@@ -48,3 +48,46 @@ def ensure():
         raise SystemExit(f'oracle: imported babel {babel.__version__} from {babel.__file__}, '
                          f'expected {VERSION}')
     return dest
+
+
+# The keys of the locale data that tools/cldrgen/importer.py reads
+# differently from Babel 2.18, correcting its errors: the week of locales
+# without a region, the alternate skeletons and interval formats, the
+# region format's variants taken for the plain one, and the zone names of
+# unconfirmed status.
+CORRECTED_KEYS = ('week_data', 'datetime_skeletons', 'interval_formats', 'zone_formats',
+                  'time_zones', 'meta_zones')
+
+
+def correct_babel_data():
+    """Make Babel read the corrected values of CORRECTED_KEYS (the
+    importer's, from the same CLDR release) from every locale data file,
+    so that the checks compare Babel's code on the corrected data. Call
+    after ensure(), before Babel loads any locale."""
+    import pickle
+    import subprocess
+    from babel import localedata
+    sys.path.insert(0, os.path.join(ROOT, 'tools'))
+    from cldrgen.importer import LocaleImporter
+    common = subprocess.run([sys.executable, '-I', os.path.join(ROOT, 'tools', 'gencldr.py'), 'fetch'],
+                            check=True, capture_output=True, text=True).stdout.strip()
+    imp = LocaleImporter(common)
+    cache = {}
+
+    class Loader:
+        @staticmethod
+        def load(fileobj):
+            data = pickle.load(fileobj)
+            name = os.path.splitext(os.path.basename(fileobj.name))[0]
+            if os.path.exists(os.path.join(common, 'main', name + '.xml')):
+                if name not in cache:
+                    ours = imp.import_locale(name)
+                    cache[name] = {k: ours[k] for k in CORRECTED_KEYS if k in ours}
+                for k in CORRECTED_KEYS:      # in place: the key order stays
+                    if k in cache[name]:
+                        data[k] = cache[name][k]
+                    else:
+                        data.pop(k, None)
+            return data
+
+    localedata.pickle = Loader

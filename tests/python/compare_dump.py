@@ -7,6 +7,10 @@ resolved), as in a fresh process.
 The reference is the oracle, Babel 2.18.0 with CLDR 47 (tools/oracle.py
 downloads it into .cache/oracle).
 
+The data errors of Babel that the importer corrects (oracle.CORRECTED_KEYS)
+are corrected in Babel's files before Babel merges them, so the
+comparison still checks the merge.
+
 Usage: dumpdata | tests/python/compare_dump.py
        dumpdata --global | tests/python/compare_dump.py --global
 Exit status 1 when any locale differs.
@@ -20,7 +24,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))), 'tools'))
 import oracle  # noqa: E402
 from cldrgen.importer import EXTRA_LOCALE_KEYS  # noqa: E402
-
 
 def ref_value(v):
     """Babel's value in the dump's representation."""
@@ -78,6 +81,8 @@ def main(argv):
     from babel import localedata
     from babel.core import get_global
     is_global = '--global' in argv
+    if not is_global:
+        oracle.correct_babel_data()
     count = bad = 0
     for line in sys.stdin:
         name, _, js = line.rstrip('\n').partition('\t')

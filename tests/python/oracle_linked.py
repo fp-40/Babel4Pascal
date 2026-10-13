@@ -1,6 +1,7 @@
 """The oracle (Python Babel 2.18.0, tools/oracle.py) limited to the locales
 that the Pascal test programs link (the data units in src/data), so that
-Locale.parse chooses among the same locales on both sides.
+Locale.parse chooses among the same locales on both sides, and reading
+the data with the importer's corrections (oracle.correct_babel_data).
 
     import oracle_linked
     LINKED = oracle_linked.setup()     # the set of linked identifiers
@@ -30,6 +31,7 @@ def linked_locales():
 
 def setup():
     oracle.ensure()
+    oracle.correct_babel_data()
     from babel import localedata
     linked = linked_locales()
     identifiers = sorted(linked - {'root'})
@@ -55,7 +57,6 @@ def _isolate_locale_data(localedata):
     for every locale, so here each locale is built from untouched copies
     of its parents' data, and callers get their own copy."""
     import copy
-    import pickle
     import threading
     from babel.core import get_global
 
@@ -77,7 +78,7 @@ def _isolate_locale_data(localedata):
         if name in pristine:
             return pristine[name]
         with open(localedata.resolve_locale_filename(name), 'rb') as f:
-            own = pickle.load(f)
+            own = localedata.pickle.load(f)
         if name == 'root':
             data = own
         else:
@@ -91,7 +92,7 @@ def _isolate_locale_data(localedata):
         with lock:
             if not merge_inherited:
                 with open(localedata.resolve_locale_filename(name), 'rb') as f:
-                    return pickle.load(f)
+                    return localedata.pickle.load(f)
             if name not in served:
                 served[name] = copy.deepcopy(build(name))
             return served[name]

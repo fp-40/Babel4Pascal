@@ -25,10 +25,18 @@ Work in progress. Done so far:
 
 Not written yet: lists, units.
 
-The target is the output of Python Babel 2.18.0, which uses CLDR 47: the
-same strings, including where Babel departs from CLDR. The checks below
-compare against Babel 2.18.0, the "oracle" (`tools/oracle.py` downloads
-its wheel from PyPI into `.cache/oracle`; no install is needed).
+The API follows Python Babel 2.18.0, which uses CLDR 47. The library
+started as an exact reproduction of Babel's output and then departed
+from it where Babel does not follow CLDR, taking ICU (the reference
+implementation of CLDR) as the reference for those cases: the numbers
+and dates checks compare with ICU's results. The importer corrects a few
+errors of Babel's data import (`tools/oracle.py`, `CORRECTED_KEYS`): the
+week of locales without a region (CLDR uses the likely region: `en` is
+US, weeks from Sunday), week keys of unlisted territories, alternate
+skeletons and interval formats (`alt="ascii"`), the region format's
+variants, and zone names of unconfirmed status. The other checks compare
+against Babel 2.18.0, the "oracle" (`tools/oracle.py` downloads its wheel
+from PyPI into `.cache/oracle`; no install is needed).
 
 ## How the data works
 
@@ -134,10 +142,12 @@ options.
 1. the generator's unit tests;
 2. `tools/check_import.py`: the data the generator reads, against the
    `global.dat` and `locale-data/*.dat` files of the oracle, for all 1083
-   locale files of the release;
+   locale files of the release (with the importer reproducing Babel's
+   errors, `babel_compat`);
 3. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (merged and alias-resolved), against
-   the oracle's `load()`, for every generated locale and the global data;
+   the oracle's `load()` reading its files with the importer's
+   corrections, for every generated locale and the global data;
 4. `tests/core/test_core` with vectors from
    `tests/python/gen_core_vectors.py`: identifiers, `Locale.parse`,
    negotiation, names and properties of every generated locale, plural
@@ -161,14 +171,19 @@ options.
 6. `tests/tz/test_tz` with vectors from `tests/python/gen_tz_vectors.py`:
    offsets and DST of every zone of the system's tz database against
    Python's zoneinfo (581 000 lookups);
-7. `tests/dates/test_dates` with vectors from
-   `tests/python/gen_dates_vectors.py`: 352 000 calls of the dates
-   functions (every pattern field and length, predefined formats,
-   skeletons, intervals, durations, day periods, zone names in 19 zones,
-   parsing) against Babel.
+7. `tests/dates/test_dates` with `tests/dates/reference.jsonl`: 8 462
+   calls of the dates functions (every pattern field and length,
+   predefined formats, skeletons, intervals, durations, day periods, zone
+   names in 19 zones, parsing) with their expected results.
+   `babel.dates` matched Babel exactly on 352 000 calls (commit d1e1263)
+   and then departed from it to follow CLDR as ICU applies it
+   (tests/dates/README.md). When gcc and the ICU development headers are
+   installed, the results are also compared with ICU4C's on 90 720 cases
+   (tests/icu/README.md); the only differences allowed are those from the
+   CLDR 47/48 data.
 
-Each comparison must report 0 differences (the ICU report is
-informative).
+Each comparison must report 0 differences, except the listed data
+differences of the ICU comparisons.
 
 ## Licenses
 
