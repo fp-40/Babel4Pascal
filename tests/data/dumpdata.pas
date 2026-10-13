@@ -71,7 +71,7 @@ end;
 var
   Names: TStringArray;
   I: Integer;
-  Keys: array of string = ('all_currencies', 'currency_fractions', 'language_aliases',
+  Keys: array of string = ('cldr', 'all_currencies', 'currency_fractions', 'language_aliases',
     'likely_subtags', 'meta_zones', 'parent_exceptions', 'script_aliases',
     'territory_aliases', 'territory_currencies', 'territory_languages',
     'territory_zones', 'variant_aliases', 'windows_zone_mapping', 'zone_aliases',

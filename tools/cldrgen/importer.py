@@ -3,7 +3,7 @@ extracted) into Python dicts: one dict of global data and one sparse dict
 per locale.
 
 The dicts have the same keys and values as the global.dat and
-locale-data/*.dat files of Python Babel 2.17.0, which its
+locale-data/*.dat files of Python Babel 2.18.0, which its
 scripts/import_cldr.py builds from the same XML release. This module
 follows that script rule by rule (which elements are skipped as drafts or
 alternates, how aliases are recorded, which numbering systems are kept),
@@ -21,7 +21,7 @@ tools/check_import.py compares the output with the .dat files of an
 installed Babel.
 
 Babel's import_cldr.py is Copyright (C) 2007-2011 Edgewall Software,
-2013-2025 the Babel team, BSD-3-Clause; see tools/cldrgen/NOTICE.
+2013-2026 the Babel team, BSD-3-Clause; see tools/cldrgen/NOTICE.
 """
 import collections
 import os
@@ -212,6 +212,11 @@ def parse_global(srcdir):
     sup_dir = os.path.join(srcdir, 'supplemental')
     sup = _parse(os.path.join(sup_dir, 'supplementalData.xml'))
     g = {}
+    with open(os.path.join(srcdir, 'dtd', 'ldml.dtd'), encoding='utf-8') as f:
+        match = re.search(r'<!ATTLIST version cldrVersion CDATA #FIXED "(.+?)"', f.read())
+    if not match:
+        raise ValueError('no CLDR version in dtd/ldml.dtd')
+    g['cldr'] = {'version': match.group(1)}
     territory_zones = g.setdefault('territory_zones', {})
     zone_aliases = g.setdefault('zone_aliases', {})
     zone_territories = g.setdefault('zone_territories', {})
@@ -241,13 +246,19 @@ def parse_global(srcdir):
     for key_elem in bcp47_timezone.findall('.//keyword/key'):
         if key_elem.attrib['name'] == 'tz':
             for elem in key_elem.findall('type'):
-                if 'deprecated' not in elem.attrib:
-                    aliases = str(elem.attrib['alias']).split()
-                    tzid = aliases.pop(0)
-                    territory = zone_territory_map.get(tzid, '001')
-                    territory_zones.setdefault(territory, []).append(tzid)
-                    zone_territories[tzid] = territory
-                    for alias in aliases:
+                if 'deprecated' in elem.attrib:
+                    continue
+                aliases = str(elem.attrib['alias']).split()
+                # The canonical IANA name when CLDR gives one (CLDR's own
+                # canonical ids are often older names: Asia/Calcutta).
+                tzid = elem.attrib.get('iana') or aliases[0]
+                # windowsZones may name the zone by any of its aliases.
+                territory = next((zone_territory_map[c] for c in (tzid, *aliases)
+                                  if c in zone_territory_map), '001')
+                territory_zones.setdefault(territory, []).append(tzid)
+                zone_territories[tzid] = territory
+                for alias in aliases:
+                    if alias != tzid:
                         zone_aliases[alias] = tzid
             break
 

@@ -81,7 +81,7 @@ const
 {_bytes_const('Data', blob)}
 
 initialization
-  RegisterGlobalData(@Data[0], Length(Data), '{cldr_version}');
+  RegisterGlobalData(@Data[0], Length(Data));
 end.
 """
     _write(outdir, unit, text)

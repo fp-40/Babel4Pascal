@@ -9,10 +9,11 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 
+import gencldr  # noqa: E402
 from cldrgen import encode, importer  # noqa: E402
 from cldrgen.model import Alias  # noqa: E402
 
-COMMON = os.path.join(ROOT, '.cache', 'cldr', 'cldr-common-46.0', 'common')
+COMMON = os.path.join(gencldr.CACHE, f'cldr-common-{gencldr.CLDR_VERSION}', 'common')
 
 
 class TestEncode(unittest.TestCase):

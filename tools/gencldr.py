@@ -30,11 +30,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from cldrgen import encode, importer, locales, pascal  # noqa: E402
 
-CLDR_VERSION = '46.0'
-CLDR_URL = f'https://unicode.org/Public/cldr/46/cldr-common-{CLDR_VERSION}.zip'
-# https://unicode.org/Public/cldr/46/hashes/SHASUM512.txt
-CLDR_SHA512 = ('316d644b79a4976d4da57d59ca57c689b339908fe61bb49110bfe1a9269c9414'
-               '4cb27322a0ea080398e6dc4c54a16752fd1ca837e14c054b3a6806b1ef9d3ec3')
+# The release Python Babel 2.18.0 is built from (its
+# scripts/download_import_cldr.py).
+CLDR_VERSION = '47.0'
+CLDR_URL = 'https://unicode.org/Public/cldr/47/cldr-common-47.zip'
+CLDR_SHA512 = ('3b1eb2a046dae23cf16f611f452833e2a95affb1aa2ae3fa599753d229d15257'
+               '7114c2ff44ca98a7f369fa41dc6f45b0d7a6647653ca79694aacfd3f3be59801')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, '.cache', 'cldr')
@@ -47,7 +48,7 @@ def fetch():
     if os.path.isdir(os.path.join(common, 'main')):
         return common
     os.makedirs(CACHE, exist_ok=True)
-    zip_path = os.path.join(CACHE, os.path.basename(CLDR_URL))
+    zip_path = os.path.join(CACHE, f'cldr-common-{CLDR_VERSION}.zip')
     if not os.path.exists(zip_path):
         print(f'downloading {CLDR_URL}', file=sys.stderr)
         urllib.request.urlretrieve(CLDR_URL, zip_path + '.part')

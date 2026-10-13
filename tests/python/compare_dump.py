@@ -4,7 +4,8 @@ library loads it) with Python Babel's data for the same locales: what
 babel.localedata.load returns, read through LocaleDataDict (aliases
 resolved), as in a fresh process.
 
-Needs the installed Babel (2.17.0, CLDR 46).
+The reference is the oracle, Babel 2.18.0 with CLDR 47 (tools/oracle.py
+downloads it into .cache/oracle).
 
 Usage: dumpdata | tests/python/compare_dump.py
        dumpdata --global | tests/python/compare_dump.py --global
@@ -12,7 +13,12 @@ Exit status 1 when any locale differs.
 """
 import copy
 import json
+import os
 import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__)))), 'tools'))
+import oracle  # noqa: E402
 
 
 def ref_value(v):
@@ -67,6 +73,7 @@ def first_difference(a, b, path=()):
 
 
 def main(argv):
+    oracle.ensure()
     from babel import localedata
     from babel.core import get_global
     is_global = '--global' in argv

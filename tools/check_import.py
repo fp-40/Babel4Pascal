@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Compare the data that tools/cldrgen/importer.py reads from a CLDR XML
-release with the global.dat and locale-data/*.dat files of an installed
-Python Babel built from the same release (Babel 2.17.0: CLDR 46).
+release with the global.dat and locale-data/*.dat files of Python Babel
+built from the same release: the oracle, Babel 2.18.0 with CLDR 47
+(tools/oracle.py downloads it into .cache/oracle).
 
-A development check, not part of the build: it needs Babel installed. It
-prints the locales whose data differ and exits with status 1 if any does.
+A development check, not part of the build. It prints the locales whose
+data differ and exits with status 1 if any does.
 
 Usage: tools/check_import.py CLDR_COMMON_DIR [LOCALE ...]
   CLDR_COMMON_DIR  the common/ directory of the extracted cldr-common zip
@@ -17,6 +18,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import oracle  # noqa: E402
 from cldrgen import importer  # noqa: E402
 from cldrgen.model import Alias  # noqa: E402
 
@@ -76,6 +78,7 @@ def main(argv):
     if len(argv) < 2:
         print(__doc__)
         return 2
+    oracle.ensure()
     import babel
     babel_dir = os.path.dirname(babel.__file__)
     srcdir = argv[1]

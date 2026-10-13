@@ -12,21 +12,22 @@ Work in progress. Done so far: the CLDR data and its loading
 (`babel.localedata`). The formatting API (`Locale`, numbers, dates,
 plurals, lists, units) is not written yet.
 
-The target is the output of Python Babel 2.17.0, which uses CLDR 46: the
+The target is the output of Python Babel 2.18.0, which uses CLDR 47: the
 same strings, including where Babel departs from CLDR. The checks below
-compare against an installed Babel 2.17.0.
+compare against Babel 2.18.0, the "oracle" (`tools/oracle.py` downloads
+its wheel from PyPI into `.cache/oracle`; no install is needed).
 
 ## How the data works
 
 - `tools/gencldr.py` reads the official CLDR XML release
-  (`cldr-common-46.0.zip` from unicode.org, the same source Babel's own
+  (`cldr-common-47.zip` from unicode.org, the same source Babel's own
   importer reads) and writes one Pascal unit per locale into `src/data/`:
   `babel.cldr_es_PE` holds the data of `es_PE` and uses the unit of the
   locale it inherits from (`babel.cldr_es_419`, then `babel.cldr_es`,
   then `babel.cldr_root`). `babel.cldr_global` holds the data that is not
   per locale (likely subtags, aliases, currencies of territories, time
   zone mappings); `babel.cldr_all` uses every generated locale.
-- By default it generates the 498 locales whose CLDR coverage level is
+- By default it generates the 512 locales whose CLDR coverage level is
   "modern" or that inherit from such a locale. `--locales` chooses
   others (`all`, or a list).
 - A program chooses its locales by naming their units in `uses`; only
@@ -46,7 +47,8 @@ tools/install-package.sh            # compiles and installs into ~/.fppkg
 
 The data units in `src/data/` are not in git: the script first runs
 `tools/gencldr.py generate` when they are absent, which needs python3 and
-downloads the CLDR release (34 MB) from unicode.org into `.cache/` once.
+downloads the CLDR release from unicode.org into `.cache/` once. A clean
+install (generating and compiling) takes about 6 s.
 
 Then a program compiles with `fpc -Mobjfpc -Sh prog.pas`, without `-Fu`
 options.
@@ -57,11 +59,11 @@ options.
 
 1. the generator's unit tests;
 2. `tools/check_import.py`: the data the generator reads, against the
-   `global.dat` and `locale-data/*.dat` files of the installed Python
-   Babel, for all 1067 locales of the release;
+   `global.dat` and `locale-data/*.dat` files of the oracle, for all 1083
+   locale files of the release;
 3. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (merged and alias-resolved), against
-   Babel's `load()`, for every generated locale and the global data.
+   the oracle's `load()`, for every generated locale and the global data.
 
 Each comparison must report 0 differences (keys, their order and values).
 

@@ -85,10 +85,11 @@ type
 { Called by the generated units. Data must stay valid for the whole run
   (a constant). Parent is '' for root. }
 procedure RegisterLocaleData(const Name, Parent: string; Data: PByte; Len: SizeInt);
-procedure RegisterGlobalData(Data: PByte; Len: SizeInt; const CLDRVersion: string);
+procedure RegisterGlobalData(Data: PByte; Len: SizeInt);
 
-{ The version of the CLDR release the linked data comes from ('46.0');
-  '' when no global data is linked (Babel 2.18's get_cldr_version). }
+{ The version of the CLDR release the linked data comes from, as Babel's
+  get_cldr_version ('47'). Raises ELocaleDataError when no global data is
+  linked. }
 function GetCLDRVersion: string;
 
 { True when the data of the locale is linked into the program. Exact match
@@ -102,7 +103,7 @@ function LocaleIdentifiers: TStringArray;
   resolved (MergeInherited = False: the locale's own data only, as
   stored). Raises ELocaleDataError when the locale is not registered. }
 function LoadLocaleData(const Name: string; MergeInherited: Boolean = True): TCLDRValue;
-{ One map of the global data (likely_subtags, parent_exceptions, ...); an
+{ One map of the global data (likely_subtags, parent_exceptions, cldr, ...); an
   empty map for an unknown key. Raises ELocaleDataError when no global
   data is linked. }
 function GetGlobal(const Key: string): TCLDRValue;
@@ -125,7 +126,6 @@ var
   GlobalBlob: PByte;
   GlobalLen: SizeInt;
   GlobalTree: TCLDRValue;
-  GlobalVersion: string;
   Lock: TRTLCriticalSection;
   Nodes: array of TCLDRValue;       { every node, freed at finalization }
   NodeCount: Integer;
@@ -728,16 +728,15 @@ begin
   Inc(EntryCount);
 end;
 
-procedure RegisterGlobalData(Data: PByte; Len: SizeInt; const CLDRVersion: string);
+procedure RegisterGlobalData(Data: PByte; Len: SizeInt);
 begin
   GlobalBlob := Data;
   GlobalLen := Len;
-  GlobalVersion := CLDRVersion;
 end;
 
 function GetCLDRVersion: string;
 begin
-  Result := GlobalVersion;
+  Result := GetGlobal('cldr').Str('version');
 end;
 
 function NormalizeLocale(const Name: string): string;
