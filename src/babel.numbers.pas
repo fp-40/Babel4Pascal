@@ -55,7 +55,7 @@ interface
 
 uses
   SysUtils, Math, babel.errors, babel.decimal, babel.localedata, babel.plural, babel.core,
-  babel.pystr;
+  babel.strutils;
 
 type
   EUnknownCurrencyError = class(EBabelError)
@@ -1746,7 +1746,7 @@ begin
   while I <= Length(S) do
   begin
     C := CodePointAt(S, I, L);
-    if (C = Ord('0')) or (C = $A4) or IsPySpace(C) then
+    if (C = Ord('0')) or (C = $A4) or IsWhiteSpaceChar(C) then
       Kept := Kept + Copy(S, I, L);
     Inc(I, L);
   end;
@@ -1756,7 +1756,7 @@ begin
   while I <= Length(Kept) do
   begin
     C := CodePointAt(Kept, I, L);
-    if IsPySpace(C) then
+    if IsWhiteSpaceChar(C) then
     begin
       if not PrevSpace then
         Result := Result + Copy(Kept, I, L);
@@ -1769,7 +1769,7 @@ begin
     end;
     Inc(I, L);
   end;
-  Result := PyStrip(Result);
+  Result := StripWhiteSpace(Result);
 end;
 
 function FormatCompactCurrency(const Number: TDecimal; const Currency: string; const Locale: TLocale): string;
@@ -1906,7 +1906,7 @@ var
 begin
   V := 0;
   Result := False;
-  T := AsciiDigits(PyStrip(S));
+  T := AsciiDigits(StripWhiteSpace(S));
   if T = '' then
     Exit;
   Neg := False;

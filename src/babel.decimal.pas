@@ -37,7 +37,7 @@ unit babel.decimal;
 interface
 
 uses
-  SysUtils, babel.errors, babel.pystr;
+  SysUtils, babel.errors, babel.strutils;
 
 type
   TDecimalKind = (dkFinite, dkInfinity, dkNaN);
@@ -208,7 +208,7 @@ begin
   Value := Default(TDecimal);
   Result := False;
   { whitespace around; decimal digits of any script }
-  T := AsciiDigits(PyStrip(S));
+  T := AsciiDigits(StripWhiteSpace(S));
   if T = '' then
     Exit;
   Neg := False;

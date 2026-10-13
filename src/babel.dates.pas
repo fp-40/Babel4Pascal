@@ -191,7 +191,7 @@ function MatchSkeleton(const Skeleton: string; const Options: array of string;
 implementation
 
 uses
-  Classes, Math, DateUtils, babel.decimal, babel.plural, babel.pystr, babel.numbers;
+  Classes, Math, DateUtils, babel.decimal, babel.plural, babel.strutils, babel.numbers;
 
 const
   NoInheritanceMarker = #$E2#$88#$85#$E2#$88#$85#$E2#$88#$85;   { ∅∅∅ }

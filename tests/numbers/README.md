@@ -1,6 +1,6 @@
 # babel.numbers tests
 
-`reference.jsonl` holds the expected results of 6 448 calls of
+`reference.jsonl` holds the expected results of 6 434 calls of
 `babel.numbers` (one JSON object per line: `op`, `args`, and `expect` or
 `error`). `test_numbers` runs them:
 

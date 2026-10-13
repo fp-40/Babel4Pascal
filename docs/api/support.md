@@ -49,8 +49,9 @@ type
   show their UTC values; `''` is UTC.
 - `NumberingSystem`: the digits of numbers, dates and times: `'latn'`
   (ASCII digits), `'default'` (the locale's default system) or a CLDR
-  numbering system id (`'arab'`, `'deva'`...). A system without decimal
-  digits in the data gives ASCII digits.
+  numbering system id with decimal digits (`'arab'`, `'deva'`...). Any
+  other value raises `EUnsupportedNumberingSystemError` when a method
+  formats.
 
 ### TFormat.Create
 
@@ -193,8 +194,8 @@ F.Currency(1234.5, 'PEN');   // 'S/ 1,234.50'
 F.Currency(1234.5, 'USD');   // 'USD 1,234.50'
 ```
 
-The code is not validated: an unknown code is written as given
-(`'XYZ 1.00'`).
+A code not in CLDR's currency data raises `EUnknownCurrencyError`
+(`F.Currency(1, 'XYZ')`).
 
 ### TFormat.CompactCurrency
 

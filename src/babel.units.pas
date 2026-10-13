@@ -78,7 +78,7 @@ function FormatCompoundUnitText(const NumeratorValue, NumeratorUnit, Denominator
 implementation
 
 uses
-  SysUtils, babel.localedata, babel.pystr, babel.numbers;
+  SysUtils, babel.localedata, babel.strutils, babel.numbers;
 
 function UnitOptions: TUnitOptions;
 begin
@@ -227,7 +227,7 @@ begin
   if Pattern = '' then
     Pattern := UnitEntry(Locale, QUnit, Options.Length, 'other');
   if Pattern <> '' then
-    Exit(PyFormat(Pattern, [FormattedValue]));
+    Exit(FormatPlaceholders(Pattern, [FormattedValue]));
   Name := GetUnitName(MeasurementUnit, Locale, Options.Length);
   if Name = '' then
     Name := MeasurementUnit;
@@ -332,11 +332,11 @@ begin
         raise UnknownUnit(DenominatorUnit, Locale);
       PerPattern := UnitEntry(Locale, DUnit, Options.Length, 'per');
       if PerPattern <> '' then
-        Exit(PyFormat(PerPattern, [FormattedNumerator]));
-      FormattedDenominator := PyStrip(FormatUnitText('', DUnit, Locale, Options));
+        Exit(FormatPlaceholders(PerPattern, [FormattedNumerator]));
+      FormattedDenominator := StripWhiteSpace(FormatUnitText('', DUnit, Locale, Options));
     end
     else
-      FormattedDenominator := PyStrip(FormatUnit(Den.Number, DenominatorUnit, Locale, Options));
+      FormattedDenominator := StripWhiteSpace(FormatUnit(Den.Number, DenominatorUnit, Locale, Options));
   end
   else
     FormattedDenominator := FormatDecimal(Den.Number, Locale, NumberOptionsOf(Options));
@@ -350,7 +350,7 @@ begin
         PerPattern := V.Get(L).Str('compound');
         Break;
       end;
-  Result := PyFormat(PerPattern, [FormattedNumerator, FormattedDenominator]);
+  Result := FormatPlaceholders(PerPattern, [FormattedNumerator, FormattedDenominator]);
 end;
 
 function Quantity(const N: TDecimal): TQuantity;

@@ -32,7 +32,7 @@ function FormatList(const Items: array of string; const Locale: TLocale;
 implementation
 
 uses
-  SysUtils, babel.errors, babel.localedata, babel.pystr;
+  SysUtils, babel.errors, babel.localedata, babel.strutils;
 
 (* The styles a style's patterns are looked up in, as CLDR's root aliases
   them: 'unit-narrow' to 'unit-short' to 'standard'. *)
@@ -135,11 +135,11 @@ begin
       [Locale.ToString, Style]);
   Last := Items[High(Items)];
   if Length(Items) = 2 then
-    Exit(PyFormat(Contextual(Locale, PartPattern(Locale, Chain, '2'), Last), [Items[0], Last]));
-  Result := PyFormat(PartPattern(Locale, Chain, 'start'), [Items[0], Items[1]]);
+    Exit(FormatPlaceholders(Contextual(Locale, PartPattern(Locale, Chain, '2'), Last), [Items[0], Last]));
+  Result := FormatPlaceholders(PartPattern(Locale, Chain, 'start'), [Items[0], Items[1]]);
   for I := 2 to High(Items) - 1 do
-    Result := PyFormat(PartPattern(Locale, Chain, 'middle'), [Result, Items[I]]);
-  Result := PyFormat(Contextual(Locale, PartPattern(Locale, Chain, 'end'), Last), [Result, Last]);
+    Result := FormatPlaceholders(PartPattern(Locale, Chain, 'middle'), [Result, Items[I]]);
+  Result := FormatPlaceholders(Contextual(Locale, PartPattern(Locale, Chain, 'end'), Last), [Result, Last]);
 end;
 
 end.

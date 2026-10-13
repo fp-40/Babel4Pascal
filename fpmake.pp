@@ -76,7 +76,7 @@ begin
     P.SourcePath.Add('src/data');
     P.IncludePath.Add('src');    { babel.floatrepr.inc }
     P.Targets.AddUnit('babel.errors.pas');
-    P.Targets.AddUnit('babel.pystr.pas');
+    P.Targets.AddUnit('babel.strutils.pas');
     P.Targets.AddUnit('babel.decimal.pas');
     P.Targets.AddUnit('babel.localedata.pas');
     P.Targets.AddUnit('babel.plural.pas');

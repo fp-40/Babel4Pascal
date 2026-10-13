@@ -1,14 +1,14 @@
-{ babel.pystr - string helpers for UTF-8 text: code points, white space
-  (the semantics of str.isspace and str.strip), the Unicode decimal
-  digits that numbers may be written in ('١٢٣' is 123), and formatting
-  with positional fields ('{0} and {1}').
+(* babel.strutils - string helpers for UTF-8 text: code points, white
+  space, the Unicode decimal digits that numbers may be written in
+  ('١٢٣' is 123), and formatting with positional fields ('{0} and {1}').
 
   The tables are those of Unicode 16.0: 76 runs of ten decimal digits
-  (category Nd, each run 0..9 in order), the 29 characters for which str.isspace() is true, and
-  the 243 ranges of the categories S and Z.
+  (category Nd, each run 0..9 in order), the 29 white-space characters
+  (category Zs and the bidirectional classes WS, B and S), and the 243
+  ranges of the categories S and Z.
 
-  Threading: no state. }
-unit babel.pystr;
+  Threading: no state. *)
+unit babel.strutils;
 
 {$mode objfpc}{$H+}
 
@@ -22,10 +22,10 @@ type
 function CodePointAt(const S: string; I: Integer; out Len: Integer): Cardinal;
 function CodePoints(const S: string): TCodePoints;
 function CodePointsToUTF8(const C: TCodePoints; First, Count: Integer): string;
-{ str.isspace() for one code point. }
-function IsPySpace(C: Cardinal): Boolean;
-{ str.strip(). }
-function PyStrip(const S: string): string;
+{ Whether a code point is one of the 29 white-space characters. }
+function IsWhiteSpaceChar(C: Cardinal): Boolean;
+{ S without the white-space characters at its start and end. }
+function StripWhiteSpace(const S: string): string;
 { The value 0..9 of a Unicode decimal digit; -1 for anything else. }
 function DecimalDigitValue(C: Cardinal): Integer;
 { S with every Unicode decimal digit replaced by its ASCII digit (the
@@ -35,19 +35,19 @@ function AsciiDigits(const S: string): string;
   Z (separators): the complement of CLDR's currencySpacing currencyMatch
   [[:^S:]&[:^Z:]]. }
 function IsSymbolOrSeparator(C: Cardinal): Boolean;
-(* Fmt.format( *Args) for positional fields: '{0}', '{1}', '{}' (numbered
-  in order), '{{' and '}}' for braces, in one pass (an argument's text is
-  not read as a field). Raises EBabelIndexError for a field without an
+(* Fmt with its positional fields replaced by Args: '{0}', '{1}', '{}'
+  (numbered in order), '{{' and '}}' for braces, in one pass (an
+  argument's text is not read as a field). Raises EBabelIndexError for a field without an
   argument and EBabelValueError for a malformed or unsupported field
   ('{0:>5}', a single '}'). *)
-function PyFormat(const Fmt: string; const Args: array of string): string;
+function FormatPlaceholders(const Fmt: string; const Args: array of string): string;
 
 implementation
 
 uses
   SysUtils, babel.errors;
 
-function PyFormat(const Fmt: string; const Args: array of string): string;
+function FormatPlaceholders(const Fmt: string; const Args: array of string): string;
 var
   I, J, Index, Auto: Integer;
   Field: string;
@@ -251,7 +251,7 @@ begin
       Result := Result + EncodeUTF8(C[I]);
 end;
 
-function IsPySpace(C: Cardinal): Boolean;
+function IsWhiteSpaceChar(C: Cardinal): Boolean;
 begin
   case C of
     9..13, $1C..$20, $85, $A0, $1680, $2000..$200A, $2028, $2029, $202F, $205F, $3000:
@@ -261,7 +261,7 @@ begin
   end;
 end;
 
-function PyStrip(const S: string): string;
+function StripWhiteSpace(const S: string): string;
 var
   P, L, First, Stop: Integer;
 begin
@@ -270,7 +270,7 @@ begin
   P := 1;
   while P <= Length(S) do
   begin
-    if not IsPySpace(CodePointAt(S, P, L)) then
+    if not IsWhiteSpaceChar(CodePointAt(S, P, L)) then
     begin
       if First = 0 then
         First := P;

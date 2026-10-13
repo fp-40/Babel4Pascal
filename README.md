@@ -7,62 +7,6 @@ It includes data extracted from the [Common Locale Data Repository (CLDR)](https
 The documentation is in [docs/](docs/index.md): a user guide and the API
 reference of every unit.
 
-## Status
-
-Work in progress. Done so far:
-
-- the CLDR data and its loading (`babel.localedata`);
-- locales: `TLocale`, identifiers, negotiation and the
-  default locale (`babel.core`);
-- plural rules (`babel.plural`) and decimal numbers with the arithmetic
-  of Python's `Decimal` (`babel.decimal`);
-- numbers, currencies and percentages: formatting (standard, compact,
-  scientific, accounting, currency names), parsing, currency data
-  (`babel.numbers`);
-- dates and times: formatting with the locale's patterns and with any
-  CLDR pattern or skeleton, intervals, durations, day periods, time zone
-  names, simple parsing (`babel.dates`), with the time zone rules of the
-  system's tz database (`babel.tz`);
-- lists ('A, B, and C') in the locale's styles (`babel.lists`);
-- measurement units ('12 kilometers', '150 km/h'), unit names, compound
-  units (`babel.units`);
-- the official languages of a territory and their population shares
-  (`babel.languages`);
-- `TFormat`, the formatting functions bound to a locale, a time zone and
-  a numbering system (`babel.support`).
-
-Not included: message translation (gettext catalogs).
-
-The data is CLDR 47. Where CLDR leaves the use of its data to the
-implementation, the library does what ICU (the reference implementation
-of CLDR) does, and the checks compare its results with ICU's. The
-generator reads the week of a locale without a region from its likely
-region (`en` is US, weeks from Sunday), gives a territory that CLDR's
-week data does not list the world's values, leaves out alternate
-skeletons and interval formats (`alt="ascii"`) and the variants of the
-region format, and leaves out the data of unconfirmed or provisional
-status (`draft` attribute), whose values are then inherited from the
-parent locale (tools/cldrgen/importer.py).
-
-## How the data works
-
-- `tools/gencldr.py` reads the official CLDR XML release
-  (`cldr-common-47.zip` from unicode.org) and writes one Pascal unit per locale into `src/data/`:
-  `babel.cldr_es_PE` holds the data of `es_PE` and uses the unit of the
-  locale it inherits from (`babel.cldr_es_419`, then `babel.cldr_es`,
-  then `babel.cldr_root`). `babel.cldr_global` holds the data that is not
-  per locale (likely subtags, aliases, currencies of territories, time
-  zone mappings); `babel.cldr_all` uses every generated locale.
-- By default it generates the 512 locales whose CLDR coverage level is
-  "modern" or that inherit from such a locale. `--locales` chooses
-  others (`all`, or a list).
-- A program chooses its locales by naming their units in `uses`; only
-  those are linked. A program with `es_PE` alone (and the global data)
-  is about 0.5 MB.
-- `babel.localedata` loads a locale on first use: it merges the locale's
-  data with what it inherits (key by key) and resolves the aliases of
-  root (months, days, quarters, eras, currency formats).
-
 ## Using it
 
 ```pascal
@@ -137,6 +81,40 @@ install (generating and compiling) takes about 6 s.
 Then a program compiles with `fpc -Mobjfpc -Sh prog.pas`, without `-Fu`
 options.
 
+
+## The data
+
+The data is CLDR 47. Where CLDR leaves the use of its data to the
+implementation, the library does what ICU (the reference implementation
+of CLDR) does, and the checks compare its results with ICU's. The
+generator reads the week of a locale without a region from its likely
+region (`en` is US, weeks from Sunday), gives a territory that CLDR's
+week data does not list the world's values, leaves out alternate
+skeletons and interval formats (`alt="ascii"`) and the variants of the
+region format, and leaves out the data of unconfirmed or provisional
+status (`draft` attribute), whose values are then inherited from the
+parent locale (tools/cldrgen/importer.py).
+
+### How it works
+
+- `tools/gencldr.py` reads the official CLDR XML release
+  (`cldr-common-47.zip` from unicode.org) and writes one Pascal unit per locale into `src/data/`:
+  `babel.cldr_es_PE` holds the data of `es_PE` and uses the unit of the
+  locale it inherits from (`babel.cldr_es_419`, then `babel.cldr_es`,
+  then `babel.cldr_root`). `babel.cldr_global` holds the data that is not
+  per locale (likely subtags, aliases, currencies of territories, time
+  zone mappings); `babel.cldr_all` uses every generated locale.
+- By default it generates the 512 locales whose CLDR coverage level is
+  "modern" or that inherit from such a locale. `--locales` chooses
+  others (`all`, or a list).
+- A program chooses its locales by naming their units in `uses`; only
+  those are linked. A program with `es_PE` alone (and the global data)
+  is about 0.5 MB.
+- `babel.localedata` loads a locale on first use: it merges the locale's
+  data with what it inherits (key by key) and resolves the aliases of
+  root (months, days, quarters, eras, currency formats).
+
+
 ## Checks
 
 `tests/run_all.sh` runs:
@@ -157,7 +135,7 @@ options.
    `tests/core/default_locale.json`: the default locale under several
    environments;
 4. `tests/numbers/test_numbers` with `tests/numbers/reference.jsonl`:
-   6 448 calls of the formatting, parsing and currency functions with
+   6 434 calls of the formatting, parsing and currency functions with
    their expected results (tests/numbers/README.md).
    `tests/numbers/test_roundtrip` formats and parses back 67 000 numbers
    (every locale, Latin and native digits). When node is installed, the
@@ -185,8 +163,8 @@ options.
 Each comparison must report 0 differences, except the listed data
 differences of the ICU comparisons.
 
+
 ## Licenses
 
-MIT (LICENSE). The CLDR data is under the Unicode License v3
-(LICENSE-CLDR). Parts of the generator derive from third-party code
-under the BSD-3-Clause license; see tools/cldrgen/NOTICE.
+MIT (LICENSE). The CLDR data is under the Unicode License v3 (LICENSE-CLDR);
+see tools/cldrgen/NOTICE.
