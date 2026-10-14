@@ -1,4 +1,4 @@
-# Babel4Pascal
+ <h1><img src="https://raw.githubusercontent.com/fp-40/Babel4Pascal/main/docs/Babel4Pascal.png" height="48" /> Babel4Pascal</h1>
 
 A library that provides an integrated collection of utilities that help internationalizing and localizing Object Pascal applications (in particular web-based applications).
 
