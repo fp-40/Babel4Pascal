@@ -4,6 +4,8 @@ An integrated collection of utilities that help with the internationalization an
 
 The documentation is in [docs/](docs/index.md).
 
+If you use this library, please send me a message ([DM](https://x.com/i/chat) or email).
+
 ## Features
 
 - **Locale data.** A `TLocale` record for each locale identifier (`'es_PE'`, `'zh_Hant_TW'`, `'de_DE'`) with the localized names of languages, territories, scripts, currencies and calendar elements, the week data, the text direction and the plural rules.
