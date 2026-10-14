@@ -16,7 +16,10 @@ CLDR XML release.
       those locales. The locales they inherit from (up to root) are
       always added.
 
-Only the Python standard library is needed.
+Only the Python standard library is needed. The generator that
+tools/install-package.sh runs is the Pascal program
+tools/gencldr/gencldr.pas, which writes the same files byte for byte;
+this script is the reference that tests/run_all.sh compares it with.
 """
 
 import argparse

@@ -1,5 +1,24 @@
 # tools/gencldr
 
+The CLDR data generator of Babel4Pascal, a Free Pascal program:
+`gencldr.pas` and its units `cldr.*.pas` (usage: docs/installation.md,
+"Generating the locale data"). It writes the same files, byte for byte,
+as the Python generator `tools/gencldr.py` (with `tools/cldrgen/`), and
+its units follow the Python modules:
+
+- `cldr.etree`: the XML files as a tree of elements with the semantics
+  of Python's `xml.etree.ElementTree` (text and tail, `findall` paths).
+  It does not read the external DTD that the CLDR files name; the
+  `fcl-xml` reader does, and adds the DTD's default attribute values;
+- `cldr.pystr`: Python's `strip`, `split`, `int` and `float` on UTF-8
+  text;
+- `cldr.values`: the imported data (maps in insertion order);
+- `cldr.importer`, `cldr.locales`, `cldr.encode`, `cldr.pascalout`:
+  `importer.py`, `locales.py`, `encode.py` and `pascal.py`;
+- `cldr.fetch`: the download (fcl-web's `fphttpclient` with
+  `opensslsockets`), the SHA-512 check and the extraction (paszlib's
+  `zipper`).
+
 `sha2.pas` (with `sha256i386.inc`, `sha256x64.inc`, `sha512x64.inc`) is a
 copy of the SHA-2 unit of https://github.com/DrPeaboss/sha2, commit
 35807c8, under the MIT license (`LICENSE-sha2.txt`). The generator uses

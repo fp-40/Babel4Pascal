@@ -15,7 +15,7 @@
   .o files to <prefix>/lib/fpc/<version>/units/<cpu>-<os>/babel/, a
   directory /etc/fpc.cfg searches (the ~/.fppkg line).
 
-  The CLDR data units (src/data/babel.cldr_*.pas, from tools/gencldr.py)
+  The CLDR data units (src/data/babel.cldr_*.pas, from tools/gencldr/gencldr.pas)
   are all compiled and installed; a program links only the ones it uses.
   They are found by listing src/data. }
 program fpmake;
@@ -41,7 +41,8 @@ begin
       FindClose(SR);
     end;
     if Names.Count = 0 then
-      raise Exception.Create('no data units in src/data: run tools/gencldr.py generate');
+      raise Exception.Create('no data units in src/data: run tools/install-package.sh, ' +
+        'or generate them with tools/gencldr/gencldr.pas (docs/installation.md)');
     Names.Sort;
     { babel.cldr_all first: compiling it compiles every locale unit in one
       compiler run (about 3 s); the other targets are then up to date.

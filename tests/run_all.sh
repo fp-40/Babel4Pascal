@@ -1,7 +1,12 @@
 #!/bin/sh
 # Runs every check of Babel4Pascal. Exit status 0 only when all pass.
 #
-# 1. Generator unit tests (tests/python/test_cldrgen.py).
+# 1. The CLDR data generator: tools/gencldr/sha2.pas (tests/gencldr/test_sha2
+#    with tests/gencldr/sha2_vectors.txt), the Python reference
+#    generator's unit tests (tests/python/test_cldrgen.py), and the units
+#    the Pascal generator (tools/gencldr/gencldr.pas) writes into src/data
+#    against those of the Python generator (tools/gencldr.py), byte for
+#    byte.
 # 2. The Pascal library's loaded data against the importer's
 #    (tests/data/dumpdata + tests/python/compare_dump.py): every generated
 #    locale merged along its parent chain with root's aliases resolved,
@@ -32,16 +37,16 @@
 #    cases (tests/languages/reference.jsonl, tests/format/reference.jsonl).
 #
 # The CLDR release (.cache/cldr) is downloaded once when absent. Python 3
-# runs the generator and the checkers.
+# runs the reference generator and the checkers.
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 OUT=$ROOT/build
-mkdir -p "$OUT/units" "$OUT/bin"
-python3 -I tools/gencldr.py fetch > /dev/null   # the CLDR release, downloaded once
-
-echo "== generator tests"
-python3 -I tests/python/test_cldrgen.py
+mkdir -p "$OUT/units" "$OUT/bin" "$OUT/gencldr"
+fpc -Mobjfpc -Sh -O2 -FU"$OUT/gencldr" -FE"$OUT/gencldr" tools/gencldr/gencldr.pas \
+  > "$OUT/gencldr.build.log" 2>&1 \
+  || { tail -n 5 "$OUT/gencldr.build.log"; exit 1; }
+"$OUT/gencldr/gencldr" fetch > /dev/null   # the CLDR release, downloaded once
 
 # Run from /tmp: Python must not import modules from this checkout's cwd.
 check() { # name, command...: run, show the last lines, fail on failure
@@ -50,9 +55,26 @@ check() { # name, command...: run, show the last lines, fail on failure
   else tail -n 20 "$OUT/$name.log"; echo "FAILED: $name (see $OUT/$name.log)"; exit 1; fi
 }
 
-echo "== Pascal loaded data vs the importer's"
+echo "== generator tests"
+fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Futools/gencldr \
+  tests/gencldr/test_sha2.pas > "$OUT/test_sha2.build.log" 2>&1 \
+  || { tail -n 5 "$OUT/test_sha2.build.log"; exit 1; }
+check sha2 "$OUT/bin/test_sha2" "$ROOT/tests/gencldr/sha2_vectors.txt"
+python3 -I tests/python/test_cldrgen.py
+
+echo "== Pascal generator vs Python generator"
 # Regenerate, so the units match the generator and the CLDR release.
-python3 -I tools/gencldr.py generate
+"$OUT/gencldr/gencldr" generate
+rm -rf "$OUT/gencldr-py"
+python3 -I tools/gencldr.py generate --out "$OUT/gencldr-py" > "$OUT/gencldr-py.log"
+if diff -r "$OUT/gencldr-py" src/data > "$OUT/gencldr.diff"; then
+  echo "src/data equals the Python generator's output"
+else
+  diff -rq "$OUT/gencldr-py" src/data | head -n 10
+  echo "FAILED: the generators differ (see $OUT/gencldr.diff)"; exit 1
+fi
+
+echo "== Pascal loaded data vs the importer's"
 fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
   tests/data/dumpdata.pas > "$OUT/dumpdata.build.log" 2>&1 \
   || { tail -n 5 "$OUT/dumpdata.build.log"; exit 1; }

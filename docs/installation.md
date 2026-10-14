@@ -5,23 +5,30 @@ installed with fpmake, Free Pascal's build tool.
 
 ## Requirements
 
-- Free Pascal 3.2.2 on Linux (x86_64 or aarch64).
-- Python 3 (standard library only) to generate the locale data units,
-  and network access to unicode.org the first time, to download the CLDR
-  release.
+- Free Pascal 3.2.2 on Linux (x86_64 or aarch64), with its standard
+  packages. The locale data generator is a Free Pascal program.
+- Network access to unicode.org the first time, to download the CLDR
+  release, and the OpenSSL library (`libssl`), which Free Pascal's HTTP
+  client loads for HTTPS.
 - The system's IANA tz database: the TZif files under
   `/usr/share/zoneinfo` (the `tzdata` package). The directory can be
   changed with the `TZDIR` environment variable or with
   `SetZoneInfoPath` (unit `babel.tz`).
 
+Python 3 is needed only to run the development checks
+(`tests/run_all.sh`), not to install.
+
 ## Generating the locale data
 
 The locale data is a set of Pascal units in `src/data/`, generated from
-the CLDR XML release by `tools/gencldr.py`:
+the CLDR XML release by the program `tools/gencldr/gencldr.pas`
+(`tools/install-package.sh` compiles and runs it when `src/data/` has no
+units). By hand:
 
 ```sh
-tools/gencldr.py fetch       # download and extract the CLDR release into .cache/cldr/
-tools/gencldr.py generate    # write src/data/babel.cldr_*.pas
+fpc -Mobjfpc -Sh -O2 -FUbuild/gencldr -FEbuild/gencldr tools/gencldr/gencldr.pas
+build/gencldr/gencldr fetch       # download and extract the CLDR release into .cache/cldr/
+build/gencldr/gencldr generate    # write src/data/babel.cldr_*.pas
 ```
 
 `fetch` downloads `cldr-common-47.zip` from unicode.org once, checks its
@@ -45,6 +52,21 @@ Options of `generate`:
   from, up to root, are always added;
 - `--out DIR`: the directory to write (default `src/data`; it is emptied
   of `babel.cldr_*.pas` files first).
+
+Options of both commands:
+
+- `--root DIR`: the repository root, which the default paths are
+  relative to. Without it, the program takes the first directory that
+  holds `fpmake.pp` and `tools/gencldr/gencldr.pas`, searching upwards
+  from the program's own directory (`build/gencldr/` is inside the
+  repository), then from the current directory;
+- `--cache DIR`: where the CLDR release is downloaded and extracted
+  (default `.cache/cldr` under the root).
+
+`tools/gencldr.py` (same commands and options, except `--root` and
+`--cache`) is the Python version of the generator, kept as the
+reference of the development checks: `tests/run_all.sh` checks that both
+write the same files, byte for byte.
 
 ## Installing the package
 

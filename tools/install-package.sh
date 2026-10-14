@@ -5,9 +5,10 @@
 # searches: afterwards a program compiles with `fpc -Mobjfpc -Sh prog.pas`,
 # without -Fu options (README.md, "Installing").
 #
-# The CLDR data units (src/data) are generated first when absent:
-# tools/gencldr.py generate, which needs python3 and downloads the CLDR
-# release from unicode.org into .cache/ once.
+# The CLDR data units (src/data) are generated first when absent: the
+# generator (tools/gencldr/gencldr.pas) is compiled into build/gencldr and
+# runs `gencldr generate`, which downloads the CLDR release from
+# unicode.org into .cache/ once. Only FPC is needed.
 #
 # Usage: tools/install-package.sh
 # Env: PREFIX overrides ~/.fppkg (the units go to
@@ -20,7 +21,12 @@
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 if [ ! -f "$ROOT/src/data/babel.cldr_all.pas" ]; then
-  python3 -I "$ROOT/tools/gencldr.py" generate \
+  GEN=$ROOT/build/gencldr
+  mkdir -p "$GEN"
+  fpc -Mobjfpc -Sh -O2 -FU"$GEN" -FE"$GEN" "$ROOT/tools/gencldr/gencldr.pas" \
+    > "$GEN/gencldr.build.log" 2>&1 \
+    || { echo "install-package: the generator did not compile (see $GEN/gencldr.build.log)"; exit 1; }
+  "$GEN/gencldr" --root "$ROOT" generate \
     || { echo "install-package: generating the CLDR data units failed"; exit 1; }
 fi
 PREFIX=${PREFIX:-$HOME/.fppkg}

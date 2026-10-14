@@ -82,10 +82,12 @@ Free Pascal 3.2.2 on Linux. The package is named `babel`:
 tools/install-package.sh            # compiles and installs into ~/.fppkg
 ```
 
-The data units in `src/data/` are not in git: the script first runs
-`tools/gencldr.py generate` when they are absent, which needs python3 and
-downloads the CLDR release from unicode.org into `.cache/` once. A clean
-install (generating and compiling) takes about 6 s.
+The data units in `src/data/` are not in git: when they are absent, the
+script first compiles the generator (`tools/gencldr/gencldr.pas`) and
+runs `gencldr generate`, which downloads the CLDR release from
+unicode.org into `.cache/` once. Installing needs only FPC; Python 3 is
+needed only to run the development checks (`tests/run_all.sh`). A clean
+install (compiling the generator, generating, compiling) takes about 7 s.
 
 Then a program compiles with `fpc -Mobjfpc -Sh prog.pas`, without `-Fu`
 options.
@@ -95,12 +97,13 @@ options.
 
 The data is the [Unicode Common Locale Data Repository (CLDR)](https://unicode.org/cldr/). Where CLDR leaves the use of its data to the implementation, the library does what ICU (the reference implementation of CLDR) does, and the checks compare its results with ICU's.
 
-The generator reads the week of a locale without a region from its likely region (`en` is US, weeks from Sunday), gives a territory that CLDR's week data does not list the world's values, leaves out alternate skeletons and interval formats (`alt="ascii"`) and the variants of the region format, and leaves out the data of unconfirmed or provisional status (`draft` attribute), whose values are then inherited from the parent locale (tools/cldrgen/importer.py).
+The generator reads the week of a locale without a region from its likely region (`en` is US, weeks from Sunday), gives a territory that CLDR's week data does not list the world's values, leaves out alternate skeletons and interval formats (`alt="ascii"`) and the variants of the region format, and leaves out the data of unconfirmed or provisional status (`draft` attribute), whose values are then inherited from the parent locale (tools/gencldr/cldr.importer.pas).
 
 
 ### How it works
 
-- `tools/gencldr.py` reads the official CLDR XML release
+- The generator, `tools/gencldr/gencldr.pas` (a Free Pascal program),
+  reads the official CLDR XML release
   (`cldr-common-47.zip` from unicode.org) and writes one Pascal unit per locale into `src/data/`:
   `babel.cldr_es_PE` holds the data of `es_PE` and uses the unit of the
   locale it inherits from (`babel.cldr_es_419`, then `babel.cldr_es`,
@@ -110,6 +113,9 @@ The generator reads the week of a locale without a region from its likely region
 - By default it generates the 512 locales whose CLDR coverage level is
   "modern" or that inherit from such a locale. `--locales` chooses
   others (`all`, or a list).
+- `tools/gencldr.py` is the same generator in Python, kept as the
+  reference of the development checks: both write the same files, byte
+  for byte. Usage and options: docs/installation.md.
 - A program chooses its locales by naming their units in `uses`; only
   those are linked. A program with `es_PE` alone (and the global data)
   is about 0.5 MB.
@@ -122,7 +128,10 @@ The generator reads the week of a locale without a region from its likely region
 
 `tests/run_all.sh` runs:
 
-1. the generator's unit tests;
+1. the generator's checks: `tests/gencldr/test_sha2` (the SHA-2 unit that
+   verifies the downloaded release, 2 014 digests), the Python generator's
+   unit tests, and the data units the Pascal generator writes into
+   `src/data/` against the Python generator's, byte for byte;
 2. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (decoded, merged along the parent chain,
    root's aliases resolved), against the importer's data merged and
