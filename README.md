@@ -1,8 +1,8 @@
- <h1><img src="https://raw.githubusercontent.com/fp-40/Babel4Pascal/main/docs/Babel4Pascal.png" height="48" /> Babel4Pascal</h1>
+ <h1><img src="docs/Babel4Pascal.png" height="128" align="middle"/> Babel<i>4Pascal</i></h1>
 
-A library that provides an integrated collection of utilities that help internationalizing and localizing Object Pascal applications (in particular web-based applications).
+An integrated collection of utilities that help with the internationalization and localization of Object Pascal applications (in particular web-based applications).
 
-The documentation is in [docs/](docs/index.md): a user guide and the API reference of every unit.
+The documentation is in [docs/](docs/index.md).
 
 ## Features
 
@@ -74,6 +74,7 @@ A `Double` is read as the shortest decimal that converts back to the
 same `Double` (2.675 is 2.675, not its binary value 2.67499999...). Use
 `TDecimal` (or an integer) for exact decimal values.
 
+
 ## Installing
 
 Free Pascal 3.2.2 on Linux. The package is named `babel`:
@@ -86,7 +87,7 @@ The data units in `src/data/` are not in git: when they are absent, the
 script first compiles the generator (`tools/gencldr/gencldr.pas`) and
 runs `gencldr generate`, which downloads the CLDR release from
 unicode.org into `.cache/` once. Installing needs only FPC. A clean
-install (compiling the generator, generating, compiling) takes about 7 s.
+install (compiling the generator, downloading the data, generating, and compiling) takes about 7 s.
 
 Then a program compiles with `fpc -Mobjfpc -Sh prog.pas`, without `-Fu`
 options.
