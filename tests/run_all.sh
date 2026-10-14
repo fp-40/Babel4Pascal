@@ -1,16 +1,17 @@
 #!/bin/sh
 # Runs every check of Babel4Pascal. Exit status 0 only when all pass.
 #
-# 1. The CLDR data generator: tools/gencldr/sha2.pas (tests/gencldr/test_sha2
-#    with tests/gencldr/sha2_vectors.txt), the Python reference
-#    generator's unit tests (tests/python/test_cldrgen.py), and the units
-#    the Pascal generator (tools/gencldr/gencldr.pas) writes into src/data
-#    against those of the Python generator (tools/gencldr.py), byte for
-#    byte.
+# 1. The CLDR data generator (tools/gencldr/gencldr.pas):
+#    tools/gencldr/sha2.pas (tests/gencldr/test_sha2 with
+#    tests/gencldr/sha2_vectors.txt), and the encoding of the imported
+#    data against the library's decoding and the importer's split of
+#    interval patterns (tests/gencldr/test_gencldr: a value of every kind,
+#    and the global data and every locale of the CLDR release). Then
+#    src/data is generated again.
 # 2. The Pascal library's loaded data against the importer's
-#    (tests/data/dumpdata + tests/python/compare_dump.py): every generated
-#    locale merged along its parent chain with root's aliases resolved,
-#    and the global data.
+#    (tests/data/dumpdata + `gencldr dump` + tests/python/compare_dump.py):
+#    every generated locale merged along its parent chain with root's
+#    aliases resolved, and the global data.
 # 3. babel.core, babel.plural and babel.decimal against their reference
 #    cases (tests/core/fixed.jsonl, tests/core/reference.jsonl +
 #    tests/core/test_core), and
@@ -37,7 +38,8 @@
 #    cases (tests/languages/reference.jsonl, tests/format/reference.jsonl).
 #
 # The CLDR release (.cache/cldr) is downloaded once when absent. Python 3
-# runs the reference generator and the checkers.
+# runs the checkers tests/python/*.py, tests/js/check_icu.py and
+# tests/icu/check_icu.py.
 set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
@@ -46,7 +48,7 @@ mkdir -p "$OUT/units" "$OUT/bin" "$OUT/gencldr"
 fpc -Mobjfpc -Sh -O2 -FU"$OUT/gencldr" -FE"$OUT/gencldr" tools/gencldr/gencldr.pas \
   > "$OUT/gencldr.build.log" 2>&1 \
   || { tail -n 5 "$OUT/gencldr.build.log"; exit 1; }
-"$OUT/gencldr/gencldr" fetch > /dev/null   # the CLDR release, downloaded once
+COMMON=$("$OUT/gencldr/gencldr" fetch)   # the CLDR release, downloaded once
 
 # Run from /tmp: Python must not import modules from this checkout's cwd.
 check() { # name, command...: run, show the last lines, fail on failure
@@ -60,19 +62,12 @@ fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Futools/gencldr \
   tests/gencldr/test_sha2.pas > "$OUT/test_sha2.build.log" 2>&1 \
   || { tail -n 5 "$OUT/test_sha2.build.log"; exit 1; }
 check sha2 "$OUT/bin/test_sha2" "$ROOT/tests/gencldr/sha2_vectors.txt"
-python3 -I tests/python/test_cldrgen.py
-
-echo "== Pascal generator vs Python generator"
+fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Futools/gencldr -Fusrc \
+  tests/gencldr/test_gencldr.pas > "$OUT/test_gencldr.build.log" 2>&1 \
+  || { tail -n 5 "$OUT/test_gencldr.build.log"; exit 1; }
+check gencldr "$OUT/bin/test_gencldr" "$COMMON"
 # Regenerate, so the units match the generator and the CLDR release.
 "$OUT/gencldr/gencldr" generate
-rm -rf "$OUT/gencldr-py"
-python3 -I tools/gencldr.py generate --out "$OUT/gencldr-py" > "$OUT/gencldr-py.log"
-if diff -r "$OUT/gencldr-py" src/data > "$OUT/gencldr.diff"; then
-  echo "src/data equals the Python generator's output"
-else
-  diff -rq "$OUT/gencldr-py" src/data | head -n 10
-  echo "FAILED: the generators differ (see $OUT/gencldr.diff)"; exit 1
-fi
 
 echo "== Pascal loaded data vs the importer's"
 fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
@@ -80,8 +75,12 @@ fpc -Mobjfpc -Sh -O2 -FU"$OUT/units" -FE"$OUT/bin" -Fusrc -Fusrc/data \
   || { tail -n 5 "$OUT/dumpdata.build.log"; exit 1; }
 "$OUT/bin/dumpdata" > "$OUT/dump-locales.txt"
 "$OUT/bin/dumpdata" --global > "$OUT/dump-global.txt"
-check locales sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' < '$OUT/dump-locales.txt'"
-check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global < '$OUT/dump-global.txt'"
+"$OUT/gencldr/gencldr" dump --out "$OUT/export-locales.txt"
+"$OUT/gencldr/gencldr" dump --global --out "$OUT/export-global.txt"
+check locales sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' '$OUT/export-global.txt' \
+  '$OUT/export-locales.txt' < '$OUT/dump-locales.txt'"
+check global sh -c "python3 -I '$ROOT/tests/python/compare_dump.py' --global \
+  '$OUT/export-global.txt' < '$OUT/dump-global.txt'"
 echo "== babel.core, babel.plural, babel.decimal vs their reference cases"
 mkdir -p "$OUT/vectors"
 for prog in support/test_testkit core/test_core core/print_default numbers/test_numbers numbers/test_roundtrip tz/test_tz dates/test_dates \

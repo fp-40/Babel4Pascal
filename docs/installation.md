@@ -15,9 +15,6 @@ installed with fpmake, Free Pascal's build tool.
   changed with the `TZDIR` environment variable or with
   `SetZoneInfoPath` (unit `babel.tz`).
 
-Python 3 is needed only to run the development checks
-(`tests/run_all.sh`), not to install.
-
 ## Generating the locale data
 
 The locale data is a set of Pascal units in `src/data/`, generated from
@@ -53,7 +50,7 @@ Options of `generate`:
 - `--out DIR`: the directory to write (default `src/data`; it is emptied
   of `babel.cldr_*.pas` files first).
 
-Options of both commands:
+Options of every command:
 
 - `--root DIR`: the repository root, which the default paths are
   relative to. Without it, the program takes the first directory that
@@ -63,10 +60,10 @@ Options of both commands:
 - `--cache DIR`: where the CLDR release is downloaded and extracted
   (default `.cache/cldr` under the root).
 
-`tools/gencldr.py` (same commands and options, except `--root` and
-`--cache`) is the Python version of the generator, kept as the
-reference of the development checks: `tests/run_all.sh` checks that both
-write the same files, byte for byte.
+`gencldr dump [--locales ...] [--out FILE]` writes the imported data of
+the locales that `generate` writes as JSON lines instead of units (to
+standard output without `--out`); `gencldr dump --global` writes the
+global data. The development checks (`tests/run_all.sh`) use it.
 
 ## Installing the package
 

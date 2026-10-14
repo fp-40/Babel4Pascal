@@ -7,7 +7,6 @@
 /fpmake
 /fpmake.o
 /*.fpm
-__pycache__/
 *.o
 *.ppu
 *.a

@@ -11,7 +11,7 @@
   always present.
 
   The data of a locale is a tree of TCLDRValue: maps, lists, strings and
-  numbers, with the keys of tools/cldrgen/importer.py (number and date
+  numbers, with the keys of tools/gencldr/cldr.importer.pas (number and date
   patterns are strings; plural rules are lists of [category,
   condition]). LoadLocaleData merges the locale's own data into a copy of
   its parent's, map by map, and resolves aliases, so the result holds
@@ -344,7 +344,7 @@ begin
   end;
 end;
 
-{ ---- decoding (format: tools/cldrgen/encode.py) ---- }
+{ ---- decoding (format: tools/gencldr/cldr.encode.pas) ---- }
 
 type
   TDecoder = record

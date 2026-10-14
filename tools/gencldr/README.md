@@ -2,9 +2,7 @@
 
 The CLDR data generator of Babel4Pascal, a Free Pascal program:
 `gencldr.pas` and its units `cldr.*.pas` (usage: docs/installation.md,
-"Generating the locale data"). It writes the same files, byte for byte,
-as the Python generator `tools/gencldr.py` (with `tools/cldrgen/`), and
-its units follow the Python modules:
+"Generating the locale data"):
 
 - `cldr.etree`: the XML files as a tree of elements with the semantics
   of Python's `xml.etree.ElementTree` (text and tail, `findall` paths).
@@ -13,11 +11,21 @@ its units follow the Python modules:
 - `cldr.pystr`: Python's `strip`, `split`, `int` and `float` on UTF-8
   text;
 - `cldr.values`: the imported data (maps in insertion order);
-- `cldr.importer`, `cldr.locales`, `cldr.encode`, `cldr.pascalout`:
-  `importer.py`, `locales.py`, `encode.py` and `pascal.py`;
+- `cldr.importer`: reads the XML files into a map of global data and a
+  map per locale (its own data). Parts derive from Python Babel 2.18.0,
+  under the BSD-3-Clause license quoted in the unit;
+- `cldr.locales`: the parent of a locale and the choice of locales to
+  generate;
+- `cldr.encode`: the data as the bytes that `src/babel.localedata.pas`
+  decodes;
+- `cldr.pascalout`: writes the units;
 - `cldr.fetch`: the download (fcl-web's `fphttpclient` with
   `opensslsockets`), the SHA-512 check and the extraction (paszlib's
   `zipper`).
+
+`gencldr dump` writes the imported data, before encoding, as JSON lines
+(the format is in `gencldr.pas`). `tests/python/compare_dump.py` compares
+it with the data as the library loads it.
 
 `sha2.pas` (with `sha256i386.inc`, `sha256x64.inc`, `sha512x64.inc`) is a
 copy of the SHA-2 unit of https://github.com/DrPeaboss/sha2, commit

@@ -85,8 +85,7 @@ tools/install-package.sh            # compiles and installs into ~/.fppkg
 The data units in `src/data/` are not in git: when they are absent, the
 script first compiles the generator (`tools/gencldr/gencldr.pas`) and
 runs `gencldr generate`, which downloads the CLDR release from
-unicode.org into `.cache/` once. Installing needs only FPC; Python 3 is
-needed only to run the development checks (`tests/run_all.sh`). A clean
+unicode.org into `.cache/` once. Installing needs only FPC. A clean
 install (compiling the generator, generating, compiling) takes about 7 s.
 
 Then a program compiles with `fpc -Mobjfpc -Sh prog.pas`, without `-Fu`
@@ -113,9 +112,7 @@ The generator reads the week of a locale without a region from its likely region
 - By default it generates the 512 locales whose CLDR coverage level is
   "modern" or that inherit from such a locale. `--locales` chooses
   others (`all`, or a list).
-- `tools/gencldr.py` is the same generator in Python, kept as the
-  reference of the development checks: both write the same files, byte
-  for byte. Usage and options: docs/installation.md.
+- Usage and options of the generator: docs/installation.md.
 - A program chooses its locales by naming their units in `uses`; only
   those are linked. A program with `es_PE` alone (and the global data)
   is about 0.5 MB.
@@ -126,17 +123,20 @@ The generator reads the week of a locale without a region from its likely region
 
 ## Checks
 
-`tests/run_all.sh` runs:
+`tests/run_all.sh` runs the checks below. It needs FPC and Python 3
+(the checkers in `tests/python/`, `tests/js/` and `tests/icu/`);
+node, gcc and the ICU development headers are optional.
 
 1. the generator's checks: `tests/gencldr/test_sha2` (the SHA-2 unit that
-   verifies the downloaded release, 2 014 digests), the Python generator's
-   unit tests, and the data units the Pascal generator writes into
-   `src/data/` against the Python generator's, byte for byte;
+   verifies the downloaded release, 2 014 digests) and
+   `tests/gencldr/test_gencldr` (the generator's encoding against the
+   library's decoding, for a value of every kind and for the global data
+   and every locale of the release; the split of interval patterns);
 2. `tests/data/dumpdata` with `tests/python/compare_dump.py`: the data as
    the Pascal library loads it (decoded, merged along the parent chain,
-   root's aliases resolved), against the importer's data merged and
-   resolved independently in Python, for every generated locale and the
-   global data;
+   root's aliases resolved), against the imported data (`gencldr dump`)
+   merged and resolved independently in Python, for every generated
+   locale and the global data;
 3. `tests/core/test_core` with `tests/core/fixed.jsonl` (the plural
    inputs and 30 000 doubles, never rewritten by `--update`) and
    `tests/core/reference.jsonl` (66 245

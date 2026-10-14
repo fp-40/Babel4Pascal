@@ -23,8 +23,7 @@
 
   The text of an element that has none is the string 'None' where the
   value is written as a string, and None where the value is the text
-  itself (the output of tools/cldrgen/importer.py, which this unit
-  reproduces; tests/run_all.sh compares the generated units).
+  itself.
 
   ---
 
@@ -71,6 +70,11 @@ uses
 { The global data: likely subtags, aliases, parent locales, currencies,
   time zone mappings, territory languages. }
 function ParseGlobal(const SrcDir: string): TValue;
+
+{ An interval pattern split into its parts: a new part starts at a field
+  whose letter the current part already has ('MMM d – d': 'MMM d – ',
+  'd'). }
+function SplitIntervalPattern(const Pattern: string): TStringArray;
 
 type
   { Holds the supplemental data shared by every locale and imports one
